@@ -14,7 +14,7 @@
 
 
 
-# Use of git submodules
+## Use of git submodules
 
 * A less well known feature which allows one repo to contain essentially a reference to another repo
 * It's important to understand this so that the reference can be maintained
