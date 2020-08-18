@@ -1,3 +1,19 @@
+# gpg_bran - GoPiGo3 Base Software
+
+* This repo should be placed on the gopigo3 as well as on your remote computer
+* The code here is mostly from other places
+* Where it is unchanged, we use submodules
+* Where it has been changed we copied from the source
+
+## Content
+
+
+* Copied from [Dexter's Gopigo3 node and additional nodes](https://github.com/ros-gopigo/gopigo3_node) and then **changed** here.
+* **Unchanged, and included as a submodule**:  [YDlidar's node and additional related nodes](https://github.com/YDLIDAR/ydlidar_ros)
+
+
+
+
 # Use of git submodules
 
 * A less well known feature which allows one repo to contain essentially a reference to another repo
@@ -8,12 +24,6 @@
 
 * <https://github.com/ros-gopigo3/gopigo3-pi-code>
 * <http://therobotacademy.com/512_Getting-started-virtual-GoPiGo3/>
-
-## Base modules
-
-
-* [Dexter's Gopigo3 node and additional nodes](https://github.com/ros-gopigo/gopigo3_node)
-* [YDlidar's node and additional related nodes](https://github.com/YDLIDAR/ydlidar_ros)
 
 
 ## Use
