@@ -44,3 +44,5 @@
 * `catkin_make`
 * `source devel/setup.bash`
 
+* Build raspicam_node from sources, following instructions in the readme: [Raspicam_node](https://github.com/UbiquityRobotics/raspicam_node)
+
