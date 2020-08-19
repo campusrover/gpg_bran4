@@ -7,12 +7,8 @@
 
 ## Content
 
-
 * Copied from [Dexter's Gopigo3 node and additional nodes](https://github.com/ros-gopigo/gopigo3_node) and then **changed** here.
 * **Unchanged, and included as a submodule**:  [YDlidar's node and additional related nodes](https://github.com/YDLIDAR/ydlidar_ros)
-
-
-
 
 ## Use of git submodules
 
@@ -38,3 +34,13 @@
 
 ## Handy Commands
 * `rosrun teleop_twist_keyboard teleop_twist_keyboard.py`
+
+## Preparing a GoPiGo3 Robot
+* Start with the original [Bernardo microSD image](https://sourceforge.net/projects/dexter-raspbian-for-robots/files/GoPiGo3_Ubuntu18.04-ROS_Melodic.tar.gz/download)
+* `mkdir -p catkin_ws/src`
+* `cd catkin_ws/src`
+* `git clone (this repo)`
+* `cd ..`
+* `catkin_make`
+* `source devel/setup.bash`
+
