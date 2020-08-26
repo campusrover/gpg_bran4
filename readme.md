@@ -1,4 +1,4 @@
-# gpg_bran - GoPiGo3 Base Software
+# gpg_bran - GoPiGo4 Base Software
 
 * This repo should be placed on the gopigo3 as well as on your remote computer
 * The code here is mostly from other places
@@ -25,7 +25,7 @@
 ## Use
 
 * Clone this repo under catlin_ws/src on the GoPiGo3's pi as well as on the remote computer
-* `cd gpg_bran3` ;`git submodule update --init`
+* `cd gpg_bran4` ;`git submodule update --init`
 
 ## How to create this from scratch
 * To add a submodule do this: 
