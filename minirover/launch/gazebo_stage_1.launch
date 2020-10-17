@@ -12,13 +12,8 @@
     <arg name="debug" value="false"/>
   </include>  
 
-
-  <param name="robot_description" command="$(find xacro)/xacro.py $(find minirover)/urdf/gopigo3.gazebo.xacro" />
-
-
   <!-- Spawn dd_robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
-  args="-file $(find minirover)/urdf/gopigo.gazebo -urdf -model gopigo" />
+     args="-file $(find gazebo_basics)/urdf/gopigo.gazebo -urdf -model gopigo" />
 
-
-</launch>
+    </launch>
