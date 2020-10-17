@@ -55,7 +55,7 @@
       <!-- Decentering of the CAD model coordinate system-->
       <origin xyz="0.024 0.097 -0.038" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://gopigo3_description/meshes/GoPiGo3_Body.stl" scale="${CADscale} ${CADscale} ${CADscale}"/>
+        <mesh filename="package://minirover/meshes/GoPiGo3_Body.stl" scale="${CADscale} ${CADscale} ${CADscale}"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -76,7 +76,7 @@
       <!-- Decentering of wheel CAD model coordinate system-->
       <origin xyz="-0.195 -0.173 -0.029" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://gopigo3_description/meshes/GoPiGo3_Wheel.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://minirover/meshes/GoPiGo3_Wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -112,7 +112,7 @@
       <!-- Decentering of wheel CAD model coordinate system-->
       <origin xyz="-0.195 -0.173 -0.029" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://gopigo3_description/meshes/GoPiGo3_Wheel.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://minirover/meshes/GoPiGo3_Wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -202,7 +202,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
         <geometry>
-          <mesh filename="package://gopigo3_description/meshes/sensors/IR_Sensor_Sharp_GP2Y_solid.stl" scale="0.001 0.001 0.001"/>
+          <mesh filename="package://minirover/meshes/sensors/IR_Sensor_Sharp_GP2Y_solid.stl" scale="0.001 0.001 0.001"/>
         </geometry>
         <material name="red"/>
       </visual>
@@ -226,8 +226,8 @@
       <visual>
         <origin xyz="0 0 0.0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://gopigo3_description/meshes/sensors/X4.stl" scale="0.001 0.001 0.001"/>
-          <!--LDS** mesh filename="package://gopigo3_description/meshes/sensors/lds.stl" scale="0.001 0.001 0.001"/-->
+          <mesh filename="package://minirover/meshes/sensors/X4.stl" scale="0.001 0.001 0.001"/>
+          <!--LDS** mesh filename="package://minirover/meshes/sensors/lds.stl" scale="0.001 0.001 0.001"/-->
         </geometry>
         <material name="orange"/>
       </visual>
@@ -261,7 +261,7 @@
       <visual>
         <origin xyz="0.005 0.000 0.013" rpy="0 1.570795 0" />
         <geometry>
-            <mesh filename="package://gopigo3_description/meshes/sensors/piCamera.stl" scale="0.00125 0.00125 0.00125"/>
+            <mesh filename="package://minirover/meshes/sensors/piCamera.stl" scale="0.00125 0.00125 0.00125"/>
         </geometry>
         <material name="yellow"/>
       </visual>
