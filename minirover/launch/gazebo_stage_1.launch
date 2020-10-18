@@ -3,6 +3,8 @@
   <arg name="y_pos" default="0.0"/>
   <arg name="z_pos" default="0.0"/>
 
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find minirover)/urdf/gopigo3.urdf.xacro'"/>
+
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find minirover)/worlds/turtlebot3_stage_1.world"/>
     <arg name="paused" value="false"/>
@@ -14,6 +16,6 @@
 
   <!-- Spawn dd_robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
-     args="-file $(find gazebo_basics)/urdf/gopigo.gazebo -urdf -model gopigo" />
+     args="-file $(urdf_file) -urdf -model gopigo" />
 
     </launch>
