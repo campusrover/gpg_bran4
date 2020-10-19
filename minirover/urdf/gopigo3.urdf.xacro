@@ -16,8 +16,8 @@
   <link name="base_footprint"/>
 
   <joint name="base_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
+    <child link="base_footprint"/>
+    <parent link="base_link"/>
     <!-- base_link is placed at the center of gravity of GoPiGo3 body -->
     <origin xyz="0 0 0.075" rpy="0 0 0"/>
   </joint>
