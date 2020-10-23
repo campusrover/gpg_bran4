@@ -235,7 +235,6 @@ class Robot:
         new_angle = (old_angle+angle) % (2*np.pi)
         new_q = quaternion_about_axis(new_angle, (0, 0, 1))
         new_angle2 = 2 * np.arccos(self.pose.pose.orientation.w)
-        print("new_angle2", new_angle2)
         new_pos = np.zeros((2,))
 
         if abs(angle) < 1e-6:
@@ -256,10 +255,10 @@ class Robot:
         self.pose.pose.position.x = new_pos[0]
         self.pose.pose.position.y = new_pos[1]
 
-        odom = Odometry(header=Header(stamp=rospy.Time.now(), frame_id="odom"), child_frame_id="base_footprint",
+        odom = Odometry(header=Header(stamp=rospy.Time.now(), frame_id="odom"), child_frame_id="base_link",
                         pose=self.pose, twist=twist)
 
-        transform = TransformStamped(header=Header(stamp=rospy.Time.now(), frame_id="odom"), child_frame_id="base_footprint")
+        transform = TransformStamped(header=Header(stamp=rospy.Time.now(), frame_id="odom"), child_frame_id="base_link")
         transform.transform.translation.x = self.pose.pose.position.x
         transform.transform.translation.y = self.pose.pose.position.y
         transform.transform.translation.z = self.pose.pose.position.z
