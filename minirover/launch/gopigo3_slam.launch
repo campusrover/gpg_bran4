@@ -1,16 +1,16 @@
 <launch>
-  <!-- Robot model to match with that of Gazebo or the physical robot -->
-  <arg name="model" default="gopigo3_actual.gazebo" />
-  <!-- More arguments -->
-  <arg name="multi_robot_name" default=""/>
   <arg name="open_rviz" default="true"/>
 
-  <!-- GoPiGo3 URDF model & robot_state_publisher -->
-  <param name="robot_description" textfile="$(find gpg_bran)/urdf/$(arg model)" />
+    <!-- Robot URDF definition -->
+    <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find minirover)/urdf/minirover.urdf.xacro'"/>
+    <param name="robot_description" command="$(arg urdf_file) 
+                  distance:=true
+                  pi_camera:=true
+                  lds:=true
+                  imu:=true "/>
 
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="50.0" />
-    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
   </node>
 
   <!-- Joint state publisher -->
@@ -19,11 +19,11 @@
   </node>
 
   <!-- SLAM using Gmapping -->
-  <include file="$(find gpg_bran)/launch/gmapping.launch"/>
+  <include file="$(find minirover)/launch/gmapping.launch"/>
 
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
-          args="-d $(find gpg_bran)/rviz/gmapping.rviz"/>
+          args="-d $(find minirover)/rviz/gmapping.rviz"/>
   </group>
 </launch>
