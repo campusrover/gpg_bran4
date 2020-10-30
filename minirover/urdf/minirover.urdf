@@ -50,7 +50,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
-          <cylinder length="0.02" radius="0.5" />
+        <cylinder length="0.02" radius="0.05" />
       </geometry>
       <material name="darkgray">
         <color rgba=".2 .2 .2 1"/>
@@ -60,7 +60,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
-          <cylinder length="0.1" radius="0.2" />
+        <cylinder length="0.02" radius="0.05" />
       </geometry>
     </collision>
     <inertial>
@@ -82,7 +82,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
-        <cylinder length="0.02" radius="0.5" />
+        <cylinder length="0.02" radius="0.05" />
       </geometry>
       <material name="darkgray">
         <color rgba=".2 .2 .2 1"/>
@@ -92,7 +92,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
-          <cylinder length="0.1" radius="0.2" />
+        <cylinder length="0.02" radius="0.05" />
       </geometry>
     </collision>
     <inertial>
