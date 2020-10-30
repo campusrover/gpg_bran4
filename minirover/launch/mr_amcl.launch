@@ -1,7 +1,7 @@
 <launch>
   <!-- *** Arguments *** -->
   <!-- Map to use argument -->
-  <arg name="map_file" default="$(find minirover)/maps/map.yaml"/>
+  <arg name="map_file" default="$(find minirover)/maps/maps.yaml"/>
   <!-- More arguments -->
   <arg name="move_forward_only" default="false"/>
   <arg name="open_rviz" default="true"/>
@@ -30,8 +30,7 @@
   <include file="$(find minirover)/launch/_mr_amcl.launch"/>
 
   <!-- move_base -->
-  <include file="$(find gpg_bran)/launch/_gopigo3_move_base.launch">
-    <arg name="robot" value="$(arg robot)" />
+  <include file="$(find minirover)/launch/_mr_move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
 
