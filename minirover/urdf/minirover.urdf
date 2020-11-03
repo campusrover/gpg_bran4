@@ -66,13 +66,15 @@
   </joint>
 
   <link name="battery_link">
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <geometry>
-        <box size="0.06 0.1 0.015"/>
-    </geometry>
-    <material name="grey">
-      <color rgba="0.2 0.2 0.2 1.0"/>
-    </material>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+          <box size="0.06 0.1 0.015"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+      </visual>
   </link>
 
   <joint name="battery_joint" type="fixed">
