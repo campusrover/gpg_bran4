@@ -69,17 +69,18 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-          <box size="0.06 0.1 0.015"/>
+          <box size="0.06 0.1 0.02"/>
       </geometry>
       <material name="grey">
         <color rgba="0.2 0.2 0.2 1.0"/>
       </material>
-      </visual>
+    </visual>
   </link>
 
   <joint name="battery_joint" type="fixed">
     <parent link="base_link"/>
     <child link="battery_link"/>
+    <origin xyz="-0.04 0.05 0" rpy="0 0 0" /> 
   </joint>
 
 </robot>
