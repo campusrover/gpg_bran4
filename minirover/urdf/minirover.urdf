@@ -33,6 +33,7 @@
       <geometry>
           <cylinder length="0.01" radius="0.03" />
       </geometry>
+      <color rgba="0 0 1 1"/>
     </visual>
   </link>
 
@@ -42,6 +43,7 @@
       <geometry>
           <cylinder length="0.01" radius="0.03" />
       </geometry>
+      <color rgba="1 0 0 1"/>
     </visual>
   </link>
 
