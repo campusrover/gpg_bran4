@@ -34,7 +34,7 @@
           <cylinder length="0.01" radius="0.03" />
       </geometry>
       <material name="green">
-        <color rgba="0 1 - 1"/>
+        <color rgba="0 1 0 1"/>
       </material>
     </visual>
   </link>
@@ -46,7 +46,7 @@
           <cylinder length="0.01" radius="0.03" />
       </geometry>
       <material name="red">
-        <color rgba="1 0 - 1"/>
+        <color rgba="1 0 0 1"/>
       </material>
     </visual>
   </link>
