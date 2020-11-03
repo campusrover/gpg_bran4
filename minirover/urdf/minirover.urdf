@@ -38,7 +38,7 @@
 
   <link name="right_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
           <cylinder length="0.01" radius="0.03" />
       </geometry>
@@ -48,14 +48,14 @@
   <joint name="right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel"/>
-    <origin xyz="0 -0.30 0" rpy="1.570795 0 0" /> 
+    <origin xyz="0 -0.05 0" rpy="0 0 0" /> 
     <axis xyz="0 1 0" />
   </joint>
 
   <joint name="left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_wheel"/>
-    <origin xyz="0 0.30 0" rpy="0 0 0" /> 
+    <origin xyz="0 0.05 0" rpy="0 0 0" /> 
     <axis xyz="0 1 0" />
   </joint>
 
