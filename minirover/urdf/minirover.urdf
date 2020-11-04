@@ -24,7 +24,7 @@
     </visual>
   </link>
   
-  <joint name="plate_link" type="fixed">
+  <joint name="plate_link_joint" type="fixed">
     <parent link="base_link" />
     <child link="plate_link" />
     <origin xyz="0.04 0.0 -0.05" rpy="0 0 0" />
@@ -41,7 +41,7 @@
     </visual>
   </link>
 
-  <joint name="porch_link" type="fixed">
+  <joint name="porch_link_joint" type="fixed">
     <parent link="plate_link" />
     <child link="porch_link" />
     <origin xyz="0.04 0.0 0.05" rpy="0 0 0" />
