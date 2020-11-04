@@ -26,6 +26,7 @@
   
   <!-- More arguments -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+  
   <include file="$(find minirover)/launch/_mr_amcl.launch"/>
 
   <!-- move_base -->
