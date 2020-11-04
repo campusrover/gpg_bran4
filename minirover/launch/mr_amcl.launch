@@ -23,6 +23,7 @@
 
   <!-- Map server -->
   <arg name="map_file" default="$(find minirover)/maps/map3.yaml"/>
+  
   <!-- More arguments -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
   <include file="$(find minirover)/launch/_mr_amcl.launch"/>
@@ -35,6 +36,6 @@
   <!-- rviz -->
   <group if="$(arg open_rviz)"> 
     <node pkg="rviz" type="rviz" name="rviz" required="true"
-          args="-d $(find gpg_bran)/rviz/navigation.rviz"/>
+          args="-d $(find minirover)/rviz/navigation.rviz"/>
   </group>
 </launch>
