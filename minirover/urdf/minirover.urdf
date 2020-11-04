@@ -1,19 +1,22 @@
 <?xml version='1.0'?>
 <robot name="gopigo">
 
-<material name="porch">
-  <color rgba="1 0.952 0.2 0.8"/>
-</material>
+  <material name="porch">
+    <color rgba="1 0.952 0.2 0.8" />
+  </material>
 
-  <!-- Based on gopigo3.urdf -->
-  <!-- Base Link -->
+  <material name="battery">
+    <color rgba="0.2 0.2 0.2 1.0" />
+  </material>
+
+  <!-- Base -->
   <link name="base_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-          <box size="0.2 0.11 0.005"/>
+        <box size="0.2 0.11 0.005" />
       </geometry>
-      <material name="porch"/>
+      <material name="porch" />
     </visual>
   </link>
 
@@ -21,26 +24,28 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-          <box size="0.12 0.11 0.005"/>
+        <box size="0.12 0.11 0.005" />
       </geometry>
-      <material name="porch"/>
+      <material name="porch" />
     </visual>
   </link>
 
   <joint name="porch_link" type="fixed">
-    <parent link="base_link"/>
-    <child link="porch_link"/>
-    <origin xyz="0.04 0.0 0.05" rpy="0 0 0" /> 
+    <parent link="base_link" />
+    <child link="porch_link" />
+    <origin xyz="0.04 0.0 0.05" rpy="0 0 0" />
   </joint>
+
+  <!-- Wheels -->
 
   <link name="left_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
-          <cylinder length="0.01" radius="0.03" />
+        <cylinder length="0.01" radius="0.03" />
       </geometry>
       <material name="green">
-        <color rgba="0 1 0 1"/>
+        <color rgba="0 1 0 1" />
       </material>
     </visual>
   </link>
@@ -49,44 +54,61 @@
     <visual>
       <origin xyz="0 0 0" rpy="1.570795 0 0" />
       <geometry>
-          <cylinder length="0.01" radius="0.03" />
+        <cylinder length="0.01" radius="0.03" />
       </geometry>
       <material name="red">
-        <color rgba="0 0 1 1"/>
+        <color rgba="0 0 1 1" />
       </material>
     </visual>
   </link>
 
   <joint name="right_wheel_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="right_wheel"/>
-    <origin xyz="0.02 -0.07 0" rpy="0 0 0" /> 
+    <parent link="base_link" />
+    <child link="right_wheel" />
+    <origin xyz="0.02 -0.07 0" rpy="0 0 0" />
     <axis xyz="0 1 0" />
   </joint>
 
   <joint name="left_wheel_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="left_wheel"/>
-    <origin xyz="0.02 0.07 0" rpy="0 0 0" /> 
+    <parent link="base_link" />
+    <child link="left_wheel" />
+    <origin xyz="0.02 0.07 0" rpy="0 0 0" />
     <axis xyz="0 1 0" />
   </joint>
+
+  <!-- Battery -->
 
   <link name="battery_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-          <box size="0.06 0.1 0.02"/>
+        <box size="0.06 0.1 0.02" />
       </geometry>
-      <material name="grey">
-        <color rgba="0.2 0.2 0.2 1.0"/>
-      </material>
+      <material name="battery" />
     </visual>
   </link>
 
   <joint name="battery_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="battery_link"/>
-    <origin xyz="-0.05 0 0.02" rpy="0 0 0" /> 
+    <parent link="base_link" />
+    <child link="battery_link" />
+    <origin xyz="-0.05 0 0.02" rpy="0 0 0" />
   </joint>
 
+  <!-- Lidar -->
+
+  <link name="lidar_link">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <visual>
+      <geometry>
+        <cylinder length="0.06" radius="0.03" />
+      </geometry>
+      <material name="battery" />
+    </visual>
+
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="porch_link" />
+    <child link="lidar_link" />
+    <origin xyz="-0.05 0 0.02" rpy="0 0 0" />
+  </joint>
 </robot>
