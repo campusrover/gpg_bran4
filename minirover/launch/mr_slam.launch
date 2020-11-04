@@ -2,7 +2,7 @@
   <arg name="open_rviz" default="true"/>
 
     <!-- Robot URDF definition -->
-    <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find minirover)/urdf/gopigo.urdf'"/>
+    <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find minirover)/urdf/minirover.urdf'"/>
     <param name="robot_description" command="$(arg urdf_file) 
                   distance:=true
                   pi_camera:=true
