@@ -107,7 +107,7 @@
 
   <!-- Lidar -->
 
-  <link name="lidar_link">
+  <link name="base_scan">
     <origin xyz="0 0 0" rpy="0 0 0" />
     <visual>
       <geometry>
@@ -119,7 +119,7 @@
   </link>
   <joint name="lidar_joint" type="fixed">
     <parent link="porch_link" />
-    <child link="lidar_link" />
+    <child link="base_scan" />
     <origin xyz="0.00 0 0.03" rpy="0 0 0" />
   </joint>
 </robot>
