@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <robot name="gopigo">
 
-  <material name="porch">
+  <material name="plate">
     <color rgba="1 0.952 0.2 0.8" />
   </material>
 
@@ -9,29 +9,40 @@
     <color rgba="0.2 0.2 0.2 1.0" />
   </material>
 
-  <!-- Base -->
-  <link name="base_link">
+  <!-- base_link is where the robot's center projects to the floor -->
+  <link name="base_link"></link>
+
+
+  <!-- plate is the first plastic base  -->
+  <link name="plate_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <box size="0.2 0.11 0.005" />
       </geometry>
-      <material name="porch" />
+      <material name="plate" />
     </visual>
   </link>
+  
+  <joint name="plate_link" type="fixed">
+    <parent link="base_link" />
+    <child link="plate_link" />
+    <origin xyz="0.04 0.0 0.05" rpy="0 0 0" />
+  </joint>
 
+  <!-- porch is the first plastic base  -->
   <link name="porch_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <box size="0.12 0.11 0.005" />
       </geometry>
-      <material name="porch" />
+      <material name="plate" />
     </visual>
   </link>
 
   <joint name="porch_link" type="fixed">
-    <parent link="base_link" />
+    <parent link="plate_link" />
     <child link="porch_link" />
     <origin xyz="0.04 0.0 0.05" rpy="0 0 0" />
   </joint>
@@ -109,6 +120,6 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="porch_link" />
     <child link="lidar_link" />
-    <origin xyz="0.05 0 0.002" rpy="0 0 0" />
+    <origin xyz="0.00 0 0.03" rpy="0 0 0" />
   </joint>
 </robot>
