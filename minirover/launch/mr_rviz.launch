@@ -1,7 +1,7 @@
 <launch>
   <!-- values passed by command line input -->     
   <arg name="model" default="gopigo3" />
-  <arg name="gui" default="false" />
+  <arg name="gui" default="true" />
 
   <!-- Robot URDF definition -->
   <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find minirover)/urdf/minirover.urdf'"/>

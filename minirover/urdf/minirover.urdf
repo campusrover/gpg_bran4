@@ -10,7 +10,8 @@
   </material>
 
   <!-- base_link is where the robot's center projects to the floor -->
-  <link name="base_link"></link>
+
+  <link name="base_link"/>
 
 
   <!-- plate is the first plastic base  -->
