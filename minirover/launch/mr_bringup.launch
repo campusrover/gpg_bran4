@@ -19,5 +19,4 @@
     <param name="low_exposure" type="bool" value="false"/>
   </node>
 
-
 </launch>
