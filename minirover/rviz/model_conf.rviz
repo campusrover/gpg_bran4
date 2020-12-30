@@ -147,6 +147,14 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /kalman/marker
+      Name: MarkerArray
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 163; 163; 163
@@ -211,5 +219,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1861
-  X: 148
-  Y: 2
+  X: 147
+  Y: -20
