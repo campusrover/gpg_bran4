@@ -132,8 +132,11 @@ class Robot:
 
             # publish current pose
             (odom, transform)= self.odometry(status_left, status_right)
+            print("+++++++++++++++")
             print(odom)
+            print("***************")
             print(transform)
+            print("----------------")
             self.pub_odometry.publish(odom)
             self.br.sendTransformMessage(transform)
 
