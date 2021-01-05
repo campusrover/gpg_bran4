@@ -255,6 +255,7 @@ class Robot:
         self.pose.pose.position.x = new_pos[0]
         self.pose.pose.position.y = new_pos[1]
 
+        print("publishing odom")
         odom = Odometry(header=Header(stamp=rospy.Time.now(), frame_id="odom"), child_frame_id="base_link",
                         pose=self.pose, twist=twist)
 
