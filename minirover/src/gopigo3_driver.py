@@ -132,6 +132,8 @@ class Robot:
 
             # publish current pose
             (odom, transform)= self.odometry(status_left, status_right)
+            print(odom)
+            print(transform)
             self.pub_odometry.publish(odom)
             self.br.sendTransformMessage(transform)
 
@@ -255,7 +257,6 @@ class Robot:
         self.pose.pose.position.x = new_pos[0]
         self.pose.pose.position.y = new_pos[1]
 
-        print("publishing odom")
         odom = Odometry(header=Header(stamp=rospy.Time.now(), frame_id="odom"), child_frame_id="base_link",
                         pose=self.pose, twist=twist)
 
