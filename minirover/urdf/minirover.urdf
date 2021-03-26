@@ -103,7 +103,7 @@
   <joint name="battery_joint" type="fixed">
     <parent link="plate_link" />
     <child link="battery_link" />
-    <origin xyz="-0.05 0 0.02" rpy="0 0 0" />
+    <origin xyz="0.05 0 0.02" rpy="0 0 0" />
   </joint>
 
   <!-- Lidar -->
@@ -121,6 +121,6 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="porch_link" />
     <child link="base_scan" />
-    <origin xyz="0.00 0 0.03" rpy="0 0 0" />
+    <origin xyz="0.05 0 0" rpy="0 0 0" />
   </joint>
 </robot>
