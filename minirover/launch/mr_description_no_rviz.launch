@@ -10,11 +10,8 @@
                 lds:=true
                 imu:=true "/>
 
-  <!-- Send joint values -->
-  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
-  </node>
+  <!-- <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"/> -->
   
-  <!-- Combine joint values to TF-->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
 </launch>
