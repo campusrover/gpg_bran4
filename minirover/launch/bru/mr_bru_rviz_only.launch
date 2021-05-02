@@ -1,0 +1,4 @@
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find minirover)/rviz/model_conf.rviz" required="true" />
+  <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
+</launch>

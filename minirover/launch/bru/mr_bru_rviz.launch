@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find minirover)/launch/bru/mr_bru_rviz_only.launch" />
+
+  <group if="$(arg desc)">
+      <include file="$(find minirover)/launch/bru/mr_bru_desc_only.launch" />
+  </group>
+</launch>
