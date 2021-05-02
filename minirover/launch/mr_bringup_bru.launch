@@ -1,0 +1,11 @@
+<launch>
+
+  <include file="$(find minirover)/launch/gopigo3.launch" />
+  <group if="$(arg lidar)">
+      <include file="$(find minirover)/launch/lidar_only.launch" />
+  </group>
+  <group if="$(arg camera)">
+    <include file="$(find minirover)/launch/camera_only.launch" />
+  </group>
+
+</launch>
