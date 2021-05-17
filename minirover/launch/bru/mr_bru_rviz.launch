@@ -4,4 +4,8 @@
   <group if="$(arg desc)">
       <include file="$(find minirover)/launch/bru/mr_bru_desc_only.launch" />
   </group>
+
+  <group if="$(arg gmapping)">
+      <include file="$(find minirover)/launch/bru/mr_bru_gmapping_only.launch" />
+  </group>
 </launch>

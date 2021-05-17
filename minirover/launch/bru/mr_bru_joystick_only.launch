@@ -1,0 +1,7 @@
+<launch>
+<!-- sudo apt-get install ros-melodic-joy -->
+  <node pkg="joy" type="joy_node" name="joy_node">
+    <param name="joy_node/dev" type="string" value="/dev/input/js0" />
+  </node>
+
+</launch>
