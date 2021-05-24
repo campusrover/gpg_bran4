@@ -7,6 +7,7 @@ import sys
 try:
     import gopigo3
 except IOError as e:
+    print(e)
     print("cannot find SPI device")
     sys.exit()
 
