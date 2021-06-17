@@ -25,6 +25,6 @@
 
     <!-- Run the joystick interface -->
     <include file="$(find teleop_twist_joy)/launch/teleop.launch">
-        <rosparam command="load" file="$(find bullet)/param/logi_joy.yaml" />
+        <rosparam command="load" file="$(find bull)/param/logi_joy.yaml" />
     </include>
 </launch>
