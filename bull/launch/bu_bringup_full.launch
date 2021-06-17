@@ -24,6 +24,7 @@
     <include file="$(find linorobot)/launch/include/laser_bullet.launch" />
 
     <!-- Run the joystick interface -->
-    <rosparam command="load" file="$(find bull)/param/logi_joy.yaml" />
+    <arg name="config_filepath" default="$(find bull)/param/logi_joy.yaml" />
     <include file="$(find teleop_twist_joy)/launch/teleop.launch" />
+
 </launch>
