@@ -62,6 +62,8 @@ void PIDCallback(const lino_msgs::PID& pid);
 //Pito added
 long m1_pid_error = 0;
 long m2_pid_error = 0;
+long m1_curr_rpm = 0;
+long m2_curr_rpm = 0;
 
 ros::NodeHandle nh;
 
@@ -192,7 +194,8 @@ void moveBase()
     // Pito added this
     m1_pid_error = req_rpm.motor1 - current_rpm1;
     m2_pid_error = req_rpm.motor2 - current_rpm2;
-     
+    m1_curr_rpm = current_rpm1;
+    m2_curr_rpm = current_rpm2;
 
     Kinematics::velocities current_vel;
 
@@ -268,5 +271,9 @@ void printDebug()
     sprintf (buffer,   "Pid Error Left  : %ld", m1_pid_error);
     nh.loginfo(buffer);
     sprintf (buffer,   "Pid Error Right : %ld", m2_pid_error);
+    nh.loginfo(buffer);
+    sprintf (buffer,   "Current RPM Left : %ld", m1_curr_rpm);
+    nh.loginfo(buffer);
+    sprintf (buffer,   "Current RPM Right : %ld", m2_curr_rpm);
     nh.loginfo(buffer);
 }
