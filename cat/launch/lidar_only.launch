@@ -1,0 +1,4 @@
+<launch>
+    <!-- Run Linorobot compatible laser drivers -->
+    <include file="$(find linorobot)/launch/include/laser_bullet.launch" />
+</launch>
