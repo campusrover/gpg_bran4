@@ -1,7 +1,5 @@
 <launch>
 
-    <node pkg="map_server" name="map_server" type="map_server" args="/my_ros_data/catkin_ws/basmt44.yaml"/>
-
     <include file="$(find minirover)/launch/_mr_move_base.launch"/>
 
     <include file="$(find minirover)/launch/mr_description_no_rviz.launch"/>
