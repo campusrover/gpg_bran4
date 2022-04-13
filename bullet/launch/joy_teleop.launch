@@ -1,5 +1,5 @@
 <launch>
   <node pkg="teleop_twist_joy" name="teleop_twist_joy" type="teleop_node">
-    <rosparam command="load" file="$(find bull)/param/logi_joy.yaml" />
+    <rosparam command="load" file="$(find bullet)/param/logi_joy.yaml" />
   </node>
 </launch>
