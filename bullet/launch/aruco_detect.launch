@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find aruco_detect)/launch/aruco_detect.launch">
+        <arg name="vis_msgs" value="false" />
+        <arg name="fiducial_len" value="0.105" />
+        <arg name="dictionary" value="16"/>
+    </include>
+</launch>
