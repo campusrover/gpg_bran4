@@ -1,0 +1,272 @@
+2022-04-14 20:11:39 [INFO ]  ################################################################################
+2022-04-14 20:11:39 [INFO ]  
+2022-04-14 20:11:39 [INFO ]  Installing FREEDOM ROBOTICS Micro Service
+2022-04-14 20:11:39 [INFO ]  
+2022-04-14 20:11:39 [INFO ]  Copyright Freedom Robotics Inc 2021. All rights reserved. Confidential.
+2022-04-14 20:11:39 [INFO ]  
+2022-04-14 20:11:39 [INFO ]  ################################################################################
+2022-04-14 20:11:39 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "whoami"
+2022-04-14 20:11:46 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.37s
+2022-04-14 20:11:46 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -nv"
+2022-04-14 20:11:52 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:11:52 [DEBUG]  			sudo: a password is required
+2022-04-14 20:11:52 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.25s
+2022-04-14 20:11:52 [INFO ]  
+2022-04-14 20:11:52 [INFO ]  Please enter the sudo password to enable install to set up the
+Freedom SYSTEM SERVICE, Remote SSH, etc... for the Freedom Agent.
+(This will time out after 60 seconds and continue without installing
+the services.)
+2022-04-14 20:11:52 [INFO ]  
+2022-04-14 20:11:52 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -v"
+2022-04-14 20:12:04 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 12.17s
+2022-04-14 20:12:06 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -nv"
+2022-04-14 20:12:12 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 5.78s
+2022-04-14 20:12:12 [INFO ]  
+2022-04-14 20:12:12 [INFO ]  ################################################################################
+2022-04-14 20:12:12 [INFO ]  
+2022-04-14 20:12:12 [INFO ]  Step 1/7: VERIFYING PREREQUISITES
+2022-04-14 20:12:12 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -c 'import sys
+import os
+if (hasattr(sys, \"base_prefix\") and sys.base_prefix != sys.prefix) or hasattr(sys, \"real_prefix\") or os.environ.get(\"CONDA_PREFIX\"):
+    print(\"Detected we are dealing with a virtual environment for /usr/bin/python\")'"
+2022-04-14 20:12:19 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 7.06s
+2022-04-14 20:12:19 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip install -qq --user distro"
+2022-04-14 20:12:25 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:12:25 [DEBUG]  			/usr/bin/python: No module named pip
+2022-04-14 20:12:25 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.40s
+2022-04-14 20:12:25 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip &> /dev/null"
+2022-04-14 20:12:31 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.13s
+2022-04-14 20:12:31 [INFO ]  Installing pip for python2.7: /usr/bin/python. Please stand by.
+2022-04-14 20:12:31 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -n apt-get update"
+2022-04-14 20:15:24 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 172.83s
+2022-04-14 20:15:24 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip install -qq --user distro"
+2022-04-14 20:15:32 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:15:32 [DEBUG]  			/usr/bin/python: No module named pip
+2022-04-14 20:15:32 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 7.49s
+2022-04-14 20:15:32 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -n  curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o /tmp/get-pip.py && sudo -n  /usr/bin/python /tmp/get-pip.py --user"
+2022-04-14 20:16:13 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:16:13 [DEBUG]  			% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2022-04-14 20:16:13 [DEBUG]  			Dload  Upload   Total   Spent    Left  Speed
+2022-04-14 20:16:13 [DEBUG]  			
+2022-04-14 20:16:13 [DEBUG]  			0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2022-04-14 20:16:13 [DEBUG]  			100 1863k  100 1863k    0     0  3180k      0 --:--:-- --:--:-- --:--:-- 3180k
+2022-04-14 20:16:13 [DEBUG]  			DEPRECATION: Python 2.7 reached the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 is no longer maintained. pip 21.0 will drop support for Python 2.7 in January 2021. More details about Python 2 support in pip can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support pip 21.0 will remove support for this functionality.
+2022-04-14 20:16:13 [DEBUG]  			WARNING: The scripts pip, pip2 and pip2.7 are installed in '/root/.local/bin' which is not on PATH.
+2022-04-14 20:16:13 [DEBUG]  			Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+2022-04-14 20:16:13 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 40.85s
+2022-04-14 20:16:13 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "which python3"
+2022-04-14 20:16:19 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.25s
+2022-04-14 20:16:19 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:16:25 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:16:25 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:16:25 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:16:25 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.51s
+2022-04-14 20:16:25 [DEBUG]  Using the default python3 binary: [running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3
+2022-04-14 20:16:25 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:16:32 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:16:32 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:16:32 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:16:32 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.52s
+2022-04-14 20:16:32 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -m pip &> /dev/null"
+2022-04-14 20:16:49 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:16:49 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:16:49 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:16:49 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 16.77s
+2022-04-14 20:16:50 [DEBUG]  Urllib2 can be use for ssl communication.
+2022-04-14 20:16:50 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:16:56 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 5.85s
+2022-04-14 20:16:56 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "which ros2"
+2022-04-14 20:17:02 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 5.88s
+2022-04-14 20:17:02 [DEBUG]  Executable `ros2` was not found using current PATH: Command '/bin/bash -c "which ros2"' returned non-zero exit status 1
+2022-04-14 20:17:02 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip install  --user  rospkg"
+2022-04-14 20:17:07 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:17:07 [DEBUG]  			/usr/bin/python: No module named pip
+2022-04-14 20:17:07 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 5.91s
+2022-04-14 20:17:07 [INFO ]  
+2022-04-14 20:17:07 [INFO ]  
+2022-04-14 20:17:07 [INFO ]  
+2022-04-14 20:17:07 [CRITI]  [31m################################################################################[39m
+2022-04-14 20:17:07 [CRITI]  [31m[39m
+2022-04-14 20:17:07 [CRITI]  [31mINSTALL DID NOT COMPLETE SUCCESSFULLY[39m
+2022-04-14 20:17:07 [CRITI]  [31m[39m
+2022-04-14 20:17:07 [CRITI]  [31mFailed to install dependent ros python packages: [running ~/.bashrc]
+[running common_alias.bash][39m
+2022-04-14 20:17:07 [CRITI]  [31m[39m
+2022-04-14 20:17:07 [CRITI]  [31m############################################################[39m
+2022-04-14 20:17:07 [CRITI]  [31m[39m
+2022-04-14 20:17:07 [CRITI]  [31m( NO STACK TRACE REPORTED )[39m
+2022-04-14 20:17:07 [CRITI]  [31m[39m
+2022-04-14 20:17:07 [CRITI]  [31m############################################################[39m
+2022-04-14 20:17:07 [CRITI]  [31m[39m
+2022-04-14 20:17:07 [CRITI]  [31mSTOPPING AGENT IF NECESSARY AND UNINSTALLING[39m
+2022-04-14 20:17:07 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -n service freedomrobotics stop"
+2022-04-14 20:17:39 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:17:39 [DEBUG]  			Failed to stop freedomrobotics.service: Unit freedomrobotics.service not loaded.
+2022-04-14 20:17:39 [DEBUG]  		ERROR RESPONSE CODE: 5, EXECUTION TIME: 32.01s
+2022-04-14 20:17:39 [CRITI]  [31m    - AGENT NOT RUNNING[39m
+2022-04-14 20:17:39 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "sudo -n systemctl daemon-reload"
+2022-04-14 20:17:50 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 10.38s
+2022-04-14 20:17:50 [DEBUG]  Systemd / Systemctl are running so registering as systemd service
+2022-04-14 20:17:50 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip show freedomrobotics | grep \"Location: \""
+2022-04-14 20:17:56 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:17:56 [DEBUG]  			/usr/bin/python: No module named pip
+2022-04-14 20:17:56 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.52s
+2022-04-14 20:17:56 [DEBUG]  Unhandled exception trying to remove service: Could not find freedomrobotics python package install location:  Command '/bin/bash -c "/usr/bin/python -m pip show freedomrobotics | grep \"Location: \""' returned non-zero exit status 1
+2022-04-14 20:17:56 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:18:02 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.12s
+2022-04-14 20:18:02 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip show freedomrobotics"
+2022-04-14 20:18:09 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:18:09 [DEBUG]  			/usr/bin/python: No module named pip
+2022-04-14 20:18:09 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.17s
+2022-04-14 20:18:09 [CRITI]  [31m    - PACKAGE NOT INSTALLED ([running ~/.bashrc]
+[running common_alias.bash]
+2.7)[39m
+2022-04-14 20:18:09 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:18:15 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:18:15 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:18:15 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:18:15 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.30s
+2022-04-14 20:18:15 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -m pip show freedomrobotics"
+2022-04-14 20:18:33 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:18:33 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:18:33 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:18:33 [DEBUG]  			WARNING: Package(s) not found: freedomrobotics
+2022-04-14 20:18:33 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 17.81s
+2022-04-14 20:18:33 [CRITI]  [31m    - PACKAGE NOT INSTALLED ([running ~/.bashrc]
+[running common_alias.bash]
+3.8)[39m
+2022-04-14 20:18:33 [CRITI]  [31m[39m
+2022-04-14 20:18:33 [CRITI]  [31mUPLOADING INSTALL ERROR REPORT[39m
+2022-04-14 20:18:33 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "pgrep fr_agent"
+2022-04-14 20:18:40 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.80s
+2022-04-14 20:18:41 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "pgrep fr_agent"
+2022-04-14 20:18:48 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 7.02s
+2022-04-14 20:18:49 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "pgrep fr_agent"
+2022-04-14 20:18:55 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.75s
+2022-04-14 20:18:56 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "pgrep fr_agent"
+2022-04-14 20:19:03 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.81s
+2022-04-14 20:19:04 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "pgrep fr_agent"
+2022-04-14 20:19:11 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.72s
+2022-04-14 20:19:12 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "service_path=\$(which service) && output=\$( \$service_path ssh status ) && echo \"\$output\""
+2022-04-14 20:19:22 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 9.94s
+2022-04-14 20:19:22 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -m pip show freedomrobotics"
+2022-04-14 20:19:28 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:19:28 [DEBUG]  			/usr/bin/python: No module named pip
+2022-04-14 20:19:28 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 6.42s
+2022-04-14 20:19:28 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:19:34 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.20s
+2022-04-14 20:19:34 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -m pip show freedomrobotics"
+2022-04-14 20:19:52 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:19:52 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:19:52 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:19:52 [DEBUG]  			WARNING: Package(s) not found: freedomrobotics
+2022-04-14 20:19:52 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 17.54s
+2022-04-14 20:19:52 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -c 'import sys; print(\"{}.{}\".format(sys.version_info.major, sys.version_info.minor))'"
+2022-04-14 20:19:59 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:19:59 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:19:59 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:19:59 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.51s
+2022-04-14 20:19:59 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "[running ~/.bashrc]
+[running common_alias.bash]
+/usr/bin/python3 -m pip show aiortc"
+2022-04-14 20:20:16 [DEBUG]  		STANDARD ERROR:
+2022-04-14 20:20:16 [DEBUG]  			/bin/bash: [running: command not found
+2022-04-14 20:20:16 [DEBUG]  			/bin/bash: line 1: [running: command not found
+2022-04-14 20:20:16 [DEBUG]  			WARNING: Package(s) not found: aiortc
+2022-04-14 20:20:16 [DEBUG]  		ERROR RESPONSE CODE: 1, EXECUTION TIME: 17.51s
+2022-04-14 20:20:16 [DEBUG]  		EXECUTING SYSTEM COMMAND: /bin/bash -c "/usr/bin/python -c \"
+import warnings
+warnings.filterwarnings('ignore')
+import json
+import platform
+import sys
+
+try:
+    import distro
+except ImportError:
+    # we don't have distro module
+    distro = lambda: None
+    distro.linux_distribution = lambda: 'Failed to get: Distro is not available.'
+
+try:
+    from pip import __version__ as pip_version
+except ImportError:
+    # we don't have pip module
+    pip_version = '0.0.0 (Pip is not available.)'
+
+try:
+    from packaging import __version__ as packaging_version
+except ImportError:
+    # we don't have pip module
+    packaging_version = '0.0.0 (Packaging is not available.)'
+
+try:
+    from packaging import tags
+    pip_supported_tags = list(tags.cpython_tags())
+except ImportError:
+    try:
+        if pip_version < '20.1' and pip_version >= '10.0':
+            from pip._internal import pep425tags
+            pip_supported_tags = pep425tags.get_supported()
+        elif pip_version >= '1.4':
+            from pip import pep425tags
+            pip_supported_tags = pep425tags.get_supported()
+        else:
+            pip_supported_tags = []
+    except ImportError:
+        pip_supported_tags = []
+
+if pip_supported_tags and hasattr(pip_supported_tags[0], 'platform'):
+    pip_supported_tags = [(tag.interpreter, tag.abi, tag.platform) for tag in pip_supported_tags]
+
+print(json.dumps({
+    'platform_system': platform.system(),
+    'platform_release': platform.release(),
+    'platform_machine': platform.machine(),
+    'platform_processor': platform.processor(),
+    'platform_linux_distribution': 
+        platform.linux_distribution() if hasattr(platform, 'linux_distribution') else distro.linux_distribution(),
+    'platform_mac_ver': platform.mac_ver(),
+    'platform_uname': platform.uname(),
+    'platform_python_implementation': platform.python_implementation(),
+    'platform_python_version': platform.python_version(),
+    'platform_python_compiler': platform.python_compiler(),
+    'platform_python_build': platform.python_build(),
+    'pip_supported_tags': pip_supported_tags,
+    'pip_version': pip_version,
+    'packaging_version': packaging_version,
+}))
+\""
+2022-04-14 20:20:22 [DEBUG]  		SUCCESS RESPONSE CODE: 0, EXECUTION TIME: 6.42s
+2022-04-14 20:20:23 [CRITI]  [31mCould not upload installation report: <type 'exceptions.ValueError'> No JSON object could be decoded[39m
+2022-04-14 20:20:23 [DEBUG]  Traceback (most recent call last):
+  File "<stdin>", line 2188, in upload_report
+  File "<stdin>", line 169, in wrapped
+  File "<stdin>", line 984, in platform_details
+  File "/usr/lib/python2.7/json/__init__.py", line 339, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 364, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python2.7/json/decoder.py", line 382, in raw_decode
+    raise ValueError("No JSON object could be decoded")
+ValueError: No JSON object could be decoded
+
+2022-04-14 20:20:23 [CRITI]  [31m    COMPLETE[39m
+2022-04-14 20:20:23 [CRITI]  [31m[39m
+2022-04-14 20:20:23 [CRITI]  [31m################################################################################[39m
