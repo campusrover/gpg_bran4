@@ -264,16 +264,10 @@ void printDebug()
 {
     char buffer[50];
 
-    sprintf (buffer,   "Encoder Left    : %ld", motor1_encoder.read());
+    sprintf (buffer,   "Encoders: %ld %ld", motor1_encoder.read(), motor2_encoder.read());
     nh.loginfo(buffer);
-    sprintf (buffer,   "Encoder Right   : %ld", motor2_encoder.read());
+    sprintf (buffer,   "Pid Errors: %ld %ld", m1_pid_error, m2_pid_error);
     nh.loginfo(buffer);
-    sprintf (buffer,   "Pid Error Left  : %ld", m1_pid_error);
-    nh.loginfo(buffer);
-    sprintf (buffer,   "Pid Error Right : %ld", m2_pid_error);
-    nh.loginfo(buffer);
-    sprintf (buffer,   "Current RPM Left : %ld", m1_curr_rpm);
-    nh.loginfo(buffer);
-    sprintf (buffer,   "Current RPM Right : %ld", m2_curr_rpm);
+    sprintf (buffer,   "Current RPM: %ld %ld", m1_curr_rpm, m2_curr_rpm);
     nh.loginfo(buffer);
 }

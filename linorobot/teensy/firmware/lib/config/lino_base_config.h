@@ -32,7 +32,7 @@
 
 
 //define your robot' specs here
-#define MAX_RPM 4000             // motor's maximum RPM
+#define MAX_RPM 1000              // motor's maximum RPM
 //#define COUNTS_PER_REV 341     // wheel encoder's no of ticks per rev
 #define COUNTS_PER_REV 2160      // wheel encoder's no of ticks per rev
 
