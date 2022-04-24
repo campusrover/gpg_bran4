@@ -16,6 +16,8 @@
 #include "lino_msgs/PID.h"
 //header file for imu
 #include "lino_msgs/Imu.h"
+//(Pito) header for instrumentation
+#include "lino_msgs/Inst.h"
 
 #include "lino_base_config.h"
 #include "Motor.h"
@@ -28,7 +30,7 @@
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
-#define DEBUG_RATE 5
+#define DEBUG_RATE 1
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
@@ -76,6 +78,11 @@ ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
+lino_msgs::Inst inst_msg;
+ros::Publisher inst_pub("inst", &inst_msg);
+
+
+
 void setup()
 {
     steering_servo.attach(STEERING_PIN);
@@ -87,6 +94,7 @@ void setup()
     nh.subscribe(cmd_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
+    nh.advertise(inst_pub);
 
     while (!nh.connected())
     {
@@ -218,6 +226,17 @@ void moveBase()
 
     //publish raw_vel_msg
     raw_vel_pub.publish(&raw_vel_msg);
+
+    //collect data for instrumentation message
+    inst_msg.l_encoder = motor1_encoder.read();
+    inst_msg.r_encoder = motor2_encoder.read();
+    inst_msg.l_piderror = m1_pid_error;
+    inst_msg.r_piderror = m2_pid_error;
+    inst_msg.l_rpm = m1_curr_rpm;
+    inst_msg.r_rpm = m2_curr_rpm;
+
+    // publish instrumentation message
+    inst_pub.publish(&inst_msg);
 }
 
 void stopBase()
