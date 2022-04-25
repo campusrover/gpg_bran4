@@ -19,7 +19,7 @@
 // #define USE_MPU9150_IMU
 // #define USE_MPU9250_IMU
 
-#define DEBUG 1
+#define DEBUG 0
 
 // #define K_P 0.6 // P constant
 // #define K_I 0.3 // I constant
@@ -32,7 +32,7 @@
 
 
 //define your robot' specs here
-#define MAX_RPM 4000             // motor's maximum RPM
+#define MAX_RPM 1000              // motor's maximum RPM
 //#define COUNTS_PER_REV 341     // wheel encoder's no of ticks per rev
 #define COUNTS_PER_REV 2160      // wheel encoder's no of ticks per rev
 

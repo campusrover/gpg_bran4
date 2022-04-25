@@ -19,7 +19,7 @@
 // #define USE_MPU9150_IMU
 // #define USE_MPU9250_IMU
 
-#define DEBUG 1
+#define DEBUG 0
 
 // #define K_P 0.6 // P constant
 // #define K_I 0.3 // I constant

@@ -30,7 +30,7 @@
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
-#define DEBUG_RATE 1
+#define DEBUG_RATE 60
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
