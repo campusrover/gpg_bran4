@@ -31,6 +31,7 @@
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
 #define DEBUG_RATE 60
+#define CAMERA_SERVO_PIN 7
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
@@ -38,6 +39,7 @@ Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV);
 Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
 
 Servo steering_servo;
+Servo camera_servo; // Pito added
 
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A, MOTOR1_IN_B);
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A, MOTOR2_IN_B); 
@@ -60,6 +62,7 @@ unsigned long g_prev_command_time = 0;
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
+void CameraServoCallback(const std_msgs::Uint16& servo_msg); // Pito added
 
 //Pito added
 long m1_pid_error = 0;
@@ -71,6 +74,7 @@ ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
+ros::Subscriber<lino_msgs::Uint16> cam_sub("camera/servo", CameraServoCallback);
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -87,7 +91,10 @@ void setup()
 {
     steering_servo.attach(STEERING_PIN);
     steering_servo.write(90); 
-    
+
+    camera_servo.attach(CAMERA_SERVO_PIN); // Pito added
+    camera_servo.write(90); // Pito added
+
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -155,6 +162,11 @@ void loop()
     }
     //call all the callbacks waiting to be called
     nh.spinOnce();
+}
+
+void CameraServoCallback(const std_msgs::Uint16& servo_msg)
+{
+    camera_servo.write(servo_msg.data);
 }
 
 void PIDCallback(const lino_msgs::PID& pid)
