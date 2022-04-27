@@ -18,6 +18,9 @@
 #include "lino_msgs/Imu.h"
 //(Pito) header for instrumentation
 #include "lino_msgs/Inst.h"
+//(Pito) Header for camera servo
+#include "std_msgs/UInt16.h"
+
 
 #include "lino_base_config.h"
 #include "Motor.h"
@@ -62,7 +65,7 @@ unsigned long g_prev_command_time = 0;
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
-void CameraServoCallback(const std_msgs::Uint16& servo_msg); // Pito added
+void CameraServoCallback(const std_msgs::UInt16& servo_msg); // Pito added
 
 //Pito added
 long m1_pid_error = 0;
@@ -74,7 +77,8 @@ ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
-ros::Subscriber<lino_msgs::Uint16> cam_sub("camera/servo", CameraServoCallback);
+
+ros::Subscriber<std_msgs::UInt16> cam_sub("camera/servo", CameraServoCallback); // Pito added
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -99,6 +103,7 @@ void setup()
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
     nh.subscribe(cmd_sub);
+    nh.subscribe(cam_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
     nh.advertise(inst_pub);
@@ -164,8 +169,12 @@ void loop()
     nh.spinOnce();
 }
 
-void CameraServoCallback(const std_msgs::Uint16& servo_msg)
+void CameraServoCallback(const std_msgs::UInt16& servo_msg)
 {
+    char buffer[50];
+    sprintf (buffer,   "Cam servo %ld", servo_msg.data);
+    nh.loginfo(buffer);
+
     camera_servo.write(servo_msg.data);
 }
 
