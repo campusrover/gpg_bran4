@@ -41,7 +41,7 @@ Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV);
 Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV); 
 Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
 
-Servo steering_servo;
+//Servo steering_servo;
 Servo camera_servo; // Pito added
 
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A, MOTOR1_IN_B);
@@ -93,11 +93,11 @@ ros::Publisher inst_pub("inst", &inst_msg);
 
 void setup()
 {
-    steering_servo.attach(STEERING_PIN);
-    steering_servo.write(90); 
+    //steering_servo.attach(STEERING_PIN);
+    //steering_servo.write(90); 
 
-    camera_servo.attach(CAMERA_SERVO_PIN); // Pito added
-    camera_servo.write(90); // Pito added
+    camera_servo.attach(STEERING_PIN); // Pito added
+    camera_servo.write(0); // Pito added
 
     nh.initNode();
     nh.getHardware()->setBaud(57600);
@@ -174,8 +174,13 @@ void CameraServoCallback(const std_msgs::UInt16& servo_msg)
     char buffer[50];
     sprintf (buffer,   "Cam servo %ld", servo_msg.data);
     nh.loginfo(buffer);
+    sprintf (buffer,   "Cam attached? %ld", camera_servo.attached());
+    nh.loginfo(buffer);
 
     camera_servo.write(servo_msg.data);
+    sprintf (buffer,   "Cam servo read %ld", camera_servo.read());
+    nh.loginfo(buffer);
+
 }
 
 void PIDCallback(const lino_msgs::PID& pid)
@@ -217,8 +222,8 @@ void moveBase()
     // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
     // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));  
 
-    // motor1_controller.spin(100); //LEFT MOTOR
-    // motor2_controller.spin(25); // RIGHT MOTOR
+    // motor1_controller.spin(100); //PITO LEFT MOTOR
+    // motor2_controller.spin(50); // PITO RIGHT MOTOR
 
     // Pito added this
     m1_pid_error = req_rpm.motor1 - current_rpm1;
@@ -290,7 +295,7 @@ float steer(float steering_angle)
     steering_angle = constrain(steering_angle, -MAX_STEERING_ANGLE, MAX_STEERING_ANGLE);
     servo_steering_angle = mapFloat(steering_angle, -MAX_STEERING_ANGLE, MAX_STEERING_ANGLE, PI, 0) * (180 / PI);
 
-    steering_servo.write(servo_steering_angle);
+    //steering_servo.write(servo_steering_angle);
 
     return steering_angle;
 }

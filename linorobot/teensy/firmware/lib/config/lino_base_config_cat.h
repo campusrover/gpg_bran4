@@ -1,3 +1,4 @@
+# FOR CAT 
 #ifndef LINO_BASE_CONFIG_H
 #define LINO_BASE_CONFIG_H
 
