@@ -1,4 +1,4 @@
 <launch>
     <!-- Run Linorobot compatible laser drivers -->
-    <include file="$(find cat)/launch/include/laser_bullet.launch" />
+    <include file="$(find cat)/launch/include/laser_cat.launch" />
 </launch>

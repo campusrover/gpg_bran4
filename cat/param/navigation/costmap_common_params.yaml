@@ -11,3 +11,4 @@ scan:
   marking: true
   clearing: true
 
+map_type: costmap
