@@ -28,8 +28,8 @@
 // #define K_D 0.2 // D constant
 
 #define K_P 0.6 // P constant
-#define K_I 0.0 // I constant
-#define K_D 0.0 // D constant
+#define K_I 0.3 // I constant
+#define K_D 0.2 // D constant
 
 
 
@@ -69,11 +69,12 @@ ROBOT ORIENTATION
 */
 
 /// ENCODER PINS
-#define MOTOR1_ENCODER_A 15
-#define MOTOR1_ENCODER_B 14
 
-#define MOTOR2_ENCODER_A 11
-#define MOTOR2_ENCODER_B 12
+#define MOTOR1_ENCODER_A 11
+#define MOTOR1_ENCODER_B 12
+
+#define MOTOR2_ENCODER_A 15
+#define MOTOR2_ENCODER_B 14
 
 #define MOTOR3_ENCODER_A 17
 #define MOTOR3_ENCODER_B 16
