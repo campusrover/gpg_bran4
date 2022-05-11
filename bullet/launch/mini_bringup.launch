@@ -21,7 +21,7 @@
     </node>
 
     <!-- Onboard instrumentaion -->
-    <node pkg="prrexamples" type="robogym.py" name="robogym"/>
+    <!-- <node pkg="prrexamples" type="robogym.py" name="robogym"/> -->
 
 
 </launch>
