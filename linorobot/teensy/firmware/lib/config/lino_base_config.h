@@ -7,7 +7,7 @@
 #define LINO_BASE DIFFERENTIAL_DRIVE // 2WD and Tracked robot w/ 2 motors
 // #define LINO_BASE SKID_STEER      // 4WD robot
 // #define LINO_BASE ACKERMANN       // Car-like steering robot w/ 2 motors
-// #define LINO_BASE ACKERMANN1      // Car-like steering robot w/ 1 motor
+// #define LINO_BASE ACKERMANN1      //ß Car-like steering robot w/ 1 motor
 // #define LINO_BASE MECANUM         // Mecanum drive robot
 
 //uncomment the motor driver you're using
@@ -21,26 +21,26 @@
 // #define USE_MPU9150_IMU
 #define USE_MPU9250_IMU
 
-#define DEBUG 0
+#define DEBUG 1
 
 // #define K_P 0.6 // P constant
 // #define K_I 0.3 // I constant
 // #define K_D 0.2 // D constant
 
 #define K_P 0.6 // P constant
-#define K_I 0.0 // I constant
-#define K_D 0.0 // D constant
+#define K_I 0.3 // I constant
+#define K_D 0.2 // D constant
 
 
 
 //define your robot' specs here
-#define MAX_RPM 1000              // motor's maximum RPM
+#define MAX_RPM 210              // motor's maximum RPM
 //#define COUNTS_PER_REV 341     // wheel encoder's no of ticks per rev
-#define COUNTS_PER_REV 2160      // wheel encoder's no of ticks per rev
+#define COUNTS_PER_REV 1180      // wheel encoder's no of ticks per rev
 
-#define WHEEL_DIAMETER 0.042	    // wheel's diameter in meters
+#define WHEEL_DIAMETER 0.074	    // wheel's diameter in meters
 #define PWM_BITS 8                // PWM Resolution of the microcontroller
-#define LR_WHEELS_DISTANCE 0.26  // distance between left and right wheels
+#define LR_WHEELS_DISTANCE 0.205  // distance between left and right wheels
 #define FR_WHEELS_DISTANCE 0.30   // distance between front and rear wheels. Ignore this if you're on 2WD/ACKERMANN
 #define MAX_STEERING_ANGLE 0.415  // max steering angle. This only applies to Ackermann steering
 
@@ -69,11 +69,12 @@ ROBOT ORIENTATION
 */
 
 /// ENCODER PINS
-#define MOTOR1_ENCODER_A 15
-#define MOTOR1_ENCODER_B 14
 
-#define MOTOR2_ENCODER_A 11
-#define MOTOR2_ENCODER_B 12
+#define MOTOR1_ENCODER_A 11
+#define MOTOR1_ENCODER_B 12
+
+#define MOTOR2_ENCODER_A 15
+#define MOTOR2_ENCODER_B 14
 
 #define MOTOR3_ENCODER_A 17
 #define MOTOR3_ENCODER_B 16
@@ -90,7 +91,7 @@ ROBOT ORIENTATION
   #define MOTOR1_PWM 5
 
   #define MOTOR2_IN_A 20
-  #define MOTOR2_IN_B 1ls
+  #define MOTOR2_IN_B 1
   #define MOTOR2_PWM 21
 
   #define MOTOR3_PWM 22

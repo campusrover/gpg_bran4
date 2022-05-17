@@ -16,6 +16,11 @@
 #include "lino_msgs/PID.h"
 //header file for imu
 #include "lino_msgs/Imu.h"
+//(Pito) header for instrumentation
+#include "lino_msgs/Inst.h"
+//(Pito) Header for camera servo
+#include "std_msgs/UInt16.h"
+
 
 #include "lino_base_config.h"
 #include "Motor.h"
@@ -28,14 +33,16 @@
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
-#define DEBUG_RATE 5
+#define DEBUG_RATE 2
+#define CAMERA_SERVO_PIN 7
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
 Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV); 
 Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
 
-Servo steering_servo;
+//Servo steering_servo;
+Servo camera_servo; // Pito added
 
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A, MOTOR1_IN_B);
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A, MOTOR2_IN_B); 
@@ -58,11 +65,20 @@ unsigned long g_prev_command_time = 0;
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
+void CameraServoCallback(const std_msgs::UInt16& servo_msg); // Pito added
+
+//Pito added
+long m1_pid_error = 0;
+long m2_pid_error = 0;
+long m1_curr_rpm = 0;
+long m2_curr_rpm = 0;
 
 ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
+
+ros::Subscriber<std_msgs::UInt16> cam_sub("camera/servo", CameraServoCallback); // Pito added
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -70,26 +86,33 @@ ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
+lino_msgs::Inst inst_msg;
+ros::Publisher inst_pub("inst", &inst_msg);
+
+
+
 void setup()
 {
-    steering_servo.attach(STEERING_PIN);
-    steering_servo.write(90); 
-    
+    //steering_servo.attach(STEERING_PIN);
+    //steering_servo.write(90); 
+
+    camera_servo.attach(STEERING_PIN); // Pito added
+    camera_servo.write(0); // Pito added
+
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
     nh.subscribe(cmd_sub);
+    nh.subscribe(cam_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
+    nh.advertise(inst_pub);
 
     while (!nh.connected())
     {
         nh.spinOnce();
     }
     nh.loginfo("LINOBASE CONNECTED");
-    char buffer[50];
-    sprintf (buffer, "PID %f %f %f", K_P, K_D, K_I);
-    nh.loginfo(buffer);
     delay(1);
 }
 
@@ -146,6 +169,20 @@ void loop()
     nh.spinOnce();
 }
 
+void CameraServoCallback(const std_msgs::UInt16& servo_msg)
+{
+    char buffer[50];
+    sprintf (buffer,   "Cam servo %ld", servo_msg.data);
+    nh.loginfo(buffer);
+    sprintf (buffer,   "Cam attached? %ld", camera_servo.attached());
+    nh.loginfo(buffer);
+
+    camera_servo.write(servo_msg.data);
+    sprintf (buffer,   "Cam servo read %ld", camera_servo.read());
+    nh.loginfo(buffer);
+
+}
+
 void PIDCallback(const lino_msgs::PID& pid)
 {
     //callback function every time PID constants are received from lino_pid for tuning
@@ -182,8 +219,17 @@ void moveBase()
     //the PWM value sent to the motor driver is the calculated PID based on required RPM vs measured RPM
     motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
     motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
-    motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
-    motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));    
+    // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
+    // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));  
+
+ //   motor1_controller.spin(100); // PITO LEFT MOTOR
+ //   motor2_controller.spin(100); // PITO RIGHT MOTOR
+
+    // Pito added this
+    m1_pid_error = req_rpm.motor1 - current_rpm1;
+    m2_pid_error = req_rpm.motor2 - current_rpm2;
+    m1_curr_rpm = current_rpm1;
+    m2_curr_rpm = current_rpm2;
 
     Kinematics::velocities current_vel;
 
@@ -206,6 +252,17 @@ void moveBase()
 
     //publish raw_vel_msg
     raw_vel_pub.publish(&raw_vel_msg);
+
+    //collect data for instrumentation message
+    inst_msg.l_encoder = motor1_encoder.read();
+    inst_msg.r_encoder = motor2_encoder.read();
+    inst_msg.l_piderror = m1_pid_error;
+    inst_msg.r_piderror = m2_pid_error;
+    inst_msg.l_rpm = m1_curr_rpm;
+    inst_msg.r_rpm = m2_curr_rpm;
+
+    // publish instrumentation message
+    inst_pub.publish(&inst_msg);
 }
 
 void stopBase()
@@ -238,7 +295,7 @@ float steer(float steering_angle)
     steering_angle = constrain(steering_angle, -MAX_STEERING_ANGLE, MAX_STEERING_ANGLE);
     servo_steering_angle = mapFloat(steering_angle, -MAX_STEERING_ANGLE, MAX_STEERING_ANGLE, PI, 0) * (180 / PI);
 
-    steering_servo.write(servo_steering_angle);
+    //steering_servo.write(servo_steering_angle);
 
     return steering_angle;
 }
@@ -252,12 +309,10 @@ void printDebug()
 {
     char buffer[50];
 
-    sprintf (buffer, "Encoder FrontLeft!  : %ld", motor1_encoder.read());
+    sprintf (buffer,   "Encoders: %ld %ld", motor1_encoder.read(), motor2_encoder.read());
     nh.loginfo(buffer);
-    sprintf (buffer, "Encoder FrontRight! : %ld", motor2_encoder.read());
+    sprintf (buffer,   "Pid Errors: %ld %ld", m1_pid_error, m2_pid_error);
     nh.loginfo(buffer);
-    sprintf (buffer, "Encoder RearLeft!   : %ld", motor3_encoder.read());
-    nh.loginfo(buffer);
-    sprintf (buffer, "Encoder RearRight! : %ld", motor4_encoder.read());
+    sprintf (buffer,   "Current RPM: %ld %ld", m1_curr_rpm, m2_curr_rpm);
     nh.loginfo(buffer);
 }

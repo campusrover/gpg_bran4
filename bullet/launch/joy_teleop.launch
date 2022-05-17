@@ -3,6 +3,8 @@
     <rosparam command="load" file="$(find bullet)/param/logi_joy.yaml" />
   </node>
   <node pkg="joy" type="joy_node" name="joy_node">
-    <param name="joy_node/dev" type="string" value="/dev/input/js0" />
+    <param name="/dev" type="string" value="/dev/input/js0" />
+    <param name="autorepeat_rate" type="string" value="8.00" />
+    <param name="coalesce_interval" type="string" value="0.002" />
   </node>
 </launch>

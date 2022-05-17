@@ -31,14 +31,14 @@
 #define DEBUG_RATE 5
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
-Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
-Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV); 
-Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
+Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV);
+Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV);
+Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV);
 
 Servo steering_servo;
 
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A, MOTOR1_IN_B);
-Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A, MOTOR2_IN_B); 
+Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A, MOTOR2_IN_B);
 Controller motor3_controller(Controller::MOTOR_DRIVER, MOTOR3_PWM, MOTOR3_IN_A, MOTOR3_IN_B);
 Controller motor4_controller(Controller::MOTOR_DRIVER, MOTOR4_PWM, MOTOR4_IN_A, MOTOR4_IN_B);
 
@@ -59,6 +59,10 @@ unsigned long g_prev_command_time = 0;
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
 
+//Pito added
+long m1_pid_error = 0;
+long m2_pid_error = 0;
+
 ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
@@ -73,8 +77,8 @@ ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 void setup()
 {
     steering_servo.attach(STEERING_PIN);
-    steering_servo.write(90); 
-    
+    steering_servo.write(90);
+
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -87,9 +91,6 @@ void setup()
         nh.spinOnce();
     }
     nh.loginfo("LINOBASE CONNECTED");
-    char buffer[50];
-    sprintf (buffer, "PID %f %f %f", K_P, K_D, K_I);
-    nh.loginfo(buffer);
     delay(1);
 }
 
@@ -182,15 +183,23 @@ void moveBase()
     //the PWM value sent to the motor driver is the calculated PID based on required RPM vs measured RPM
     motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
     motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
-    motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
-    motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));    
+    // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));
+    // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));
+
+    // motor1_controller.spin(100); //LEFT MOTOR
+    // motor2_controller.spin(25); // RIGHT MOTOR
+
+    // Pito added this
+    m1_pid_error = req_rpm.motor1 - current_rpm1;
+    m2_pid_error = req_rpm.motor2 - current_rpm2;
+
 
     Kinematics::velocities current_vel;
 
     if(kinematics.base_platform == Kinematics::ACKERMANN || kinematics.base_platform == Kinematics::ACKERMANN1)
     {
         float current_steering_angle;
-        
+
         current_steering_angle = steer(g_req_angular_vel_z);
         current_vel = kinematics.getVelocities(current_steering_angle, current_rpm1, current_rpm2);
     }
@@ -198,7 +207,7 @@ void moveBase()
     {
         current_vel = kinematics.getVelocities(current_rpm1, current_rpm2, current_rpm3, current_rpm4);
     }
-    
+
     //pass velocities to publisher object
     raw_vel_msg.linear_x = current_vel.linear_x;
     raw_vel_msg.linear_y = current_vel.linear_y;
@@ -252,12 +261,12 @@ void printDebug()
 {
     char buffer[50];
 
-    sprintf (buffer, "Encoder FrontLeft!  : %ld", motor1_encoder.read());
+    sprintf (buffer,   "Encoder Left    : %ld", motor1_encoder.read());
     nh.loginfo(buffer);
-    sprintf (buffer, "Encoder FrontRight! : %ld", motor2_encoder.read());
+    sprintf (buffer,   "Encoder Right   : %ld", motor2_encoder.read());
     nh.loginfo(buffer);
-    sprintf (buffer, "Encoder RearLeft!   : %ld", motor3_encoder.read());
+    sprintf (buffer,   "Pid Error Left  : %ld", m1_pid_error);
     nh.loginfo(buffer);
-    sprintf (buffer, "Encoder RearRight! : %ld", motor4_encoder.read());
+    sprintf (buffer,   "Pid Error Right : %ld", m2_pid_error);
     nh.loginfo(buffer);
 }

@@ -6,7 +6,7 @@
     </node>
 
     <!-- IMU Relay and Filter -->
-    <include file="$(find linorobot)/launch/include/imu/imu_bullet.launch" />
+    <include file="$(find bullet)/launch/include/imu_bullet.launch" />
 
     <!-- Publish Linorobot odometry -->
     <node pkg="linorobot" name="lino_base_node" type="lino_base_node"></node>
@@ -21,7 +21,7 @@
     </node>
 
     <!-- Onboard instrumentaion -->
-    <node pkg="prrexamples" type="robogym.py" name="robogym"/>
+    <!-- <node pkg="prrexamples" type="robogym.py" name="robogym"/> -->
 
 
 </launch>
