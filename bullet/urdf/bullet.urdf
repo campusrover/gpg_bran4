@@ -24,6 +24,10 @@
         <cylinder length="0.025" radius="0.035"/>
       </geometry>
       <origin rpy="1.57 0 0" xyz="0 .09 0"/>
+      <material name="red">
+        <color rgba="1 0 0 1" />
+      </material>
+
     </visual>
   </link>
 
@@ -33,6 +37,9 @@
         <cylinder length="0.025" radius="0.035"/>
       </geometry>
       <origin rpy="1.57 0 0" xyz="0 -.09 0"/>
+      <material name="green">
+        <color rgba="0 1 0 1" />
+      </material>
     </visual>
   </link>
 
