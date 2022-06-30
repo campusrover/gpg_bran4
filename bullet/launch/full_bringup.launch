@@ -21,7 +21,7 @@
     </node>
 
     <!-- Run our laser drivers -->
-    <include file="$(find linorobot)/launch/include/laser_bullet.launch" />
+    <include file="$(find bullet)/launch/include/laser_bullet.launch" />
 
     <!-- Run our camera drivers -->
     <include file="$(find bullet)/launch/camera_only.launch" />
