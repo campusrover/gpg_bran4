@@ -1,6 +1,6 @@
 <launch>
     <!-- Run Linorobot compatible laser drivers. Takes reference from env var LINOLIDAR. ie. export LINOLIDAR=xv11 -->
-    <include file="$(find linorobot)/launch/include/lidar/$(env LINOLIDAR).launch" />
+    <include file="$(find linorobot)/launch/include/lidar/ydlidar.launch" />
 
     <!-- Publish static transform of the laser. Define your sensor offset here. 
          static_transform_publisher x y z yaw pitch roll frame_id child_frame_id -->
