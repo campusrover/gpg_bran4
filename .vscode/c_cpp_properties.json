@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/opt/ros/noetic/include/**",
+        "/my_ros_data/catkin_ws/src/gpg_bran4/imu_calib/include/**",
+        "/my_ros_data/catkin_ws/src/gpg_bran4/lino_pid/include/**",
+        "/my_ros_data/catkin_ws/src/gpg_bran4/linorobot/include/**",
+        "/my_ros_data/catkin_ws/src/gpg_bran4/raspicam_node/include/**",
+        "/my_ros_data/catkin_ws/src/gpg_bran4/teleop_twist_joy/include/**",
+        "/my_ros_data/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
+        "/my_ros_data/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+        "/my_ros_data/catkin_ws/src/turtlebot3/turtlebot3_slam/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
