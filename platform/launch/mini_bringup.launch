@@ -6,7 +6,7 @@
     </node>
 
     <!-- IMU Relay and Filter -->
-    <include file="$(find bullet)/launch/include/imu_bullet.launch" />
+    <include file="$(find platform)/launch/include/imu_platform.launch" />
 
     <!-- Publish Linorobot odometry -->
     <node pkg="linorobot" name="lino_base_node" type="lino_base_node"></node>
