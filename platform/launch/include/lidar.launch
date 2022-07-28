@@ -6,6 +6,7 @@
          static_transform_publisher x y z yaw pitch roll frame_id child_frame_id -->
 
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_scan_link" args="-0.08 0.0 0.3 0.0 0.0 0.0  base_link scan_link"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_scan_link" 
+          args="-0.15 0.0 0.0 0.0 0.0 0.0  base_link scan_link"/>
 
 </launch>
