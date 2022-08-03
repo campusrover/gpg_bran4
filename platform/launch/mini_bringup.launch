@@ -18,7 +18,7 @@
     </node>
 
     <!-- Publish all the transforms  -->
-    <include file="$(find platform)/launch/include/static_transforms.launch" />
+    <include file="$(find platform)/launch/include/urdf.launch" />
 
 </launch>
 
