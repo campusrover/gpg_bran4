@@ -1,6 +1,6 @@
 <launch>
   <node pkg="teleop_twist_joy" name="teleop_twist_joy" type="teleop_node">
-    <rosparam command="load" file="$(find bullet)/param/logi_joy.yaml" />
+    <rosparam command="load" file="$(find platform)/param/logi_joy.yaml" />
   </node>
   <node pkg="joy" type="joy_node" name="joy_node">
     <param name="/dev" type="string" value="/dev/input/js0" />

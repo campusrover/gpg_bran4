@@ -1,0 +1,15 @@
+<launch>
+    <!-- Publish all the static transforms in one place so we can make sure they are all 
+    correct and consistent. Usage is 
+        static_transform_publisher x y z yaw pitch roll frame_id child_frame_id -->
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_footprint_to_base_link" args="0.0 0.0 0.045 0.0 0.0 0.0  base_footprint base_link"/>
+    
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_camera" args="0.11 0.07 0.04  0.0 1.0 0.0  base_link raspicam" />
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_footprint_to_imu_link" args="-0.14 0 0.0 0 0 0 base_link imu_link"/>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_scan_link" args="-0.17 0.0 0.1 0.0 0.0 0.0  base_link scan_link"/>
+
+</launch>
+
