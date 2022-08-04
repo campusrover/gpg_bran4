@@ -71,7 +71,7 @@
 
   <link name="base_footprint">
   </link>
-
+eval "$(ssh-agent -s)"
    <link name="scan_link">
     <visual>
       <geometry>
