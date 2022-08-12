@@ -1,7 +1,7 @@
 # Logitech - Bullet
 
 axis_linear: 3  # Right Joystick
-scale_linear: 0.5
+scale_linear: 0.3
 scale_linear_turbo: 1.0
 
 axis_angular: 2  # Right Joystick
