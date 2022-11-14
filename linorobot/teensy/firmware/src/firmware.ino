@@ -143,7 +143,11 @@ void loop()
     //this block publishes the IMU data based on defined rate
     if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE))
     {
-        //sanity check if the IMU is connected
+        nh.loginfo("Checking IMU.");
+        char buffer[50];
+        sprintf(buffer, "*********** IMU Address: %d", getIMUaddrs());
+        nh.loginfo(buffer);
+
         if (!imu_is_initialized)
         {
             imu_is_initialized = initIMU();

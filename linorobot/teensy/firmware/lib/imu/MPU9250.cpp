@@ -40,6 +40,7 @@ THE SOFTWARE.
  * @see MPU9250_DEFAULT_ADDRESS
  */
 MPU9250::MPU9250() {
+        Serial.print("/////////");
     devAddr = MPU9250_DEFAULT_ADDRESS;
 }
 
@@ -50,6 +51,8 @@ MPU9250::MPU9250() {
  * @see MPU9250_ADDRESS_AD0_HIGH
  */
 MPU9250::MPU9250(uint8_t address) {
+        Serial.print("/////////");
+
     devAddr = address;
 }
 
@@ -73,8 +76,7 @@ void MPU9250::initialize() {
  */
 bool MPU9250::testConnection() {
     uint8_t device_id = getDeviceID();
-
-    if(device_id == 0x38 || device_id == 0x71)
+    if(device_id == 0x38 || device_id == 0x71 || device_id == 0x68 || device_id == 0x39 ) 
         return true;
     else 
         return false;
