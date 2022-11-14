@@ -19,10 +19,5 @@
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find linorobot)/param/ekf/robot_localization.yaml" />
     </node>
-
-    <!-- Onboard instrumentaion -->
-    <!-- <node pkg="prrexamples" type="robogym.py" name="robogym"/> -->
-
-
 </launch>
 
