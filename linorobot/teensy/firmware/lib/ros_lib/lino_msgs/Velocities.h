@@ -26,7 +26,7 @@ namespace lino_msgs
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const override
+    virtual int serialize(unsigned char *outbuffer) const
     {
       int offset = 0;
       union {
@@ -62,7 +62,7 @@ namespace lino_msgs
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer) override
+    virtual int deserialize(unsigned char *inbuffer)
     {
       int offset = 0;
       union {
@@ -101,8 +101,8 @@ namespace lino_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "lino_msgs/Velocities"; };
-    virtual const char * getMD5() override { return "0ee8ad4cb7809be2d5a0a76352fea86a"; };
+    const char * getType(){ return "lino_msgs/Velocities"; };
+    const char * getMD5(){ return "0ee8ad4cb7809be2d5a0a76352fea86a"; };
 
   };
 
