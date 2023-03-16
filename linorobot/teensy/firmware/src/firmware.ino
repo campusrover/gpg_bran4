@@ -85,12 +85,17 @@ unsigned long g_prev_command_time = 0;
 // Pincer servo
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-#define SERVOMIN  170 // This is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  300 // This is the 'maximum' pulse length count (out of 4096)
+#define PINCERMIN  170
+#define PINCERMAX  300 
+#define CLAWMIN 212
+#define CLAWMAX 360
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
 
-uint8_t servonum = 0;
-uint16_t pulselen = SERVOMIN;
+uint8_t servonum_pincer = 0;
+uint16_t pulselen_pincer = PINCERMIN;
+
+uint8_t servonum_claw = 1;
+uint16_t pulselen_claw = CLAWMIN;
 
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
@@ -181,7 +186,8 @@ void loop()
     
 
     // This block sets the servo to the desired position
-    pwm.setPWM(servonum, 0, pulselen);
+    pwm.setPWM(servonum_pincer, 0, pulselen_pincer);
+    pwm.setPWM(servonum_claw, 0, pulselen_claw);
     // char buffer[50];
     // sprintf(buffer, "&&&&&&&&&&& Pulse Length: %d", pulselen);
     // nh.loginfo(buffer);
@@ -348,9 +354,11 @@ void LEDUpdate()
 void ServoCallback(const std_msgs::Bool& servo_msg)
 {
     if (servo_msg.data){
-        pulselen = SERVOMAX;
+        pulselen_pincer = PINCERMAX;
+        pulselen_claw = CLAWMAX;
     } else{
-        pulselen = SERVOMIN;
+        pulselen_pincer = PINCERMIN;
+        pulselen_claw = CLAWMIN;
     }
 }
 
