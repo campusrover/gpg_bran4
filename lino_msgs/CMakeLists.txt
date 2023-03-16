@@ -10,6 +10,7 @@ add_message_files(
   PID.msg
   Imu.msg
   Inst.msg
+  Led.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)

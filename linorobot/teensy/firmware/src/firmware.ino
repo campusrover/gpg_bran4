@@ -5,9 +5,12 @@
 #endif
 
 #include <Servo.h>
-
+#include <Wire.h>
 #include "ros.h"
 #include "ros/time.h"
+
+//Header file for subscribing for LED
+#include "lino_msgs/Led.h"
 //header file for publishing velocities for odom
 #include "lino_msgs/Velocities.h"
 //header file for cmd_subscribing to "cmd_vel"
@@ -16,12 +19,13 @@
 #include "lino_msgs/PID.h"
 //header file for imu
 #include "lino_msgs/Imu.h"
+#include "std_msgs/Bool.h"
 // //(Pito) header for instrumentation
 // #include "lino_msgs/Inst.h"
 // //(Pito) Header for camera servo
 // #include "std_msgs/UInt16.h"
-
-
+#include "Adafruit_AW9523.h"
+#include "Adafruit_PWMServoDriver.h"
 #include "lino_base_config.h"
 #include "Motor.h"
 #include "Kinematics.h"
@@ -56,6 +60,20 @@ PID motor2_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor3_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor4_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 
+//LED Test
+Adafruit_AW9523 aw;
+bool LED_on1 = false;
+bool LED_blink1 = false;
+bool LED_blink_on1 = false;
+
+bool LED_on2 = false;
+bool LED_blink2 = false;
+bool LED_blink_on2 = false;
+
+bool LED_on3 = false;
+bool LED_blink3 = false;
+bool LED_blink_on3 = false;
+
 Kinematics kinematics(Kinematics::LINO_BASE, MAX_RPM, WHEEL_DIAMETER, FR_WHEELS_DISTANCE, LR_WHEELS_DISTANCE);
 
 float g_req_linear_vel_x = 0;
@@ -64,9 +82,21 @@ float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
 
+// Pincer servo
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+#define SERVOMIN  170 // This is the 'minimum' pulse length count (out of 4096)
+#define SERVOMAX  300 // This is the 'maximum' pulse length count (out of 4096)
+#define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+
+uint8_t servonum = 0;
+uint16_t pulselen = SERVOMIN;
+
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
+void LEDCallback(const lino_msgs::Led& led_msg);
+void ServoCallback(const std_msgs::Bool& servo_msg);
 //void CameraServoCallback(const std_msgs::UInt16& servo_msg); // Pito added
 
 //Pito added
@@ -80,7 +110,8 @@ ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
-
+ros::Subscriber<lino_msgs::Led> led_sub("led", LEDCallback);
+ros::Subscriber<std_msgs::Bool> servo_sub("servo", ServoCallback);
 //ros::Subscriber<std_msgs::UInt16> cam_sub("camera/servo", CameraServoCallback); // Pito added
 
 lino_msgs::Imu raw_imu_msg;
@@ -100,11 +131,31 @@ void setup()
 
     //camera_servo.attach(STEERING_PIN); // Pito added
     //camera_servo.write(0); // Pito added
+    Serial.begin(115200);
+    while (!Serial) delay(1);  // wait for serial port to open
     
+    Serial.println("Adafruit AW9523 GPIO Expander test!");
+
+    if (! aw.begin(0x58)) {
+        Serial.println("AW9523 not found? Check wiring!");
+        while (1) delay(10);  // halt forever
+    }
+
+    pwm.begin();
+
+    pwm.setOscillatorFrequency(27000000);
+    pwm.setPWMFreq(SERVO_FREQ);
+
+    Serial.println("AW9523 found!");
+    aw.pinMode(1, OUTPUT);
+    aw.pinMode(2, OUTPUT);
+    aw.pinMode(3, OUTPUT);
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
     nh.subscribe(cmd_sub);
+    nh.subscribe(led_sub);
+    nh.subscribe(servo_sub);
     //nh.subscribe(cam_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
@@ -127,10 +178,17 @@ void loop()
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_debug_time = 0;
     static bool imu_is_initialized;
+    
 
+    // This block sets the servo to the desired position
+    pwm.setPWM(servonum, 0, pulselen);
+    // char buffer[50];
+    // sprintf(buffer, "&&&&&&&&&&& Pulse Length: %d", pulselen);
+    // nh.loginfo(buffer);
     //this block drives the robot based on defined rate
     if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE))
     {
+        LEDUpdate();
         moveBase();
         prev_control_time = millis();
     }
@@ -141,14 +199,16 @@ void loop()
         stopBase();
     }
 
+
     //this block publishes the IMU data based on defined rate
     if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE))
     {
         nh.loginfo("Checking IMU.");
+
         char buffer[50];
         sprintf(buffer, "*********** IMU Address: %d", getIMUaddrs());
         nh.loginfo(buffer);
-
+        // aw.digitalWrite(LedPin, LOW);
         if (!imu_is_initialized)
         {
             imu_is_initialized = initIMU();
@@ -176,6 +236,7 @@ void loop()
     }
     //call all the callbacks waiting to be called
     nh.spinOnce();
+    
 }
 
 // void CameraServoCallback(const std_msgs::UInt16& servo_msg)
@@ -212,6 +273,87 @@ void commandCallback(const geometry_msgs::Twist& cmd_msg)
 
     g_prev_command_time = millis();
 }
+
+void LEDCallback(const lino_msgs::Led& led_msg)
+{   
+    if (led_msg.wire == 1){
+        LED_on1 = led_msg.on;
+        LED_blink1 = led_msg.blink;
+    } else if (led_msg.wire == 2){
+        LED_on2 = led_msg.on;
+        LED_blink2 = led_msg.blink;
+    } else if (led_msg.wire == 3){
+        LED_on3 = led_msg.on;
+        LED_blink3 = led_msg.blink;
+    }
+    
+}
+
+
+void LEDUpdate()
+{
+    if (LED_on1 && !LED_blink1)
+    {
+        aw.digitalWrite(1, LOW);
+    } else if (LED_on1 && LED_blink1)
+    {   
+        if (LED_blink_on1){
+            aw.digitalWrite(1, LOW);
+            LED_blink_on1 = false;
+        } else{
+            aw.digitalWrite(1, HIGH);
+            LED_blink_on1 = true;
+        }
+    } else if (!LED_on1){
+        aw.digitalWrite(1, HIGH);
+    }
+
+
+    if (LED_on2 && !LED_blink2)
+    {
+        aw.digitalWrite(2, LOW);
+    } else if (LED_on2 && LED_blink2)
+    {   
+        if (LED_blink_on2){
+            aw.digitalWrite(2, LOW);
+            LED_blink_on2 = false;
+        } else{
+            aw.digitalWrite(2, HIGH);
+            LED_blink_on2 = true;
+        }
+    } else if (!LED_on2){
+        aw.digitalWrite(2, HIGH);
+    }
+
+
+    if (LED_on3 && !LED_blink3)
+    {
+        aw.digitalWrite(3, LOW);
+    } else if (LED_on3 && LED_blink3)
+    {   
+        if (LED_blink_on3){
+            aw.digitalWrite(3, LOW);
+            LED_blink_on3 = false;
+        } else{
+            aw.digitalWrite(3, HIGH);
+            LED_blink_on3 = true;
+        }
+    } else if (!LED_on3){
+        aw.digitalWrite(3, HIGH);
+    }
+}
+
+
+
+void ServoCallback(const std_msgs::Bool& servo_msg)
+{
+    if (servo_msg.data){
+        pulselen = SERVOMAX;
+    } else{
+        pulselen = SERVOMIN;
+    }
+}
+
 
 void moveBase()
 {
@@ -326,3 +468,5 @@ void printDebug()
     sprintf (buffer,   "Current RPM: %ld %ld", m1_curr_rpm, m2_curr_rpm);
     nh.loginfo(buffer);
 }
+
+
