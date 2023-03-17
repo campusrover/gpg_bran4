@@ -17,6 +17,7 @@
     <param name="camera_name" value="$(arg camera_name)"/>
     <param name="width" value="410"/>
     <param name="height" value="308"/>
+    <param name="vflip" value="true"/>
 
     <param name="framerate" value="30"/>
     <param name="exposure_mode" value="antishake"/>
