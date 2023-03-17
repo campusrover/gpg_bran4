@@ -18,6 +18,7 @@
     <param name="width" value="410"/>
     <param name="height" value="308"/>
     <param name="vFlip" value="true"/>
+    <param name="hFlip" value="true"/>
 
     <param name="framerate" value="30"/>
     <param name="exposure_mode" value="antishake"/>
