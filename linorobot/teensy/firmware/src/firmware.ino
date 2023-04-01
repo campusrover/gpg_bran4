@@ -26,6 +26,7 @@
 #include "Motor.h"
 #include "Kinematics.h"
 #include "PID.h"
+
 #include "Imu.h"
 
 #define ENCODER_OPTIMIZE_INTERRUPTS // comment this out on Non-Teensy boards
@@ -33,7 +34,7 @@
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
-#define DEBUG_RATE 5
+#define DEBUG_RATE 1
 #define CAMERA_SERVO_PIN 7
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
@@ -223,7 +224,7 @@ void moveBase()
     int current_rpm3 = motor3_encoder.getRPM();
     int current_rpm4 = motor4_encoder.getRPM();
 
-    //the required rpm is capped at -/+ MAX_RPM to prevent the PID from having too much error
+    //the required rpm is capped at -/+ MAX_RPM to prevent the PID from having too much error 
     //the PWM value sent to the motor driver is the calculated PID based on required RPM vs measured RPM
     motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
     motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
