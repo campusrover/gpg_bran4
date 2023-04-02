@@ -1,6 +1,6 @@
 <launch>
 
-  <include file="$(find raspicam_node)/launch/camerav2_1280x720.launch" />
+  <include file="$(find raspicam_node)/launch/camerav2_1280x960_10fps.launch" />
 
   <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera" args="0.0 0.0 0.0  0.0 1.57 0.0   /base_link /raspicam 100" />
 
