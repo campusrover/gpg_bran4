@@ -1,8 +1,8 @@
 <launch>
     <include file="$(find aruco_detect)/launch/aruco_detect.launch">
         <arg name="vis_msgs" value="false" />
-        <arg name="fiducial_len" value="0.14" />
+        <arg name="fiducial_len" value="0.05" />
         <arg name="dictionary" value="7"/>
     </include>
-    <!-- <include file="$(find bullet)/launch/camera_only.launch" /> -->
+    <include file="$(find bullet)/launch/camera_only.launch" />
 </launch>
