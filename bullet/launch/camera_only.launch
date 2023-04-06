@@ -1,6 +1,6 @@
 <launch>
 
-  <include file="$(find raspicam_node)/launch/bullet_camera.launch" >
+  <include file="$(find raspicam_node)/launch/bullet_camera_lowres.launch" >
       <arg name="enable_raw" value="true"/>
   </include>
 
