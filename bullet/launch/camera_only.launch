@@ -3,7 +3,7 @@
   <include file="$(find raspicam_node)/launch/bullet_camera_lowres.launch" >
       <arg name="enable_raw" value="true"/>
   </include>
-
-  <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera" args="0.0 0.0 0.0  1.57 1.57 0.0   /base_link /raspicam 100" />
+  <!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id  period (milliseconds) -->
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera" args="0.0 0.0 0.0  0.0 1.57 0.0   /base_link /raspicam 100" />
 
 </launch>
