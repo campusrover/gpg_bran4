@@ -3,6 +3,7 @@
         <arg name="vis_msgs" value="false" />
         <arg name="fiducial_len" value="0.05" />
         <arg name="dictionary" value="16"/>
+        <arg name="transport" value="full"/>
     </include>
     <!-- <include file="$(find bullet)/launch/camera_only.launch" /> -->
 </launch>
