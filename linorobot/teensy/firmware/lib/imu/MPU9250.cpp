@@ -40,7 +40,7 @@ THE SOFTWARE.
  * @see MPU9250_DEFAULT_ADDRESS
  */
 MPU9250::MPU9250() {
-        Serial.print("/////////");
+//        Serial.print("/////////");
     devAddr = MPU9250_DEFAULT_ADDRESS;
 }
 
@@ -51,7 +51,7 @@ MPU9250::MPU9250() {
  * @see MPU9250_ADDRESS_AD0_HIGH
  */
 MPU9250::MPU9250(uint8_t address) {
-        Serial.print("/////////");
+        //Serial.print("/////////");
 
     devAddr = address;
 }

@@ -1,0 +1,7 @@
+<launch>
+    <!-- Run Linorobot compatible laser drivers -->
+    <include file="$(find plat)/launch/include/lidar.launch" />
+
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_scan_link" args="-0.08 0.0 0.22 3.14 0.0 0.0  base_footprint scan_link"/> -->
+
+</launch>

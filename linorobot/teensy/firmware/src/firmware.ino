@@ -1,32 +1,49 @@
+#define INSTRUMENTATION 0
+#define LED 0
+#define PINCER 0
+#define DETAILED_LOG 0
+#define IMU 1
+#define STEERING 0
+
 #if (ARDUINO >= 100)
     #include <Arduino.h>
 #else
     #include <WProgram.h>
 #endif
 
+#include "lino_base_config.h"
+
 #include <Servo.h>
 #include <Wire.h>
 #include "ros.h"
 #include "ros/time.h"
 
-//Header file for subscribing for LED
-#include "lino_msgs/Led.h"
+#if LED == 1
+    //Header file for subscribing for LED
+    #include "lino_msgs/Led.h"
+#endif
+
 //header file for publishing velocities for odom
 #include "lino_msgs/Velocities.h"
 //header file for cmd_subscribing to "cmd_vel"
 #include "geometry_msgs/Twist.h"
 //header file for pid server
 #include "lino_msgs/PID.h"
+#include "std_msgs/Bool.h"
+
 //header file for imu
 #include "lino_msgs/Imu.h"
-#include "std_msgs/Bool.h"
-// //(Pito) header for instrumentation
-// #include "lino_msgs/Inst.h"
-// //(Pito) Header for camera servo
-// #include "std_msgs/UInt16.h"
-#include "Adafruit_AW9523.h"
-#include "Adafruit_PWMServoDriver.h"
-#include "lino_base_config.h"
+
+#if INSTRUMENTATION == 1
+    #include "lino_msgs/Inst.h"
+#endif
+
+#if PINCER == 1
+    #include "Adafruit_AW9523.h"
+    #include "Adafruit_PWMServoDriver.h"
+    Adafruit_AW9523 aw;
+#endif
+
 #include "Motor.h"
 #include "Kinematics.h"
 #include "PID.h"
@@ -38,17 +55,15 @@
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
-#define DEBUG_RATE 1
-#define CAMERA_SERVO_PIN 7
+#define DEBUG_RATE 5
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
 Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV); 
 Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
 
-// Servo steering_servo;
 Servo steering_servo;
-// Servo camera_servo; // Pito added
+
 
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A, MOTOR1_IN_B);
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A, MOTOR2_IN_B); 
@@ -60,19 +75,20 @@ PID motor2_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor3_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor4_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 
-//LED Test
-Adafruit_AW9523 aw;
-bool LED_on1 = false;
-bool LED_blink1 = false;
-bool LED_blink_on1 = false;
+#if LED==1
+    //LED Test
+    bool LED_on1 = false;
+    bool LED_blink1 = false;
+    bool LED_blink_on1 = false;
 
-bool LED_on2 = false;
-bool LED_blink2 = false;
-bool LED_blink_on2 = false;
+    bool LED_on2 = false;
+    bool LED_blink2 = false;
+    bool LED_blink_on2 = false;
 
-bool LED_on3 = false;
-bool LED_blink3 = false;
-bool LED_blink_on3 = false;
+    bool LED_on3 = false;
+    bool LED_blink3 = false;
+    bool LED_blink_on3 = false;
+#endif
 
 Kinematics kinematics(Kinematics::LINO_BASE, MAX_RPM, WHEEL_DIAMETER, FR_WHEELS_DISTANCE, LR_WHEELS_DISTANCE);
 
@@ -81,43 +97,53 @@ float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
+char buffer[100];
 
-// Pincer servo
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-#define PINCERMIN  170
-#define PINCERMAX  300 
-#define CLAWMIN 212
-#define CLAWMAX 360
-#define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+#if PINCER==1
 
-uint8_t servonum_pincer = 0;
-uint16_t pulselen_pincer = PINCERMIN;
+    // Pincer servo
+    Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-uint8_t servonum_claw = 1;
-uint16_t pulselen_claw = CLAWMIN;
+    #define PINCERMIN  170
+    #define PINCERMAX  300 
+    #define CLAWMIN 212
+    #define CLAWMAX 360
+    #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+
+    uint8_t servonum_pincer = 0;
+    uint16_t pulselen_pincer = PINCERMIN;
+
+    uint8_t servonum_claw = 1;
+    uint16_t pulselen_claw = CLAWMIN;
+#endif
 
 //callback function prototypes
+
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
+
 void PIDCallback(const lino_msgs::PID& pid);
-void LEDCallback(const lino_msgs::Led& led_msg);
-void ServoCallback(const std_msgs::Bool& servo_msg);
-//void CameraServoCallback(const std_msgs::UInt16& servo_msg); // Pito added
 
-//Pito added
-long m1_pid_error = 0;
-long m2_pid_error = 0;
-long m1_curr_rpm = 0;
-long m2_curr_rpm = 0;
+#if PINCER==1
+    void ServoCallback(const std_msgs::Bool& servo_msg);
+    ros::Subscriber<std_msgs::Bool> servo_sub("servo", ServoCallback);
+#endif
 
+#if LED==1
+    void LEDCallback(const lino_msgs::Led& led_msg);
+    ros::Subscriber<lino_msgs::Led> led_sub("led", LEDCallback);
+#endif
 
+#if DETAILED_LOG==1
+    long m1_pid_error = 0;
+    long m2_pid_error = 0;
+    long m1_curr_rpm = 0;
+    long m2_curr_rpm = 0;
+#endif
 ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
-ros::Subscriber<lino_msgs::Led> led_sub("led", LEDCallback);
-ros::Subscriber<std_msgs::Bool> servo_sub("servo", ServoCallback);
-//ros::Subscriber<std_msgs::UInt16> cam_sub("camera/servo", CameraServoCallback); // Pito added
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -125,55 +151,59 @@ ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
-// lino_msgs::Inst inst_msg;
-// ros::Publisher inst_pub("inst", &inst_msg);
-
+#if INSTRUMENTATION==1
+    // lino_msgs::Inst inst_msg;
+    // ros::Publisher inst_pub("inst", &inst_msg);
+#endif
 
 void setup()
 {
-    //steering_servo.attach(STEERING_PIN);
-    //steering_servo.write(90); 
-
-    //camera_servo.attach(STEERING_PIN); // Pito added
-    //camera_servo.write(0); // Pito added
-    Serial.begin(115200);
-    while (!Serial) delay(1);  // wait for serial port to open
-    
-    Serial.println("Adafruit AW9523 GPIO Expander test!");
-
-    if (! aw.begin(0x58)) {
-        Serial.println("AW9523 not found? Check wiring!");
-        while (1) delay(10);  // halt forever
-    }
-
-    pwm.begin();
-
-    pwm.setOscillatorFrequency(27000000);
-    pwm.setPWMFreq(SERVO_FREQ);
-
-    Serial.println("AW9523 found!");
-    aw.pinMode(1, OUTPUT);
-    aw.pinMode(2, OUTPUT);
-    aw.pinMode(3, OUTPUT);
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
     nh.subscribe(cmd_sub);
-    nh.subscribe(led_sub);
-    nh.subscribe(servo_sub);
-    //nh.subscribe(cam_sub);
+
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
-    //nh.advertise(inst_pub);
+
+#if INSTRUMENTATION==1
+    nh.advertise(inst_pub);
+#endif
 
     while (!nh.connected())
     {
         nh.spinOnce();
     }
-    nh.loginfo("LINOBASE CONNECTED");
-    char buffer[50];
+    nh.loginfo("**** LINOBASE CONNECTED!!");
+
+#if STEERING==1
+    steering_servo.attach(STEERING_PIN);
+    steering_servo.write(90); 
+#endif
+
+
+#if PINCER==1
+    nh.loginfo("***** ENTERING Pincer | Led");
+    pwm.begin();
+    pwm.setOscillatorFrequency(27000000);
+    pwm.setPWMFreq(SERVO_FREQ);
+    nh.subscribe(servo_sub);
+#endif
+
+#if LED==1
+    nh.loginfo("***** AW9523 found!");
+    aw.pinMode(1, OUTPUT);
+    aw.pinMode(2, OUTPUT);
+    aw.pinMode(3, OUTPUT);
+
+    nh.subscribe(led_sub);
+#endif
+
+#if DETAILED_LOG==1
     sprintf (buffer, "PID %f %f %f", K_P, K_D, K_I);
     nh.loginfo(buffer);
+#endif
+
     delay(1);
 }
 
@@ -183,18 +213,21 @@ void loop()
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_debug_time = 0;
     static bool imu_is_initialized;
-    
 
+#if PINCER==1
     // This block sets the servo to the desired position
     pwm.setPWM(servonum_pincer, 0, pulselen_pincer);
     pwm.setPWM(servonum_claw, 0, pulselen_claw);
-    // char buffer[50];
-    // sprintf(buffer, "&&&&&&&&&&& Pulse Length: %d", pulselen);
+    //sprintf(buffer, "Pincer: pincer @%d=%d claw@%d=%d ", servonum_pincer, pulselen_pincer, servonum_claw, pulselen_claw);
     // nh.loginfo(buffer);
+#endif
+
     //this block drives the robot based on defined rate
     if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE))
     {
+#if LED==1
         LEDUpdate();
+#endif
         moveBase();
         prev_control_time = millis();
     }
@@ -204,17 +237,18 @@ void loop()
     {
         stopBase();
     }
-
+#if LED==1
+        #define LEDPIN 0
+        aw.digitalWrite(LEDPIN, LOW);
+#endif
 
     //this block publishes the IMU data based on defined rate
     if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE))
     {
-        nh.loginfo("Checking IMU.");
+        //sanity check if the IMU is connected
 
-        char buffer[50];
-        sprintf(buffer, "*********** IMU Address: %d", getIMUaddrs());
-        nh.loginfo(buffer);
-        // aw.digitalWrite(LedPin, LOW);
+
+#if IMU==1
         if (!imu_is_initialized)
         {
             imu_is_initialized = initIMU();
@@ -229,9 +263,11 @@ void loop()
             publishIMU();
         }
         prev_imu_time = millis();
+#endif
     }
 
     //this block displays the encoder readings. change DEBUG to 0 if you don't want to display
+    
     if(DEBUG)
     {
         if ((millis() - prev_debug_time) >= (1000 / DEBUG_RATE))
@@ -242,22 +278,7 @@ void loop()
     }
     //call all the callbacks waiting to be called
     nh.spinOnce();
-    
 }
-
-// void CameraServoCallback(const std_msgs::UInt16& servo_msg)
-// {
-//     char buffer[50];
-//     sprintf (buffer,   "Cam servo %ld", servo_msg.data);
-//     nh.loginfo(buffer);
-//     sprintf (buffer,   "Cam attached? %ld", camera_servo.attached());
-//     nh.loginfo(buffer);
-
-//     camera_servo.write(servo_msg.data);
-//     sprintf (buffer,   "Cam servo read %ld", camera_servo.read());
-//     nh.loginfo(buffer);
-
-// }
 
 void PIDCallback(const lino_msgs::PID& pid)
 {
@@ -280,6 +301,7 @@ void commandCallback(const geometry_msgs::Twist& cmd_msg)
     g_prev_command_time = millis();
 }
 
+#if LED==1
 void LEDCallback(const lino_msgs::Led& led_msg)
 {   
     if (led_msg.wire == 1){
@@ -294,7 +316,6 @@ void LEDCallback(const lino_msgs::Led& led_msg)
     }
     
 }
-
 
 void LEDUpdate()
 {
@@ -313,7 +334,6 @@ void LEDUpdate()
     } else if (!LED_on1){
         aw.digitalWrite(1, HIGH);
     }
-
 
     if (LED_on2 && !LED_blink2)
     {
@@ -348,11 +368,13 @@ void LEDUpdate()
         aw.digitalWrite(3, HIGH);
     }
 }
+#endif
 
-
-
+#if PINCER==1
 void ServoCallback(const std_msgs::Bool& servo_msg)
 {
+    sprintf(buffer, ">>>> Servo Request %d", servo_msg.data);
+    nh.loginfo(buffer);
     if (servo_msg.data){
         pulselen_pincer = PINCERMAX;
         pulselen_claw = CLAWMAX;
@@ -361,7 +383,7 @@ void ServoCallback(const std_msgs::Bool& servo_msg)
         pulselen_claw = CLAWMIN;
     }
 }
-
+#endif
 
 void moveBase()
 {
@@ -374,21 +396,24 @@ void moveBase()
     int current_rpm3 = motor3_encoder.getRPM();
     int current_rpm4 = motor4_encoder.getRPM();
 
-    //the required rpm is capped at -/+ MAX_RPM to prevent the PID from having too much error 
+    //the required rpm is capped at -/+ MAX_RPM to prevent the PID from having too much error
     //the PWM value sent to the motor driver is the calculated PID based on required RPM vs measured RPM
     motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
     motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
     // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
     // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));  
 
+// DEBUG CODE
 // motor1_controller.spin(50); // PITO LEFT MOTOR
 // motor2_controller.spin(100); // PITO RIGHT MOTOR
 
+#if DETAILED_LOG==1
     // Pito added this
     m1_pid_error = req_rpm.motor1 - current_rpm1;
     m2_pid_error = req_rpm.motor2 - current_rpm2;
     m1_curr_rpm = current_rpm1;
     m2_curr_rpm = current_rpm2;
+#endif
 
     Kinematics::velocities current_vel;
 
@@ -412,17 +437,18 @@ void moveBase()
     //publish raw_vel_msg
     raw_vel_pub.publish(&raw_vel_msg);
 
-//     //collect data for instrumentation message
-//     inst_msg.l_encoder = motor1_encoder.read();
-//     inst_msg.r_encoder = motor2_encoder.read();
-//     inst_msg.l_piderror = m1_pid_error;
-//     inst_msg.r_piderror = m2_pid_error;
-//     inst_msg.l_rpm = m1_curr_rpm;
-//     inst_msg.r_rpm = m2_curr_rpm;
+#if INSTRUMENTATION==1
+    //collect data for instrumentation message
+    inst_msg.l_encoder = motor1_encoder.read();
+    inst_msg.r_encoder = motor2_encoder.read();
+    inst_msg.l_piderror = m1_pid_error;
+    inst_msg.r_piderror = m2_pid_error;
+    inst_msg.l_rpm = m1_curr_rpm;
+    inst_msg.r_rpm = m2_curr_rpm;
+// publish instrumentation message
+    inst_pub.publish(&inst_msg);
+#endif
 
-//     // publish instrumentation message
-//     inst_pub.publish(&inst_msg);
-// 
 }
 
 void stopBase()
@@ -432,6 +458,7 @@ void stopBase()
     g_req_angular_vel_z = 0;
 }
 
+#if IMU==1
 void publishIMU()
 {
     //pass accelerometer data to imu object
@@ -446,6 +473,7 @@ void publishIMU()
     //publish raw_imu_msg
     raw_imu_pub.publish(&raw_imu_msg);
 }
+#endif
 
 float steer(float steering_angle)
 {
@@ -467,6 +495,7 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 
 void printDebug()
 {
+#if DETAILED_LOG==1
     char buffer[50];
 
     sprintf (buffer,   "Encoders: %ld %ld", motor1_encoder.read(), motor2_encoder.read());
@@ -475,6 +504,5 @@ void printDebug()
     nh.loginfo(buffer);
     sprintf (buffer,   "Current RPM: %ld %ld", m1_curr_rpm, m2_curr_rpm);
     nh.loginfo(buffer);
+#endif
 }
-
-

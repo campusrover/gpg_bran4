@@ -21,16 +21,16 @@ namespace lino_msgs
 
     Led():
       wire(0),
-      on(false),
-      blink(false)
+      on(0),
+      blink(0)
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       union {
-        bool real;
+        int8_t real;
         uint8_t base;
       } u_wire;
       u_wire.real = this->wire;
@@ -50,15 +50,14 @@ namespace lino_msgs
       u_blink.real = this->blink;
       *(outbuffer + offset + 0) = (u_blink.base >> (8 * 0)) & 0xFF;
       offset += sizeof(this->blink);
-      
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       union {
-        bool real;
+        int8_t real;
         uint8_t base;
       } u_wire;
       u_wire.base = 0;
@@ -84,8 +83,8 @@ namespace lino_msgs
      return offset;
     }
 
-    const char * getType(){ return "lino_msgs/Led"; };
-    const char * getMD5(){ return "37838ae7aa70723939792ea809ae469c"; };
+    virtual const char * getType() override { return "lino_msgs/Led"; };
+    virtual const char * getMD5() override { return "37838ae7aa70723939792ea809ae469c"; };
 
   };
 

@@ -1,4 +1,0 @@
-<launch>
-    <!-- Run Linorobot compatible laser drivers -->
-    <include file="$(find platform)/launch/include/lidar.launch" />
-</launch>

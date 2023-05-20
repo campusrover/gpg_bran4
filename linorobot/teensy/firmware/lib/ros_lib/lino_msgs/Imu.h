@@ -27,7 +27,7 @@ namespace lino_msgs
     {
     }
 
-    virtual int serialize(unsigned char *outbuffer) const
+    virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
       offset += this->linear_acceleration.serialize(outbuffer + offset);
@@ -36,7 +36,7 @@ namespace lino_msgs
       return offset;
     }
 
-    virtual int deserialize(unsigned char *inbuffer)
+    virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
       offset += this->linear_acceleration.deserialize(inbuffer + offset);
@@ -45,8 +45,8 @@ namespace lino_msgs
      return offset;
     }
 
-    const char * getType(){ return "lino_msgs/Imu"; };
-    const char * getMD5(){ return "275110405f08e1b7c0c0f1aba3e19c67"; };
+    virtual const char * getType() override { return "lino_msgs/Imu"; };
+    virtual const char * getMD5() override { return "275110405f08e1b7c0c0f1aba3e19c67"; };
 
   };
 

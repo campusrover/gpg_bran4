@@ -1,4 +1,4 @@
-// FOR PLATFORM2
+// FOR PLATFORM3
 
 #ifndef LINO_BASE_CONFIG_H
 #define LINO_BASE_CONFIG_H
@@ -17,7 +17,7 @@
 
 //uncomment the IMU you're using
 //#define USE_GY85_IMU
-// #define USE_MPU6050_IMU
+//#define USE_MPU6050_IMU
 // #define USE_MPU9150_IMU
 #define USE_MPU9250_IMU
 
