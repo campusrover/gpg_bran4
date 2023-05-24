@@ -158,6 +158,7 @@ ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
 void setup()
 {
+    delay(10000); // trying to slow up program so micro_ros_agent in reboot cron has time to get going
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -204,7 +205,7 @@ void setup()
     nh.loginfo(buffer);
 #endif
 
-    delay(1);
+    delay(10000);
 }
 
 void loop()
@@ -256,6 +257,7 @@ void loop()
             if(imu_is_initialized)
                 nh.loginfo("IMU Initialized");
             else
+
                 nh.logfatal("IMU failed to initialize. Check your IMU connection.");
         }
         else
@@ -263,7 +265,11 @@ void loop()
             publishIMU();
         }
         prev_imu_time = millis();
+        
+        // sprintf(buffer, "**** IMU: accel: %d, gyro: %d, mag: %d", getAccelID(), getGyroID(), getMagID());
+        // nh.loginfo(buffer);
 #endif
+
     }
 
     //this block displays the encoder readings. change DEBUG to 0 if you don't want to display

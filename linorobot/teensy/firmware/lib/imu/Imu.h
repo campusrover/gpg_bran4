@@ -30,18 +30,28 @@ bool initIMU()
     return true;
 }
 
-int getIMUaddrs()
+int getAccelID()
 {
-    // Wire.begin();
-    // accelerometer.initialize();
-    // int ret1 = accelerometer.getDeviceID();
-    // gyroscope.initialize();
-    // int ret2 = gyroscope.getDeviceID();
-    // magnetometer.initialize();
-    // int ret3 = magnetometer.getDeviceID();
-    // return(ret1*1000+ret2*100+ret3);
-    return 0;
+    int ret;
+    ret = accelerometer.getDeviceID();
+    return ret;
 }
+
+int getGyroID()
+{
+    int ret;
+    ret = gyroscope.getDeviceID();
+    return ret;
+}
+
+int getMagID()
+{
+    int ret;
+    ret = magnetometer.getDeviceID();
+    return ret;
+}
+
+
 
 geometry_msgs::Vector3 readAccelerometer()
 {
