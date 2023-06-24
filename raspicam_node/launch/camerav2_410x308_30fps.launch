@@ -4,6 +4,12 @@
   <arg name="camera_id" default="0"/>
   <arg name="camera_frame_id" default="raspicam"/>
   <arg name="camera_name" default="camerav2_410x308"/>
+  <arg name="frame_rate" default="30"/>
+  <arg name="contrast" default="38" />
+  <arg name="sharpness" default="56" />
+  <arg name="saturation" default="38" />
+  <arg name="ISO" default="1258" />
+
 
   <node type="raspicam_node" pkg="raspicam_node" name="raspicam_node" output="screen">
     <param name="private_topics" value="true"/>
@@ -20,8 +26,14 @@
     <param name="vFlip" value="false"/>
     <param name="hFlip" value="false"/>
 
-    <param name="framerate" value="30"/>
+  <param name="contrast" value="$(arg frame_rate)"/>
+  <param name="sharpness" value="$(arg sharpness)"/>
+  <param name="saturation" value="$(arg saturation)"/>
+  <param name="ISO" value="$(arg ISO)"/>
+
+    <param name="framerate" value="$(arg frame_rate)"/>
     <param name="exposure_mode" value="antishake"/>
     <param name="shutter_speed" value="0"/>
+
   </node>
 </launch>

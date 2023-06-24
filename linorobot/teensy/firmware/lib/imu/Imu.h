@@ -30,29 +30,6 @@ bool initIMU()
     return true;
 }
 
-int getAccelID()
-{
-    int ret;
-    ret = accelerometer.getDeviceID();
-    return ret;
-}
-
-int getGyroID()
-{
-    int ret;
-    ret = gyroscope.getDeviceID();
-    return ret;
-}
-
-int getMagID()
-{
-    int ret;
-    ret = magnetometer.getDeviceID();
-    return ret;
-}
-
-
-
 geometry_msgs::Vector3 readAccelerometer()
 {
     geometry_msgs::Vector3 accel;

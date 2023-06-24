@@ -1,5 +1,11 @@
 <launch>
 
-  <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch" />
+  <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch">
+    <arg name="frame_rate" value="10" />
+    <arg name="contrast" value="38" />
+    <arg name="sharpness" value="56" />
+    <arg name="saturation" value="38" />
+    <arg name="ISO" value="1258" />
+  </include>
 
 </launch>

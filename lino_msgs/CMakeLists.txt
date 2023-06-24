@@ -9,8 +9,6 @@ add_message_files(
   Velocities.msg
   PID.msg
   Imu.msg
-  Inst.msg
-  Led.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
