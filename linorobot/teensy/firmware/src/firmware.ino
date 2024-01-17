@@ -16,10 +16,7 @@
 #include "lino_msgs/PID.h"
 //header file for imu
 #include "lino_msgs/Imu.h"
-// //(Pito) header for instrumentation
-// #include "lino_msgs/Inst.h"
-// //(Pito) Header for camera servo
-// #include "std_msgs/UInt16.h"
+#include "crinstrument.h"
 
 
 #include "lino_base_config.h"
@@ -31,6 +28,7 @@
 
 #define ENCODER_OPTIMIZE_INTERRUPTS // comment this out on Non-Teensy boards
 #include "Encoder.h"
+
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
@@ -89,18 +87,11 @@ ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
-// lino_msgs::Inst inst_msg;
-// ros::Publisher inst_pub("inst", &inst_msg);
-
+// New stuff as part of the refactoring
+Instrument inst;
 
 void setup()
 {
-    //steering_servo.attach(STEERING_PIN);
-    //steering_servo.write(90); 
-
-    //camera_servo.attach(STEERING_PIN); // Pito added
-    //camera_servo.write(0); // Pito added
-    
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -108,7 +99,8 @@ void setup()
     //nh.subscribe(cam_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
-    //nh.advertise(inst_pub);
+    
+    inst.setup(nh);
 
 
     while (!nh.connected())
