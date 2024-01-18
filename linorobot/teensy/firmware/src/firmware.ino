@@ -30,11 +30,13 @@
 #include "Motor.h"
 #include "Kinematics.h"
 #include "PID.h"
+#include "arm.h"
 
 #include "Imu.h"
 
 #define ENCODER_OPTIMIZE_INTERRUPTS // comment this out on Non-Teensy boards
 #include "Encoder.h"
+#include "std_msgs/UInt16.h"
 
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
@@ -46,9 +48,6 @@ Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV);
 Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV); 
 Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
 
-// Servo steering_servo;
-Servo steering_servo;
-// Servo camera_servo; // Pito added
 
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A, MOTOR1_IN_B);
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A, MOTOR2_IN_B); 
@@ -83,7 +82,8 @@ float g_req_angular_vel_z = 0;
 unsigned long g_prev_command_time = 0;
 
 // Pincer servo
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+// Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+Arm theArm = Arm();
 
 #define PINCERMIN  170
 #define PINCERMAX  300 
@@ -117,7 +117,6 @@ ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
 ros::Subscriber<lino_msgs::Led> led_sub("led", LEDCallback);
 ros::Subscriber<std_msgs::Bool> servo_sub("servo", ServoCallback);
-//ros::Subscriber<std_msgs::UInt16> cam_sub("camera/servo", CameraServoCallback); // Pito added
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -146,12 +145,12 @@ void setup()
         while (1) delay(10);  // halt forever
     }
 
-    pwm.begin();
+    // pwm.begin();
 
-    pwm.setOscillatorFrequency(27000000);
-    pwm.setPWMFreq(SERVO_FREQ);
+    // pwm.setOscillatorFrequency(27000000);
+    // pwm.setPWMFreq(SERVO_FREQ);
 
-    Serial.println("AW9523 found!");
+    // Serial.println("AW9523 found!");
     aw.pinMode(1, OUTPUT);
     aw.pinMode(2, OUTPUT);
     aw.pinMode(3, OUTPUT);
@@ -185,9 +184,6 @@ void loop()
     static bool imu_is_initialized;
     
 
-    // This block sets the servo to the desired position
-    pwm.setPWM(servonum_pincer, 0, pulselen_pincer);
-    pwm.setPWM(servonum_claw, 0, pulselen_claw);
     // char buffer[50];
     // sprintf(buffer, "&&&&&&&&&&& Pulse Length: %d", pulselen);
     // nh.loginfo(buffer);
@@ -205,6 +201,7 @@ void loop()
         stopBase();
     }
 
+    theArm.loop();
 
     //this block publishes the IMU data based on defined rate
     if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE))
@@ -244,20 +241,6 @@ void loop()
     nh.spinOnce();
     
 }
-
-// void CameraServoCallback(const std_msgs::UInt16& servo_msg)
-// {
-//     char buffer[50];
-//     sprintf (buffer,   "Cam servo %ld", servo_msg.data);
-//     nh.loginfo(buffer);
-//     sprintf (buffer,   "Cam attached? %ld", camera_servo.attached());
-//     nh.loginfo(buffer);
-
-//     camera_servo.write(servo_msg.data);
-//     sprintf (buffer,   "Cam servo read %ld", camera_servo.read());
-//     nh.loginfo(buffer);
-
-// }
 
 void PIDCallback(const lino_msgs::PID& pid)
 {
@@ -349,16 +332,12 @@ void LEDUpdate()
     }
 }
 
-
-
 void ServoCallback(const std_msgs::Bool& servo_msg)
 {
     if (servo_msg.data){
-        pulselen_pincer = PINCERMAX;
-        pulselen_claw = CLAWMAX;
+        theArm.armCommand("open");
     } else{
-        pulselen_pincer = PINCERMIN;
-        pulselen_claw = CLAWMIN;
+        theArm.armCommand("close");
     }
 }
 
@@ -396,7 +375,6 @@ void moveBase()
     {
         float current_steering_angle;
         
-        current_steering_angle = steer(g_req_angular_vel_z);
         current_vel = kinematics.getVelocities(current_steering_angle, current_rpm1, current_rpm2);
     }
     else
@@ -447,18 +425,6 @@ void publishIMU()
     raw_imu_pub.publish(&raw_imu_msg);
 }
 
-float steer(float steering_angle)
-{
-    //steering function for ACKERMANN base
-    float servo_steering_angle;
-
-    steering_angle = constrain(steering_angle, -MAX_STEERING_ANGLE, MAX_STEERING_ANGLE);
-    servo_steering_angle = mapFloat(steering_angle, -MAX_STEERING_ANGLE, MAX_STEERING_ANGLE, PI, 0) * (180 / PI);
-
-    steering_servo.write(servo_steering_angle);
-
-    return steering_angle;
-}
 
 float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
 {

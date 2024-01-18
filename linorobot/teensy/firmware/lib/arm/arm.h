@@ -13,6 +13,7 @@ public:
     void setup();
     String getState();
     void armCommand(String command);
+    void loop();
 
 private:
     Adafruit_PWMServoDriver ARM;
@@ -43,11 +44,10 @@ private:
 
     String state;
 
-    void loop();
     void elbow(float deg);
     void shoulder(float deg);
     void wrist(float deg);
-    void setIterationDelta();
+    void calculateIterationDeltas();
     int move();
 };
 

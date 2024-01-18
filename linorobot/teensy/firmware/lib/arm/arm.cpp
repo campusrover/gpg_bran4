@@ -60,7 +60,7 @@ String Arm::getState()
     return state;
 }
 
-void Arm::setIterationDelta()
+void Arm::calculateIterationDeltas()
 {
     shouldercnt = abs(destination_shoulder - CurrentShoulder);
     elbowcnt = abs(destination_elbow - CurrentElbow);
@@ -84,7 +84,7 @@ void Arm::setIterationDelta()
 
 int Arm::move()
 {
-    if (iterations <= 0) {
+    if (iterations <= 0 || state != "move") {
         state = "idle";
         return 0;
     }
@@ -105,14 +105,17 @@ void Arm::armCommand(String command)
         destination_shoulder = ShoulderParkdeg;
         destination_wrist = WristParkdeg;
         destination_elbow = ElbowParkdeg;
-        setIterationDelta();
+        calculateIterationDeltas();
         state = "move";
         return;
     }
-    if (command == "open")
+    if (command == "floor")
     {
-    }
-    if (command == "close")
-    {
+        destination_shoulder = ShoulderParkdeg;
+        destination_wrist = WristParkdeg;
+        destination_elbow = ElbowParkdeg;
+        calculateIterationDeltas();
+        state = "move";
     }
 }
+    
