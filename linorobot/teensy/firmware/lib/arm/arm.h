@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <ros.h>
 #include <Adafruit_PWMServoDriver.h>
 #include "armconstants.h"
 
@@ -10,7 +11,7 @@ class Arm {
 
 public:
     Arm();
-    void setup();
+    void setup(ros::NodeHandle& nh);
     String getState();
     void armCommand(String command);
     void loop();
@@ -43,6 +44,7 @@ private:
     float wristdelta = 0;
 
     String state;
+    ros::NodeHandle& nh_ = NULL;
 
     void elbow(float deg);
     void shoulder(float deg);

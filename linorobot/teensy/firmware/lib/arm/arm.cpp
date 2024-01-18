@@ -5,21 +5,22 @@ Arm::Arm()
     ARM = Adafruit_PWMServoDriver(0x40);
     iteration_time = millis();
     iteration_interval = 20; // 20 milli second
+    nh_ = (nullptr);
     state = "idle";
 };
 
-void Arm::setup()
+void Arm::setup(ros::NodeHandle& nh) 
 {
-    Serial.begin(9600);
+    nh_ = &nh;
     ARM.begin();
     ARM.setPWMFreq(60);
-    delay(10);
     ARM.setPWM(Claw, 0, ClawPark);
     ARM.setPWM(Wrist, 0, WristPark);
     ARM.setPWM(Elbow, 0, ElbowPark);
     ARM.setPWM(Shoulder, 0, ShoulderPark);
     // pinMode(5, OUTPUT);
     // digitalWrite(5, LOW); // turn the Left wheel off by making the voltage LOW
+    nh_.loginfo("Arm setup complete");
 }
 
 void Arm::loop()
@@ -62,6 +63,8 @@ String Arm::getState()
 
 void Arm::calculateIterationDeltas()
 {
+    // nh.loginfo("calculateIterationDeltas");
+
     shouldercnt = abs(destination_shoulder - CurrentShoulder);
     elbowcnt = abs(destination_elbow - CurrentElbow);
     wristcnt = abs(destination_wrist - CurrentWrist); // note wrist is backwards

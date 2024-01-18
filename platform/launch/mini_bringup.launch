@@ -17,8 +17,8 @@
         <rosparam command="load" file="$(find linorobot)/param/ekf/robot_localization.yaml" />
     </node>
 
-    <!-- Onboard instrumentaion -->
-    <node pkg="prrexamples" type="robogym.py" name="robogym"/>
+    <!-- Onboard instrumentaion
+    <node pkg="prrexamples" type="robogym.py" name="robogym"/>  -->
 
     <!-- Publish all the transforms  -->
     <include file="$(find platform)/launch/include/urdf.launch" />
