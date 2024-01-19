@@ -1,17 +1,16 @@
 #include "arm.h"
 
-Arm::Arm()
+Arm::Arm() : nodeHandle(nullptr) {}
 {
     ARM = Adafruit_PWMServoDriver(0x40);
     iteration_time = millis();
     iteration_interval = 20; // 20 milli second
-    nh_ = (nullptr);
     state = "idle";
 };
 
 void Arm::setup(ros::NodeHandle& nh) 
 {
-    nh_ = &nh;
+    nodeHandle = &nh;
     ARM.begin();
     ARM.setPWMFreq(60);
     ARM.setPWM(Claw, 0, ClawPark);
@@ -20,7 +19,7 @@ void Arm::setup(ros::NodeHandle& nh)
     ARM.setPWM(Shoulder, 0, ShoulderPark);
     // pinMode(5, OUTPUT);
     // digitalWrite(5, LOW); // turn the Left wheel off by making the voltage LOW
-    nh_.loginfo("Arm setup complete");
+    nodeHandle.loginfo("Arm setup complete");
 }
 
 void Arm::loop()
