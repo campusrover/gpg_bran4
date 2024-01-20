@@ -55,6 +55,29 @@ void Arm::wrist(float deg)
     // CurrentWrist = deg;
 }
 
+void Arm::openclaw() {  // Claw   MIN is closed   MAX is open
+
+  if (CurrentClaw >= CLAWOPEN) {
+    for (int pulselen = CurrentClaw; pulselen > CLAWOPEN; pulselen--) {
+      ARM.setPWM(Claw, 0, ClawOpen);
+      delay(20);
+    }
+  }
+  CurrentClaw = CLAWOPEN;
+}
+
+void closeclaw() {  // Claw MIN is closed   MAX is open
+
+  if (CurrentClaw <= CLAWCLOSED) {
+    for (int pulselen = CurrentClaw; pulselen < ClawClosed; pulselen++) {
+      ARM.setPWM(Claw, 0, ClawClosed);
+
+      delay(20);
+    }
+  }
+  CurrentClaw = ClawClosed;
+}
+
 String Arm::getState()
 {
     return state;
@@ -125,5 +148,23 @@ void Arm::armCommand(String command)
         calculateIterationDeltas();
         state = "move";
     }
+    if (command == "open")
+    {
+        destination_shoulder = SHOULDERFLOORDEG;
+        destination_wrist = WRISTFLOORDEG;
+        destination_elbow = ELBOWFLOORDEG;
+        calculateIterationDeltas();
+        state = "move";
+    }
+    if (command == "close")
+    {
+        destination_shoulder = SHOULDERFLOORDEG;
+        destination_wrist = WRISTFLOORDEG;
+        destination_elbow = ELBOWFLOORDEG;
+        calculateIterationDeltas();
+        state = "move";
+    }
+
+
 }
     
