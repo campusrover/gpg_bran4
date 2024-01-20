@@ -11,6 +11,7 @@ add_message_files(
   Imu.msg
   Inst.msg
   Led.msg
+  ArmMsg.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)

@@ -8,6 +8,7 @@
 #include <Wire.h>
 #include "ros/node_handle.h"
 #include "ros/time.h"
+#include "ros/types.h"
 
 //header file for publishing velocities for odom
 #include "lino_msgs/Velocities.h"
@@ -17,7 +18,7 @@
 #include "lino_msgs/PID.h"
 //header file for imu
 #include "lino_msgs/Imu.h"
-#include "std_msgs/Bool.h"
+#include "lino_msgs/ArmMsg.h"
 // //(Pito) header for instrumentation
 // #include "lino_msgs/Inst.h"
 // //(Pito) Header for camera servo
@@ -70,7 +71,7 @@ Arm theArm = Arm();
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
-void ServoCallback(const std_msgs::Bool& servo_msg);
+void ArmMsgCallback(const lino_msgs::ArmMsg& arm_msg);
 
 //Pito added
 long m1_pid_error = 0;
@@ -83,7 +84,7 @@ ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
-ros::Subscriber<std_msgs::Bool> servo_sub("servo", ServoCallback);
+ros::Subscriber<lino_msgs::Arm arm_sub("arm", armMsgCallback);
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -102,7 +103,7 @@ void setup()
     nh.subscribe(pid_sub);
     nh.subscribe(cmd_sub);
     // nh.subscribe(led_sub);
-    nh.subscribe(servo_sub);
+    nh.subscribe(armMsg_sub);
     //nh.subscribe(cam_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
@@ -207,16 +208,16 @@ void commandCallback(const geometry_msgs::Twist& cmd_msg)
     g_prev_command_time = millis();
 }
 
-void ServoCallback(const std_msgs::Bool& servo_msg)
+void armMsgCallback(const std_msgs::Bool& servo_msg)
 {
-    nh.loginfo("Servo Callback.");
-    if (servo_msg.data){
-        nh.loginfo("Open.");
-        theArm.armCommand("park");
-    } else{
-        nh.loginfo("Close.");
-        theArm.armCommand("floor");
-    }
+    nh.loginfo("Arm Callback.");
+    // if (servo_msg.data){
+    //     nh.loginfo("Open.");
+    //     theArm.armCommand("park");
+    // } else{
+    //     nh.loginfo("Close.");
+    //     theArm.armCommand("floor");
+    // }
 }
 
 

@@ -13,10 +13,10 @@ void Arm::setup(ros::NodeHandle& nh)
     nodeHandle = &nh;
     ARM.begin();
     ARM.setPWMFreq(60);
-    ARM.setPWM(Claw, 0, ClawPark);
-    ARM.setPWM(Wrist, 0, WristPark);
-    ARM.setPWM(Elbow, 0, ElbowPark);
-    ARM.setPWM(Shoulder, 0, ShoulderPark);
+    ARM.setPWM(CLAW, 0, CLAWPARK);
+    ARM.setPWM(WRIST, 0, WRISTPARK);
+    ARM.setPWM(ELBOW, 0, ELBOWPARK);
+    ARM.setPWM(SHOULDER, 0, SHOULDERPARK);
     // pinMode(5, OUTPUT);
     // digitalWrite(5, LOW); // turn the Left wheel off by making the voltage LOW
     nodeHandle->loginfo("Arm setup complete");
@@ -34,7 +34,7 @@ void Arm::loop()
 void Arm::elbow(float deg)
 {
     int deglen = (deg + 43) * 2.5; // pulselen of commanded degrees
-    ARM.setPWM(Elbow, 0, deglen);
+    ARM.setPWM(ELBOW, 0, deglen);
     // delay(20);
     // CurrentElbow = deg;
 }
@@ -42,7 +42,7 @@ void Arm::elbow(float deg)
 void Arm::shoulder(float deg)
 {
     int deglen = (deg + 67.8) * 1.77; // pulselen of commanded degrees
-    ARM.setPWM(Shoulder, 0, deglen);
+    ARM.setPWM(SHOULDER, 0, deglen);
     // delay(20);
     // CurrentShoulder = deg;
 }
@@ -50,7 +50,7 @@ void Arm::shoulder(float deg)
 void Arm::wrist(float deg)
 {
     int deglen = (deg + 75) * 1.77; // pulselen of commanded degrees
-    ARM.setPWM(Wrist, 0, deglen);
+    ARM.setPWM(WRIST, 0, deglen);
     // delay(20);
     // CurrentWrist = deg;
 }
@@ -64,9 +64,9 @@ void Arm::calculateIterationDeltas()
 {
     // nh.loginfo("calculateIterationDeltas");
 
-    shouldercnt = abs(destination_shoulder - CurrentShoulder);
-    elbowcnt = abs(destination_elbow - CurrentElbow);
-    wristcnt = abs(destination_wrist - CurrentWrist); // note wrist is backwards
+    shouldercnt = abs(destination_shoulder - currentShoulder);
+    elbowcnt = abs(destination_elbow - currentElbow);
+    wristcnt = abs(destination_wrist - currentWrist); // note wrist is backwards
 
     if (shouldercnt > elbowcnt && shouldercnt > wristcnt)
         iterations = shouldercnt;
@@ -75,9 +75,9 @@ void Arm::calculateIterationDeltas()
     if (wristcnt > shouldercnt && wristcnt > elbowcnt)
         iterations = wristcnt;
 
-    shouldercnt = destination_shoulder - CurrentShoulder;
-    elbowcnt = destination_elbow - CurrentElbow;
-    wristcnt = destination_wrist - CurrentWrist; // note wrist is backwards
+    shouldercnt = destination_shoulder - currentShoulder;
+    elbowcnt = destination_elbow - currentElbow;
+    wristcnt = destination_wrist - currentWrist; // note wrist is backwards
     iterations = iterations / 2;
     if (iterations == 0) {
         shoulderdelta = 0;
@@ -96,12 +96,12 @@ int Arm::move()
         state = "idle";
         return 0;
     }
-    CurrentWrist = CurrentWrist + wristdelta;
-    wrist(CurrentWrist);
-    CurrentElbow = CurrentElbow + elbowdelta;
-    elbow(CurrentElbow);
-    CurrentShoulder = CurrentShoulder + shoulderdelta;
-    shoulder(CurrentShoulder);
+    currentWrist = currentWrist + wristdelta;
+    wrist(currentWrist);
+    currentElbow = currentElbow + elbowdelta;
+    elbow(currentElbow);
+    currentShoulder = currentShoulder + shoulderdelta;
+    shoulder(currentShoulder);
     iterations = iterations - 1;
     return iterations;
 }
@@ -110,18 +110,18 @@ void Arm::armCommand(String command)
 {
     if (command == "park")
     {
-        destination_shoulder = ShoulderParkdeg;
-        destination_wrist = WristParkdeg;
-        destination_elbow = ElbowParkdeg;
+        destination_shoulder = SHOULDERPARKDEG;
+        destination_wrist = WRISTPARKDEG;
+        destination_elbow = ELBOWPARKDEG;
         calculateIterationDeltas();
         state = "move";
         return;
     }
     if (command == "floor")
     {
-        destination_shoulder = ShoulderFloordeg;
-        destination_wrist = WristFloordeg;
-        destination_elbow = ElbowFloordeg;
+        destination_shoulder = SHOULDERFLOORDEG;
+        destination_wrist = WRISTFLOORDEG;
+        destination_elbow = ELBOWFLOORDEG;
         calculateIterationDeltas();
         state = "move";
     }
