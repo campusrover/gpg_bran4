@@ -1,6 +1,6 @@
 <launch>
   <!-- Robot URDF definition -->
-  <arg name="urdf_file" default="$(find xacro)/xacro '$(find platform)/urdf/platform1.urdf'"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro '$(find plat)/urdf/platform1.urdf'"/>
   <param name="robot_description" command="$(arg urdf_file) 
                 distance:=true
                 pi_camera:=true
@@ -14,7 +14,7 @@
   <!-- Combine joint values to TF-->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find platform)/rviz/slam_setup.rviz" required="true" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find plat)/rviz/slam_setup.rviz" required="true" />
   <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
 
 </launch>

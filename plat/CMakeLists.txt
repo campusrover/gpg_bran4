@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(platform)
+project(plat)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -103,7 +103,7 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
+ #INCLUDE_DIRS include
  LIBRARIES bull
  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
  DEPENDS system_lib

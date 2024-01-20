@@ -6,7 +6,7 @@
     </node>
 
     <!-- IMU Relay and Filter -->
-    <include file="$(find platform)/launch/include/imu.launch" />
+    <include file="$(find plat)/launch/include/imu.launch" />
 
     <!-- Publish Linorobot odometry -->
     <node pkg="linorobot" name="lino_base_node" type="lino_base_node"></node>
@@ -18,16 +18,16 @@
     </node>
 
     <!-- Run our laser drivers -->
-    <include file="$(find platform)/launch/include/lidar.launch" />
+    <include file="$(find plat)/launch/include/lidar.launch" />
 
     <!-- Run our camera drivers -->
-    <include file="$(find platform)/launch/camera_only.launch" />
+    <include file="$(find plat)/launch/camera_only.launch" />
 
     <!-- Run our compatible joystick drivers -->
-    <include file="$(find platform)/launch/joy_teleop.launch" />
+    <include file="$(find plat)/launch/joy_teleop.launch" />
 
     <!-- Publish all the transforms  -->
-    <include file="$(find platform)/launch/include/urdf.launch" />
+    <include file="$(find plat)/launch/include/urdf.launch" />
 
 
 </launch>

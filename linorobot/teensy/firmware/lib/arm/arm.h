@@ -44,7 +44,7 @@ private:
     float wristdelta = 0;
 
     String state;
-    ros::NodeHandle& nh_ = NULL;
+    ros::NodeHandle* nodeHandle;
 
     void elbow(float deg);
     void shoulder(float deg);

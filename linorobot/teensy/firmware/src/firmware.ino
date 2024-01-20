@@ -65,8 +65,6 @@ float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
 
-// Pincer servo
-// Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Arm theArm = Arm();
 
 //callback function prototypes
@@ -109,6 +107,8 @@ void setup()
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
     //nh.advertise(inst_pub);
+    theArm.setup(nh);
+
 
     while (!nh.connected())
     {
@@ -248,17 +248,7 @@ void moveBase()
     m2_curr_rpm = current_rpm2;
 
     Kinematics::velocities current_vel;
-
-    if(kinematics.base_platform == Kinematics::ACKERMANN || kinematics.base_platform == Kinematics::ACKERMANN1)
-    {
-        float current_steering_angle;
-        
-        current_vel = kinematics.getVelocities(current_steering_angle, current_rpm1, current_rpm2);
-    }
-    else
-    {
-        current_vel = kinematics.getVelocities(current_rpm1, current_rpm2, current_rpm3, current_rpm4);
-    }
+    current_vel = kinematics.getVelocities(current_rpm1, current_rpm2, current_rpm3, current_rpm4);
     
     //pass velocities to publisher object
     raw_vel_msg.linear_x = current_vel.linear_x;

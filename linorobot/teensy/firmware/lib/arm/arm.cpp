@@ -1,6 +1,6 @@
 #include "arm.h"
 
-Arm::Arm() : nodeHandle(nullptr) {}
+Arm::Arm() : nodeHandle(nullptr)
 {
     ARM = Adafruit_PWMServoDriver(0x40);
     iteration_time = millis();
@@ -19,7 +19,7 @@ void Arm::setup(ros::NodeHandle& nh)
     ARM.setPWM(Shoulder, 0, ShoulderPark);
     // pinMode(5, OUTPUT);
     // digitalWrite(5, LOW); // turn the Left wheel off by making the voltage LOW
-    nodeHandle.loginfo("Arm setup complete");
+    nodeHandle->loginfo("Arm setup complete");
 }
 
 void Arm::loop()
@@ -79,9 +79,15 @@ void Arm::calculateIterationDeltas()
     elbowcnt = destination_elbow - CurrentElbow;
     wristcnt = destination_wrist - CurrentWrist; // note wrist is backwards
     iterations = iterations / 2;
-    shoulderdelta = shouldercnt / iterations;
-    elbowdelta = elbowcnt / iterations;
-    wristdelta = wristcnt / iterations;
+    if (iterations == 0) {
+        shoulderdelta = 0;
+        elbowdelta = 0;
+        wristdelta = 0;
+    } else {
+        shoulderdelta = shouldercnt / iterations;
+        elbowdelta = elbowcnt / iterations;
+        wristdelta = wristcnt / iterations;
+    }
 }
 
 int Arm::move()
@@ -113,9 +119,9 @@ void Arm::armCommand(String command)
     }
     if (command == "floor")
     {
-        destination_shoulder = ShoulderParkdeg;
-        destination_wrist = WristParkdeg;
-        destination_elbow = ElbowParkdeg;
+        destination_shoulder = ShoulderFloordeg;
+        destination_wrist = WristFloordeg;
+        destination_elbow = ElbowFloordeg;
         calculateIterationDeltas();
         state = "move";
     }

@@ -6,7 +6,7 @@
     </node>
 
     <!-- IMU Relay and Filter -->
-    <include file="$(find platform)/launch/include/imu_platform.launch" />
+    <include file="$(find plat)/launch/include/imu_platform.launch" />
 
     <!-- Publish Linorobot odometry -->
     <node pkg="linorobot" name="lino_base_node" type="lino_base_node"></node>
@@ -21,7 +21,7 @@
     <node pkg="prrexamples" type="robogym.py" name="robogym"/>  -->
 
     <!-- Publish all the transforms  -->
-    <include file="$(find platform)/launch/include/urdf.launch" />
+    <include file="$(find plat)/launch/include/urdf.launch" />
 
 </launch>
 
