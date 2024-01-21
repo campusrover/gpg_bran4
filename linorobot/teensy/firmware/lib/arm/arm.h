@@ -37,13 +37,6 @@ private:
 
     float iterations = 0;
 
-    int shouldercnt = 0;
-    int elbowcnt = 0;
-    int wristcnt = 0;
-    float shoulderdelta = 0;
-    float elbowdelta = 0;
-    float wristdelta = 0;
-
     String state;
     ros::NodeHandle* nodeHandle;
 

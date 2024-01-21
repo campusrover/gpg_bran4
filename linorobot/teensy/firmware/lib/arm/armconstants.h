@@ -15,6 +15,13 @@
 #define CLAWPARKDEG 21  // claw closed deglen = (deg + 43) * 2.5;
 #define CLAWCLOSED 160
 
+#define EL_DEGOFFSET 43
+#define EL_DEGSCALE 2.5
+#define SH_DEGOFFSET 67.8
+#define SH_DEGSCALE 1.77
+#define WR_DEGOFFSET 75
+#define WR_DEGSCALE 1.77
+
 
 //  wrist pulse length  = (degrees + 75)*1.77
 // wrist degrees = pulselenth /1.77 - 75

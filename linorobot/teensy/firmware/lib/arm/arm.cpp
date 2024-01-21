@@ -31,26 +31,20 @@ void Arm::loop()
 
 void Arm::elbow(float deg)
 {
-    int deglen = (deg + 43) * 2.5; // pulselen of commanded degrees
+    int deglen = (deg + EL_DEGOFFSET) * EL_DEGSCALE; // pulselen of commanded degrees
     ARM.setPWM(ELBOW, 0, deglen);
-    // delay(20);
-    // CurrentElbow = deg;
 }
 
 void Arm::shoulder(float deg)
 {
-    int deglen = (deg + 67.8) * 1.77; // pulselen of commanded degrees
+    int deglen = (deg + SH_DEGOFFSET) * SH_DEGSCALE; // pulselen of commanded degrees
     ARM.setPWM(SHOULDER, 0, deglen);
-    // delay(20);
-    // CurrentShoulder = deg;
 }
 
 void Arm::wrist(float deg)
 {
-    int deglen = (deg + 75) * 1.77; // pulselen of commanded degrees
+    int deglen = (deg + WR_DEGOFFSET) * WR_DEGSCALE; // pulselen of commanded degrees
     ARM.setPWM(WRIST, 0, deglen);
-    // delay(20);
-    // CurrentWrist = deg;
 }
 
 void Arm::openClaw()
@@ -88,7 +82,12 @@ String Arm::getState()
 
 void Arm::calculateIterationDeltas()
 {
-    // nh.loginfo("calculateIterationDeltas");
+    int shouldercnt = 0;
+    int elbowcnt = 0;
+    int wristcnt = 0;
+    float shoulderdelta = 0;
+    float elbowdelta = 0;
+    float wristdelta = 0;
 
     shouldercnt = abs(destination_shoulder - currentShoulder);
     elbowcnt = abs(destination_elbow - currentElbow);
@@ -161,85 +160,97 @@ void Arm::armCommand(String command, float arg)
 {
     if (command == "wrist")
     {
-        wrist((int)arg);
+        destination_shoulder = currentShoulder;
+        destination_wrist = (int)arg;
+        destination_elbow = currentElbow
+        calculateIterationDeltas();
+        state = "move";
     }
     if (command == "elbow")
     {
-        elbow((int)arg);
+        destination_shoulder = currentShoulder;
+        destination_wrist = currentWrist
+        destination_elbow = (int)arg;
+        calculateIterationDeltas();
+        state = "move";
     }
 
     if (command == "shoulder")
     {
-        shoulder((int)arg);
+        destination_shoulder = (int)arg;
+        destination_wrist = currentWrist
+        destination_elbow = currentElbow
+        state = "move";
+        calculateIterationDeltas();
     }
 }
 
-void Arm::wrist(int deg)
-{
-    int deglen = (deg + 75) * 1.77; // pulselen of commanded degrees  Rev 1
-                                    // int deglen = ((-deg +180 +63.5)*1.77 );  //rev 4
-    if (currentWrist <= deglen)
-    {
-        for (int pulselen = currentWrist; pulselen < deglen; pulselen++)
-        {
-            ARM.setPWM(WRIST, 0, pulselen);
-            delay(20);
-        }
-    }
-    else
-    {
-        for (int pulselen = currentWrist; pulselen > deglen; pulselen--)
-        {
-            ARM.setPWM(WRIST, 0, pulselen);
-            delay(20);
-        }
-    }
-    currentWrist = deglen;
-}
+// void Arm::wrist(int deg)
+// {
+//     int deglen = (deg + 75) * 1.77; // pulselen of commanded degrees  Rev 1
+//                                     // int deglen = ((-deg +180 +63.5)*1.77 );  //rev 4
+//     if (currentWrist <= deglen)
+//     {
+//         for (int pulselen = currentWrist; pulselen < deglen; pulselen++)
+//         {
+//             ARM.setPWM(WRIST, 0, pulselen);
+//             delay(20);
+//         }
+//     }
+//     else
+//     {
+//         for (int pulselen = currentWrist; pulselen > deglen; pulselen--)
+//         {
+//             ARM.setPWM(WRIST, 0, pulselen);
+//             delay(20);
+//         }
+//     }
+//     currentWrist = deglen;
+// }
 
-void Arm::elbow(int deg)
-{
-    int deglen = (deg + 43) * 2.5; // pulselen of commanded degrees
+// void Arm::elbow(int deg)
+// {
+//     int deglen = (deg + 43) * 2.5; // pulselen of commanded degrees
 
-    if (currentElbow <= deglen)
-    {
-        for (int pulselen = currentElbow; pulselen < deglen; pulselen++)
-        {
-            ARM.setPWM(ELBOW, 0, pulselen);
-            delay(20);
-        }
-    }
-    else
-    {
-        for (int pulselen = currentElbow; pulselen > deglen; pulselen--)
-        {
-            ARM.setPWM(ELBOW, 0, pulselen);
-            delay(20);
-        }
-    }
+//     if (currentElbow <= deglen)
+//     {
+//         for (int pulselen = currentElbow; pulselen < deglen; pulselen++)
+//         {
+//             ARM.setPWM(ELBOW, 0, pulselen);
+//             delay(20);
+//         }
+//     }
+//     else
+//     {
+//         for (int pulselen = currentElbow; pulselen > deglen; pulselen--)
+//         {
+//             ARM.setPWM(ELBOW, 0, pulselen);
+//             delay(20);
+//         }
+//     }
 
-    currentElbow = deglen;
-}
+//     currentElbow = deglen;
+// }
 
-void Arm::shoulder(int deg)
-{
-    int deglen = (deg + 67.8) * 1.77; // pulselen of commanded degrees
+// void Arm::shoulder(int deg)
+// {
+//     int deglen = (deg + 67.8) * 1.77; // pulselen of commanded degrees
 
-    if (currentShoulder <= deglen)
-    {
-        for (int pulselen = currentShoulder; pulselen < deglen; pulselen++)
-        {
-            ARM.setPWM(SHOULDER, 0, pulselen);
-            delay(20);
-        }
-    }
-    else
-    {
-        for (int pulselen = currentShoulder; pulselen > deglen; pulselen--)
-        {
-            ARM.setPWM(SHOULDER, 0, pulselen);
-            delay(20);
-        }
-    }
-    currentShoulder = deglen;
-}
+//     if (currentShoulder <= deglen)
+//     {
+//         for (int pulselen = currentShoulder; pulselen < deglen; pulselen++)
+//         {
+//             ARM.setPWM(SHOULDER, 0, pulselen);
+//             delay(20);
+//         }
+//     }
+//     else
+//     {
+//         for (int pulselen = currentShoulder; pulselen > deglen; pulselen--)
+//         {
+//             ARM.setPWM(SHOULDER, 0, pulselen);
+//             delay(20);
+//         }
+//     }
+//     currentShoulder = deglen;
+// }
