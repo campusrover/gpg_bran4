@@ -56,6 +56,8 @@ private:
     void closeClaw();
     void calculateIterationDeltas();
     int move();
+
+    void traceOut(String msg);
 };
 
 #endif
