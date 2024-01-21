@@ -33,7 +33,7 @@
 //  0 left angle to elbow towards back of Platform
 // 245  park
 
-//  elbow pulse length  = (degrees + 65.3)*2.83
+// elbow pulse length  = (degrees + 65.3)*2.83
 // elbow degrees = pulselenth /2.83 - 65.3
 #define ELBOWPARK 340        // parallel to ground old 340
 #define ELBOWVERTICAL 340    // parallel to shoulder old 340

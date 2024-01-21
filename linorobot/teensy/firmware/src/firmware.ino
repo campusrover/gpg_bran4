@@ -204,25 +204,34 @@ void commandCallback(const geometry_msgs::Twist &cmd_msg)
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg)
 {
     nh.loginfo("Arm Callback.");
-    if (strcmp(arm_msg.command, "park") ==0 )
+    nh.loginfo(arm_msg.command);
+    if (strcmp(arm_msg.command, "park") == 0)
     {
-        nh.loginfo("park");
         theArm.armCommand("park");
     }
-    else if (strcmp(arm_msg.command, "floor") ==0 )
+    else if (strcmp(arm_msg.command, "floor") == 0)
     {
-        nh.loginfo("floor");
         theArm.armCommand("floor");
     }
-    else if (strcmp(arm_msg.command, "open") ==0 )
+    else if (strcmp(arm_msg.command, "open") == 0)
     {
-        nh.loginfo("open");
         theArm.armCommand("open");
     }
-    else if (strcmp(arm_msg.command, "close") ==0 )
+    else if (strcmp(arm_msg.command, "close") == 0)
     {
-        nh.loginfo("close");
         theArm.armCommand("close");
+    }
+    else if (strcmp(arm_msg.command, "wrist") == 0)
+    {
+        theArm.armCommand("wrist", arm_msg.arg1);
+    }
+    else if (strcmp(arm_msg.command, "elbow") == 0)
+    {
+        theArm.armCommand("elbow", arm_msg.arg1);
+    }
+    else if (strcmp(arm_msg.command, "shoulder") == 0)
+    {
+        theArm.armCommand("shoulder", arm_msg.arg1);
     }
 }
 

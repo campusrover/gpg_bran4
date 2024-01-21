@@ -14,6 +14,7 @@ public:
     void setup(ros::NodeHandle& nh);
     String getState();
     void armCommand(String command);
+    void armCommand(String command, float arg);
     void loop();
 
 private:
@@ -49,6 +50,12 @@ private:
     void elbow(float deg);
     void shoulder(float deg);
     void wrist(float deg);
+    void elbow(int deg);
+    void shoulder(int deg);
+    void wrist(int deg);
+
+    void openClaw();
+    void closeClaw();
     void calculateIterationDeltas();
     int move();
 };
