@@ -85,9 +85,6 @@ void Arm::calculateIterationDeltas()
     int shouldercnt = 0;
     int elbowcnt = 0;
     int wristcnt = 0;
-    float shoulderdelta = 0;
-    float elbowdelta = 0;
-    float wristdelta = 0;
 
     shouldercnt = abs(destination_shoulder - currentShoulder);
     elbowcnt = abs(destination_elbow - currentElbow);
@@ -106,15 +103,15 @@ void Arm::calculateIterationDeltas()
     iterations = iterations / 2;
     if (iterations == 0)
     {
-        shoulderdelta = 0;
-        elbowdelta = 0;
-        wristdelta = 0;
+        shoulderDelta = 0;
+        elbowDelta = 0;
+        wristDelta = 0;
     }
     else
     {
-        shoulderdelta = shouldercnt / iterations;
-        elbowdelta = elbowcnt / iterations;
-        wristdelta = wristcnt / iterations;
+        shoulderDelta = shouldercnt / iterations;
+        elbowDelta = elbowcnt / iterations;
+        wristDelta = wristcnt / iterations;
     }
 }
 
@@ -125,11 +122,11 @@ int Arm::move()
         state = "idle";
         return 0;
     }
-    currentWrist = currentWrist + wristdelta;
+    currentWrist = currentWrist + wristDelta;
     wrist(currentWrist);
-    currentElbow = currentElbow + elbowdelta;
+    currentElbow = currentElbow + elbowDelta;
     elbow(currentElbow);
-    currentShoulder = currentShoulder + shoulderdelta;
+    currentShoulder = currentShoulder + shoulderDelta;
     shoulder(currentShoulder);
     iterations = iterations - 1;
     return iterations;
@@ -162,14 +159,14 @@ void Arm::armCommand(String command, float arg)
     {
         destination_shoulder = currentShoulder;
         destination_wrist = (int)arg;
-        destination_elbow = currentElbow
+        destination_elbow = currentElbow;
         calculateIterationDeltas();
         state = "move";
     }
     if (command == "elbow")
     {
         destination_shoulder = currentShoulder;
-        destination_wrist = currentWrist
+        destination_wrist = currentWrist;
         destination_elbow = (int)arg;
         calculateIterationDeltas();
         state = "move";
@@ -178,8 +175,8 @@ void Arm::armCommand(String command, float arg)
     if (command == "shoulder")
     {
         destination_shoulder = (int)arg;
-        destination_wrist = currentWrist
-        destination_elbow = currentElbow
+        destination_wrist = currentWrist;
+        destination_elbow = currentElbow;
         state = "move";
         calculateIterationDeltas();
     }

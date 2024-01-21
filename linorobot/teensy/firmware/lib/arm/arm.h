@@ -30,6 +30,11 @@ private:
     float elbowposition;
     float shoulderposition;
 
+    float shoulderDelta = 0;
+    float elbowDelta = 0;
+    float wristDelta = 0;
+
+
     float currentClaw = CLAWPARKDEG;
     float currentWrist = WRISTPARKDEG;
     float currentElbow = ELBOWPARKDEG;
