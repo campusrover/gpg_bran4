@@ -244,45 +244,25 @@ void Arm::arm_command(String command, float arg)
     {
         destination_shoulder = current_shoulder;
         destination_wrist = (int)arg;
-<<<<<<< HEAD
-        destination_elbow = current_elbow
-=======
         destination_elbow = currentElbow;
->>>>>>> f5ae87f68c69d9e8117f016557061c6fa3309c26
         calculateIterationDeltas();
         state = "move";
     }
     if (command == "elbow")
     {
-<<<<<<< HEAD
-        destination_shoulder = current_shoulder;
-        destination_wrist = current_wrist
-            destination_elbow = (int)arg;
-        calculate_iteration_deltas();
-=======
         destination_shoulder = currentShoulder;
         destination_wrist = currentWrist;
         destination_elbow = (int)arg;
         calculateIterationDeltas();
->>>>>>> f5ae87f68c69d9e8117f016557061c6fa3309c26
         state = "move";
     }
 
     if (command == "shoulder")
     {
         destination_shoulder = (int)arg;
-<<<<<<< HEAD
-        destination_wrist = current_wrist
-            destination_elbow = currentElbow
-                state = "move";
-        calculate_iteration_deltas();
-    }
-}
-=======
         destination_wrist = currentWrist;
         destination_elbow = currentElbow;
         state = "move";
         calculateIterationDeltas();
     }
 }
->>>>>>> f5ae87f68c69d9e8117f016557061c6fa3309c26
