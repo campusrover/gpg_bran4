@@ -207,31 +207,31 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg)
     nh.loginfo(arm_msg.command);
     if (strcmp(arm_msg.command, "park") == 0)
     {
-        theArm.armCommand("park");
+        theArm.arm_command("park");
     }
     else if (strcmp(arm_msg.command, "floor") == 0)
     {
-        theArm.armCommand("floor");
+        theArm.arm_command("floor");
     }
     else if (strcmp(arm_msg.command, "open") == 0)
     {
-        theArm.armCommand("open");
+        theArm.arm_command("open");
     }
     else if (strcmp(arm_msg.command, "close") == 0)
     {
-        theArm.armCommand("close");
+        theArm.arm_command("close");
     }
     else if (strcmp(arm_msg.command, "wrist") == 0)
     {
-        theArm.armCommand("wrist", arm_msg.arg1);
+        theArm.arm_command("wrist", arm_msg.arg1);
     }
     else if (strcmp(arm_msg.command, "elbow") == 0)
     {
-        theArm.armCommand("elbow", arm_msg.arg1);
+        theArm.arm_command("elbow", arm_msg.arg1);
     }
     else if (strcmp(arm_msg.command, "shoulder") == 0)
     {
-        theArm.armCommand("shoulder", arm_msg.arg1);
+        theArm.arm_command("shoulder", arm_msg.arg1);
     }
 }
 
