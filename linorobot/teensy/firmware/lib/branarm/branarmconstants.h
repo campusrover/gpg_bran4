@@ -1,5 +1,5 @@
-#ifndef ARMCONSTANTS_H
-#define ARMCONSTANTS_H
+#ifndef BRANARMCONSTANTS_H
+#define BRANARMCONSTANTS_H
 
 #define SERVOMIN 100  // this is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX 160  // this is the 'maximum' pulse length count (out of 4096)
@@ -32,9 +32,6 @@
 #define WRISTMAX 570         //
 #define WRISTMAXDEG 250      //max wrist degrees
 #define WRISTMINDEG 0        //min wrist degrees
-#define WR_PARK_DEG 245     //park degrees
-#define WR_FLOOR_DEG -9     //touching flooor degrees*************** should be -10
-
 //90 parallel to elbow degrees
 // 180 right angle to elbow towards front
 //  0 left angle to elbow towards back of Platform
@@ -49,8 +46,6 @@
 #define ELBOWMAX 570         // old 570
 #define ELBOWMAXDEG 185      //max  degrees   2.5 deg/pulselen
 #define ELBOWMINDEG 31       //min  degrees   (puls/2.5)-43
-#define EL_FLOOR_DEG 0
-#define EL_PARK_DEG 90
 
 //  shoulder pulse length  = (degrees + 67.8)*1.77
 // shoulder degrees = pulselenth /1.77 - 67.8
@@ -61,12 +56,20 @@
 #define SHOULDERVERTICAL 285    // perpendicular to ground
 #define SHOULDERMAXDEG 254      //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
 #define SHOULDERMINDEG 0        //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
-#define SH_PARK_DEG 0       // parallel to ground
 #define SHOULDERVERTICALDEG 90  // perpendicular to ground
 #define SHOULDERFORWARDEG 180   // horizontal  180
-#define SH_FLOOR_DEG 196    //
 
-// Waypoints
+// Standard arm positions, aka armlocs
+
+// Park
+#define SH_PARK_DEG 0       // parallel to ground
+#define EL_PARK_DEG 90
+#define WR_PARK_DEG 245     //park degrees
+
+// To the floor
+#define SH_FLOOR_DOWN_DEG 196    //
+#define EL_FLOOR_DOWN_DEG 0
+#define WR_FLOOR_DOWN_DEG -9     //touching flooor degrees*************** should be -10
 
 // Straight up 
 #define SH_STRAIGHTUP 90
@@ -78,40 +81,37 @@
 #define EL_VERT_HORIZ_HAND 90
 #define WR_VERT_HORIZ_HAND 180
 
-// All pointing forward
-#define SH_ALL_FORWARD 0
-#define EL_ALL_FORWARD 90
-#define WR_ALL_FORWARD 90
+// All pointing backward
+#define SH_ALL_BACKWARD_DEG 0
+#define EL_ALL_BACKWARD_DEG 90
+#define WR_ALL_BACKWARD_DEG 90
 
-// Vertical just above floor position
-#define SH_ALL_VERTABOVEPARK 21.51
-#define EL_ALL_VERTABOVEPARK -21.51
-#define WR_ALL_VERTABOVEPARK 136.98
+// All pointing forward
+#define SH_ALL_FORWARD_DEG 180
+#define EL_ALL_FORWARD_DEG 90
+#define WR_ALL_FORWARD_DEG 90
+
+
+// Floor up, same as floor down except tip is offset
+// vertically 
+#define SH_FLOOR_UP_DEG 51
+#define EL_FLOOR_UP_DEG 25
+#define WR_FLOOR_UP_DEG 153
 
 struct ServoData {
-    int shoulder;
-    int elbow;
-    int wrist;
+    float shoulder;
+    float elbow;
+    float wrist;
 };
 
-enum Waypoint {
+enum ArmLocs {
     PARK,
-    FLOOR,
+    FLOOR_UP,
     STRAIGHTUP,
     VERT_HORIZ_HAND,
     ALL_FORWARD,
-    ALL_VERTABOVEPARK
+    FLOOR_DOWN,
+    ALL_BACKWARD
 };
-
-ServoData waypoints[] = {
-    {SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},
-    {SH_FLOOR_DEG, EL_FLOOR_DEG, WR_FLOOR_DEG},
-    {SH_STRAIGHTUP, EL_STRAIGHTUP, WR_STRAIGHTUP},
-    {SH_VERT_HORIZ_HAND, EL_VERT_HORIZ_HAND, WR_VERT_HORIZ_HAND},
-    {SH_ALL_FORWARD, EL_ALL_FORWARD, WR_ALL_FORWARD},
-    {SH_ALL_VERTABOVEPARK, EL_ALL_VERTABOVEPARK, WR_ALL_VERTABOVEPARK}
-};
-
-
 
 #endif

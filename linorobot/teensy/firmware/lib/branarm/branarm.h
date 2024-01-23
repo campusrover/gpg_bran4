@@ -1,16 +1,16 @@
-#ifndef ARM_H
-#define ARM_H
+#ifndef BRANARM_H
+#define BRANARM_H
 
 #include <Arduino.h>
 #include <Wire.h>
 #include <ros.h>
 #include <Adafruit_PWMServoDriver.h>
-#include "armconstants.h"
+#include "branarmconstants.h"
 
-class Arm {
+class BrandeisArm {
 
 public:
-    Arm();
+    BrandeisArm();
     void setup(ros::NodeHandle& nh);
     String getState();
     void arm_command(String command);

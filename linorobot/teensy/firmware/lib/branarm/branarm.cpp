@@ -1,6 +1,14 @@
-#include "arm.h"
+#include "branarm.h"
 
-Arm::Arm() : node_handle(nullptr)
+ServoData arm_locs[] = {
+    {SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},
+    {SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG},
+    {SH_STRAIGHTUP, EL_STRAIGHTUP, WR_STRAIGHTUP},
+    {SH_VERT_HORIZ_HAND, EL_VERT_HORIZ_HAND, WR_VERT_HORIZ_HAND},
+    {SH_ALL_BACKWARD_DEG, EL_ALL_BACKWARD_DEG, WR_ALL_BACKWARD_DEG},
+    {SH_FLOOR_UP_DEG, EL_FLOOR_UP_DEG, WR_FLOOR_UP_DEG}};
+
+BrandeisArm::BrandeisArm() : node_handle(nullptr)
 {
     ARM = Adafruit_PWMServoDriver(0x40);
     iteration_time = millis();
@@ -8,7 +16,7 @@ Arm::Arm() : node_handle(nullptr)
     state = "idle";
 };
 
-void Arm::setup(ros::NodeHandle &nh)
+void BrandeisArm::setup(ros::NodeHandle &nh)
 {
     node_handle = &nh;
     ARM.begin();
@@ -17,24 +25,24 @@ void Arm::setup(ros::NodeHandle &nh)
     ARM.setPWM(WRIST, 0, WRISTPARK);
     ARM.setPWM(ELBOW, 0, ELBOWPARK);
     ARM.setPWM(SHOULDER, 0, SHOULDERPARK);
-    
+
     node_handle->loginfo("Arm setup complete");
-   
+
     current_claw = CLAWPARKDEG;
     current_wrist = WR_PARK_DEG;
     current_elbow = EL_PARK_DEG;
     current_shoulder = SH_PARK_DEG;
-    Arm::traceOut("setup");
+    BrandeisArm::traceOut("setup");
 }
 
-void Arm::traceOut(String msg)
+void BrandeisArm::traceOut(String msg)
 {
     char buffer[100];
     sprintf(buffer, "msg: %s, curSh %f, curEl %f,  curWr %f, curCl %f", msg.c_str(), current_shoulder, current_elbow, current_wrist, current_claw);
     node_handle->loginfo(buffer);
 }
 
-void Arm::loop()
+void BrandeisArm::loop()
 {
     if (millis() < iteration_time + iteration_interval || state == "idle")
         return;
@@ -43,27 +51,28 @@ void Arm::loop()
         move();
 }
 
-void Arm::elbow(float deg)
+void BrandeisArm::elbow(float deg)
 {
     int deglen = (deg + EL_DEGOFFSET) * EL_DEGSCALE; // pulselen of commanded degrees
     ARM.setPWM(ELBOW, 0, deglen);
 }
 
-void Arm::shoulder(float deg)
+void BrandeisArm::shoulder(float deg)
 {
     int deglen = (deg + SH_DEGOFFSET) * SH_DEGSCALE; // pulselen of commanded degrees
     ARM.setPWM(SHOULDER, 0, deglen);
 }
 
-void Arm::wrist(float deg)
+void BrandeisArm::wrist(float deg)
 {
     int deglen = (deg + WR_DEGOFFSET) * WR_DEGSCALE; // pulselen of commanded degrees
     ARM.setPWM(WRIST, 0, deglen);
 }
 // true = open; false = close
-void Arm::claw(bool open_close)
+void BrandeisArm::claw(bool open_close)
 {
     if (open_close)
+    {
         if (current_claw >= CLAWOPEN)
         {
             for (int pulse_len = current_claw; pulse_len > CLAWOPEN; pulse_len--)
@@ -74,21 +83,22 @@ void Arm::claw(bool open_close)
 
             current_claw = CLAWOPEN;
         }
-        else
+    }
+    else
+    {
+        if (current_claw <= CLAWCLOSED)
         {
-            if (current_claw <= CLAWCLOSED)
+            for (int pulse_len = current_claw; pulse_len < CLAWCLOSED; pulse_len++)
             {
-                for (int pulse_len = current_claw; pulse_len < CLAWCLOSED; pulse_len++)
-                {
-                    ARM.setPWM(CLAW, 0, pulse_len);
-                    delay(20);
-                }
+                ARM.setPWM(CLAW, 0, pulse_len);
+                delay(20);
             }
-            current_claw = CLAWCLOSED;
         }
+        current_claw = CLAWCLOSED;
+    }
 }
 
-void Arm::open_claw()
+void BrandeisArm::open_claw()
 { // Claw   MIN is closed   MAX is open
 
     if (current_claw >= CLAWOPEN)
@@ -102,7 +112,7 @@ void Arm::open_claw()
     current_claw = CLAWOPEN;
 }
 
-void Arm::close_claw()
+void BrandeisArm::close_claw()
 { // Claw MIN is closed   MAX is open
 
     if (current_claw <= CLAWCLOSED)
@@ -116,12 +126,12 @@ void Arm::close_claw()
     current_claw = CLAWCLOSED;
 }
 
-String Arm::getState()
+String BrandeisArm::getState()
 {
     return state;
 }
 
-void Arm::calculate_iteration_deltas()
+void BrandeisArm::calculate_iteration_deltas()
 {
     int shouldercnt = 0;
     int elbowcnt = 0;
@@ -156,7 +166,7 @@ void Arm::calculate_iteration_deltas()
     }
 }
 
-int Arm::move()
+int BrandeisArm::move()
 {
     if (iterations <= 0 || state != "move")
     {
@@ -173,22 +183,13 @@ int Arm::move()
     return iterations;
 }
 
-void Arm::arm_command(String command)
+void BrandeisArm::arm_command(String command)
 {
     if (command == "park")
     {
         destination_shoulder = SH_PARK_DEG;
         destination_wrist = WR_PARK_DEG;
         destination_elbow = EL_PARK_DEG;
-        calculate_iteration_deltas();
-        state = "move";
-        return;
-    }
-    if (command == "floor")
-    {
-        destination_shoulder = SH_FLOOR_DEG;
-        destination_wrist = WR_FLOOR_DEG;
-        destination_elbow = EL_FLOOR_DEG;
         calculate_iteration_deltas();
         state = "move";
     }
@@ -208,27 +209,45 @@ void Arm::arm_command(String command)
         calculate_iteration_deltas();
         state = "move";
     }
+    if (command == "allback")
+    {
+        destination_shoulder = SH_ALL_BACKWARD_DEG;
+        destination_wrist = WR_ALL_BACKWARD_DEG;
+        destination_elbow = EL_ALL_BACKWARD_DEG;
+        calculate_iteration_deltas();
+        state = "move";
+    }
     if (command == "allforward")
     {
-        destination_shoulder = SH_ALL_FORWARD;
-        destination_wrist = WR_ALL_FORWARD;
-        destination_elbow = EL_ALL_FORWARD;
+        destination_shoulder = SH_ALL_FORWARD_DEG;
+        destination_wrist = WR_ALL_FORWARD_DEG;
+        destination_elbow = EL_ALL_FORWARD_DEG;
         calculate_iteration_deltas();
         state = "move";
     }
-    if (command == "allvertabovepark")
+    if (command == "floorup")
     {
-        destination_shoulder = SH_ALL_VERTABOVEPARK;
-        destination_wrist = WR_ALL_VERTABOVEPARK;
-        destination_elbow = EL_ALL_VERTABOVEPARK;
+        destination_shoulder = SH_FLOOR_UP_DEG;
+        destination_wrist = WR_FLOOR_UP_DEG;
+        destination_elbow = EL_FLOOR_UP_DEG;
         calculate_iteration_deltas();
         state = "move";
     }
+    if (command == "floordown")
+    {
+        destination_shoulder = SH_FLOOR_DOWN_DEG;
+        destination_wrist = WR_FLOOR_DOWN_DEG;
+        destination_elbow = EL_FLOOR_DOWN_DEG;
+        calculate_iteration_deltas();
+        state = "move";
+    }
+
+    BrandeisArm::traceOut("arm_command");
 }
 
-void Arm::arm_command(String command, float arg)
+void BrandeisArm::arm_command(String command, float arg)
 {
-    Arm::traceOut("armCommand");
+    BrandeisArm::traceOut("armCommand");
 
     if (command == "wrist")
     {

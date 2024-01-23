@@ -28,7 +28,7 @@
 #include "Motor.h"
 #include "Kinematics.h"
 #include "PID.h"
-#include "arm.h"
+#include "branarm.h"
 
 #include "Imu.h"
 
@@ -64,7 +64,7 @@ float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
 
-Arm theArm = Arm();
+BrandeisArm theArm = BrandeisArm();
 
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
@@ -205,33 +205,23 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg)
 {
     nh.loginfo("Arm Callback.");
     nh.loginfo(arm_msg.command);
-    if (strcmp(arm_msg.command, "park") == 0)
+
+    const char *command = arm_msg.command;
+
+    if (strcmp(command, "wrist") == 0 || strcmp(command, "elbow") == 0 || strcmp(command, "shoulder") == 0)
     {
-        theArm.arm_command("park");
+        theArm.arm_command(command, arm_msg.arg1);
     }
-    else if (strcmp(arm_msg.command, "floor") == 0)
+    else if (strcmp(command, "park") == 0 || strcmp(command, "floordown") == 0 || strcmp(command, "open") == 0 ||
+             strcmp(command, "close") == 0 || strcmp(command, "straightup") == 0 ||
+             strcmp(command, "verthorizhand") == 0 || strcmp(command, "allforward") == 0 || strcmp(command, "allback") == 0 ||
+             strcmp(command, "floorup") == 0)
     {
-        theArm.arm_command("floor");
+        theArm.arm_command(command);
     }
-    else if (strcmp(arm_msg.command, "open") == 0)
+    else
     {
-        theArm.arm_command("open");
-    }
-    else if (strcmp(arm_msg.command, "close") == 0)
-    {
-        theArm.arm_command("close");
-    }
-    else if (strcmp(arm_msg.command, "wrist") == 0)
-    {
-        theArm.arm_command("wrist", arm_msg.arg1);
-    }
-    else if (strcmp(arm_msg.command, "elbow") == 0)
-    {
-        theArm.arm_command("elbow", arm_msg.arg1);
-    }
-    else if (strcmp(arm_msg.command, "shoulder") == 0)
-    {
-        theArm.arm_command("shoulder", arm_msg.arg1);
+        nh.loginfo("Invalid topic message.");
     }
 }
 
