@@ -17,22 +17,21 @@ void Arm::setup(ros::NodeHandle &nh)
     ARM.setPWM(WRIST, 0, WRISTPARK);
     ARM.setPWM(ELBOW, 0, ELBOWPARK);
     ARM.setPWM(SHOULDER, 0, SHOULDERPARK);
-<<<<<<< HEAD
+    
     node_handle->loginfo("Arm setup complete");
-=======
-    currentClaw = CLAWPARKDEG;
-    currentWrist = WRISTPARKDEG;
-    currentElbow = ELBOWPARKDEG;
-    currentShoulder = SHOULDERPARKDEG;
+   
+    current_claw = CLAWPARKDEG;
+    current_wrist = WR_PARK_DEG;
+    current_elbow = EL_PARK_DEG;
+    current_shoulder = SH_PARK_DEG;
     Arm::traceOut("setup");
 }
 
 void Arm::traceOut(String msg)
 {
     char buffer[100];
-    sprintf(buffer, "msg: %s, curSh %f, curEl %f,  curWr %f, curCl %f", msg.c_str(), currentShoulder, currentElbow, currentWrist, currentClaw);
-    nodeHandle->loginfo(buffer);
->>>>>>> f5ae87f68c69d9e8117f016557061c6fa3309c26
+    sprintf(buffer, "msg: %s, curSh %f, curEl %f,  curWr %f, curCl %f", msg.c_str(), current_shoulder, current_elbow, current_wrist, current_claw);
+    node_handle->loginfo(buffer);
 }
 
 void Arm::loop()
@@ -164,21 +163,12 @@ int Arm::move()
         state = "idle";
         return 0;
     }
-<<<<<<< HEAD
-    current_wrist = current_wrist + wristdelta;
+    current_wrist = current_wrist + wristDelta;
     wrist(current_wrist);
-    current_elbow = current_elbow + elbowdelta;
+    current_elbow = current_elbow + elbowDelta;
     elbow(current_elbow);
-    current_shoulder = current_shoulder + shoulderdelta;
+    current_shoulder = current_shoulder + shoulderDelta;
     shoulder(current_shoulder);
-=======
-    currentWrist = currentWrist + wristDelta;
-    wrist(currentWrist);
-    currentElbow = currentElbow + elbowDelta;
-    elbow(currentElbow);
-    currentShoulder = currentShoulder + shoulderDelta;
-    shoulder(currentShoulder);
->>>>>>> f5ae87f68c69d9e8117f016557061c6fa3309c26
     iterations = iterations - 1;
     return iterations;
 }
@@ -244,25 +234,25 @@ void Arm::arm_command(String command, float arg)
     {
         destination_shoulder = current_shoulder;
         destination_wrist = (int)arg;
-        destination_elbow = currentElbow;
-        calculateIterationDeltas();
+        destination_elbow = current_elbow;
+        calculate_iteration_deltas();
         state = "move";
     }
     if (command == "elbow")
     {
-        destination_shoulder = currentShoulder;
-        destination_wrist = currentWrist;
+        destination_shoulder = current_shoulder;
+        destination_wrist = current_wrist;
         destination_elbow = (int)arg;
-        calculateIterationDeltas();
+        calculate_iteration_deltas();
         state = "move";
     }
 
     if (command == "shoulder")
     {
         destination_shoulder = (int)arg;
-        destination_wrist = currentWrist;
-        destination_elbow = currentElbow;
+        destination_wrist = current_wrist;
+        destination_elbow = current_elbow;
         state = "move";
-        calculateIterationDeltas();
+        calculate_iteration_deltas();
     }
 }

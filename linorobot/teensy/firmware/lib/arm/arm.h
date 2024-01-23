@@ -30,22 +30,15 @@ private:
     float elbow_position;
     float shoulder_position;
 
-<<<<<<< HEAD
     float current_claw = CLAWPARKDEG;
     float current_wrist = WR_PARK_DEG;
     float current_elbow = EL_PARK_DEG;
     float current_shoulder = SH_PARK_DEG;
-=======
+
     float shoulderDelta = 0;
     float elbowDelta = 0;
     float wristDelta = 0;
 
-
-    float currentClaw = CLAWPARKDEG;
-    float currentWrist = WRISTPARKDEG;
-    float currentElbow = ELBOWPARKDEG;
-    float currentShoulder = SHOULDERPARKDEG;
->>>>>>> f5ae87f68c69d9e8117f016557061c6fa3309c26
 
     float iterations = 0;
 
@@ -58,7 +51,7 @@ private:
     void elbow(int deg);
     void shoulder(int deg);
     void wrist(int deg);
-    void claw(bool open_close)    
+    void claw(bool open_close); 
 
     void open_claw();
     void close_claw();
