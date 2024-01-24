@@ -120,7 +120,7 @@ int BrandeisArm::move()
     return iterations;
 }
 
-int BrandeisArm::movex()
+void BrandeisArm::movex()
 {
     servos.shoulder.calc_elapsed(millis());
     servos.elbow.calc_elapsed(millis());

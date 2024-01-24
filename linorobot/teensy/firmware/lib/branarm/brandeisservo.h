@@ -5,17 +5,15 @@
 
 class BrandeisServo {
 public:
-    float current;
-    float destination;
-    int start_millis;
-    int elapsed;
-    int duration_ms;
-
-    float delta() {
-        return destination - current;
-    }
+    BrandeisServo();
+    double current;
+    double destination;
+    double start_millis;
+    double elapsed;
+    double duration_ms;
+    double delta();
     void calc_elapsed(int current_millis);
-    float update_current();
+    double update_current();
     Transition tr;
 };
 

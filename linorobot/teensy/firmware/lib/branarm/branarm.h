@@ -60,7 +60,7 @@ private:
     void calculate_iteration_deltas();
     void configure_ease_algorithm(int duration_in_ms);
     int move();
-    int movex();
+    void movex();
     void traceOut(String msg);
 };
 
