@@ -98,20 +98,4 @@
 #define EL_FLOOR_UP_DEG 25
 #define WR_FLOOR_UP_DEG 153
 
-struct ServoData {
-    float shoulder;
-    float elbow;
-    float wrist;
-};
-
-enum ArmLocs {
-    PARK,
-    FLOOR_UP,
-    STRAIGHTUP,
-    VERT_HORIZ_HAND,
-    ALL_FORWARD,
-    FLOOR_DOWN,
-    ALL_BACKWARD
-};
-
 #endif

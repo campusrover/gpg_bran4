@@ -29,7 +29,6 @@
 #include "Kinematics.h"
 #include "PID.h"
 #include "branarm.h"
-
 #include "Imu.h"
 
 #define ENCODER_OPTIMIZE_INTERRUPTS // comment this out on Non-Teensy boards

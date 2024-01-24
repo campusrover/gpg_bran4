@@ -6,6 +6,8 @@
 #include <ros.h>
 #include <Adafruit_PWMServoDriver.h>
 #include "branarmconstants.h"
+#include "transition.h"
+#include "brandeisservo.h"
 
 class BrandeisArm {
 
@@ -56,9 +58,34 @@ private:
     void open_claw();
     void close_claw();
     void calculate_iteration_deltas();
+    void configure_ease_algorithm(int duration_in_ms);
     int move();
-
+    int movex();
     void traceOut(String msg);
 };
+
+struct ServoCoords {
+    float shoulder;
+    float elbow;
+    float wrist;
+};
+
+struct ServoInfo {
+    BrandeisServo shoulder;
+    BrandeisServo elbow;
+    BrandeisServo wrist;
+    BrandeisServo claw;
+};
+
+enum ArmLocs {
+    PARK,
+    FLOOR_UP,
+    STRAIGHTUP,
+    VERT_HORIZ_HAND,
+    ALL_FORWARD,
+    FLOOR_DOWN,
+    ALL_BACKWARD
+};
+
 
 #endif

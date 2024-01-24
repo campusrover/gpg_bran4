@@ -1,12 +1,15 @@
 #include "branarm.h"
 
-ServoData arm_locs[] = {
+
+ServoCoords arm_locs[] = {
     {SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},
     {SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG},
     {SH_STRAIGHTUP, EL_STRAIGHTUP, WR_STRAIGHTUP},
     {SH_VERT_HORIZ_HAND, EL_VERT_HORIZ_HAND, WR_VERT_HORIZ_HAND},
     {SH_ALL_BACKWARD_DEG, EL_ALL_BACKWARD_DEG, WR_ALL_BACKWARD_DEG},
     {SH_FLOOR_UP_DEG, EL_FLOOR_UP_DEG, WR_FLOOR_UP_DEG}};
+
+ServoInfo servos = {BrandeisServo(), BrandeisServo(), BrandeisServo(), BrandeisServo()};
 
 BrandeisArm::BrandeisArm() : node_handle(nullptr)
 {
@@ -33,6 +36,11 @@ void BrandeisArm::setup(ros::NodeHandle &nh)
     current_elbow = EL_PARK_DEG;
     current_shoulder = SH_PARK_DEG;
     BrandeisArm::traceOut("setup");
+
+    servos.shoulder.current = SH_PARK_DEG;
+    servos.elbow.current = EL_PARK_DEG;
+    servos.wrist.current = WR_PARK_DEG;
+    servos.claw.current = CLAWPARKDEG;
 }
 
 void BrandeisArm::traceOut(String msg)
@@ -49,6 +57,79 @@ void BrandeisArm::loop()
     iteration_time = millis();
     if (state == "move")
         move();
+    else if (state == "movex")
+    {
+        movex();
+    }
+}
+
+void BrandeisArm::calculate_iteration_deltas()
+{
+    int shouldercnt;
+    int elbowcnt;
+    int wristcnt;
+
+    shouldercnt = abs(destination_shoulder - current_shoulder);
+    elbowcnt = abs(destination_elbow - current_elbow);
+    wristcnt = abs(destination_wrist - current_wrist); // note wrist is backwards
+
+    if (shouldercnt > elbowcnt && shouldercnt > wristcnt)
+        iterations = shouldercnt;
+    if (elbowcnt > shouldercnt && elbowcnt > wristcnt)
+        iterations = elbowcnt;
+    if (wristcnt > shouldercnt && wristcnt > elbowcnt)
+        iterations = wristcnt;
+
+    shouldercnt = destination_shoulder - current_shoulder;
+    elbowcnt = destination_elbow - current_elbow;
+    wristcnt = destination_wrist - current_wrist; // note wrist is backwards
+    iterations = iterations / 2;
+    if (iterations == 0)
+    {
+        shoulderDelta = 0;
+        elbowDelta = 0;
+        wristDelta = 0;
+    }
+    else
+    {
+        shoulderDelta = shouldercnt / iterations;
+        elbowDelta = elbowcnt / iterations;
+        wristDelta = wristcnt / iterations;
+    }
+}
+
+void BrandeisArm::configure_ease_algorithm(int duration_in_ms)
+{
+    servos.shoulder.destination = destination_shoulder;
+    servos.elbow.destination = destination_elbow;
+    servos.wrist.destination = destination_wrist;
+    servos.shoulder.duration_ms = duration_in_ms;
+    servos.elbow.duration_ms = duration_in_ms;
+    servos.wrist.duration_ms = duration_in_ms;
+}
+
+int BrandeisArm::move()
+{
+    current_wrist = current_wrist + wristDelta;
+    wrist(current_wrist);
+    current_elbow = current_elbow + elbowDelta;
+    elbow(current_elbow);
+    current_shoulder = current_shoulder + shoulderDelta;
+    shoulder(current_shoulder);
+    iterations = iterations - 1;
+    return iterations;
+}
+
+int BrandeisArm::movex()
+{
+    servos.shoulder.calc_elapsed(millis());
+    servos.elbow.calc_elapsed(millis());
+    servos.wrist.calc_elapsed(millis());
+    servos.claw.calc_elapsed(millis());
+    servos.shoulder.update_current();
+    servos.elbow.update_current();
+    servos.wrist.update_current();
+    servos.claw.update_current();
 }
 
 void BrandeisArm::elbow(float deg)
@@ -114,7 +195,6 @@ void BrandeisArm::open_claw()
 
 void BrandeisArm::close_claw()
 { // Claw MIN is closed   MAX is open
-
     if (current_claw <= CLAWCLOSED)
     {
         for (int pulselen = current_claw; pulselen < CLAWCLOSED; pulselen++)
@@ -129,58 +209,6 @@ void BrandeisArm::close_claw()
 String BrandeisArm::getState()
 {
     return state;
-}
-
-void BrandeisArm::calculate_iteration_deltas()
-{
-    int shouldercnt = 0;
-    int elbowcnt = 0;
-    int wristcnt = 0;
-
-    shouldercnt = abs(destination_shoulder - current_shoulder);
-    elbowcnt = abs(destination_elbow - current_elbow);
-    wristcnt = abs(destination_wrist - current_wrist); // note wrist is backwards
-
-    if (shouldercnt > elbowcnt && shouldercnt > wristcnt)
-        iterations = shouldercnt;
-    if (elbowcnt > shouldercnt && elbowcnt > wristcnt)
-        iterations = elbowcnt;
-    if (wristcnt > shouldercnt && wristcnt > elbowcnt)
-        iterations = wristcnt;
-
-    shouldercnt = destination_shoulder - current_shoulder;
-    elbowcnt = destination_elbow - current_elbow;
-    wristcnt = destination_wrist - current_wrist; // note wrist is backwards
-    iterations = iterations / 2;
-    if (iterations == 0)
-    {
-        shoulderDelta = 0;
-        elbowDelta = 0;
-        wristDelta = 0;
-    }
-    else
-    {
-        shoulderDelta = shouldercnt / iterations;
-        elbowDelta = elbowcnt / iterations;
-        wristDelta = wristcnt / iterations;
-    }
-}
-
-int BrandeisArm::move()
-{
-    if (iterations <= 0 || state != "move")
-    {
-        state = "idle";
-        return 0;
-    }
-    current_wrist = current_wrist + wristDelta;
-    wrist(current_wrist);
-    current_elbow = current_elbow + elbowDelta;
-    elbow(current_elbow);
-    current_shoulder = current_shoulder + shoulderDelta;
-    shoulder(current_shoulder);
-    iterations = iterations - 1;
-    return iterations;
 }
 
 void BrandeisArm::arm_command(String command)
@@ -271,7 +299,8 @@ void BrandeisArm::arm_command(String command, float arg)
         destination_shoulder = (int)arg;
         destination_wrist = current_wrist;
         destination_elbow = current_elbow;
-        state = "move";
-        calculate_iteration_deltas();
+        state = "movex";
+        configure_ease_algorithm(6000);
+        // calculate_iteration_deltas();
     }
 }
