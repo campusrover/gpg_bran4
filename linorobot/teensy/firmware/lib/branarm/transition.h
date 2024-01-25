@@ -1,3 +1,6 @@
+#ifndef TRANSITION_H
+#define TRANSITION_H
+
 class Transition
 {
 public:
@@ -12,6 +15,8 @@ public:
     int ease_in_out_cubic(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle);
 
     int ease_in_out_quart(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle);
-    
+
     int ease_in_out_quint(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle);
 };
+
+#endif
