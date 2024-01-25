@@ -10,6 +10,8 @@ BrandeisServo::BrandeisServo()
     tr = Transition();
 }
 
+void BrandeisServo::set_variables(double destination, double duration_ms, double start_time_ms) : destination(destination), duration_ms(duration_ms), start_time_ms(start_time_ms) {}
+
 double BrandeisServo::upadate_current_time()
 {
     current = (float)tr.ease_in_out_cubic(elapsed_time_ms, current, delta(), duration_ms, start_time_ms, destination);
