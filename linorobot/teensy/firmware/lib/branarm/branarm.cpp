@@ -1,6 +1,5 @@
 #include "branarm.h"
 
-
 ServoCoords arm_locs[] = {
     {SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},
     {SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG},
@@ -46,20 +45,26 @@ void BrandeisArm::setup(ros::NodeHandle &nh)
 void BrandeisArm::traceOut(String msg)
 {
     char buffer[100];
-    sprintf(buffer, "msg: %s, curSh %f, curEl %f,  curWr %f, curCl %f", msg.c_str(), current_shoulder, current_elbow, current_wrist, current_claw);
+    sprintf(buffer, "%s, %f, %f, %f, %f", msg.c_str(), current_shoulder, current_elbow, current_wrist, current_claw);
     node_handle->loginfo(buffer);
 }
 
 void BrandeisArm::loop()
 {
-    if (millis() < iteration_time + iteration_interval || state == "idle")
+    if (state == "idle")
         return;
-    iteration_time = millis();
     if (state == "move")
+    {
+        iteration_time = millis();
         move();
+    }
     else if (state == "movex")
     {
         movex();
+        if (arm_motion_stopped())
+        {
+            state = "idle";
+        }
     }
 }
 
@@ -98,14 +103,46 @@ void BrandeisArm::calculate_iteration_deltas()
     }
 }
 
+void BrandeisArm::traceOut2(String msg)
+{
+    char buffer[400];
+    snprintf(buffer, sizeof(buffer), "%s, %.1f, %.1f, %.1f, %.1f",
+            msg.c_str(),
+            servos.shoulder.destination,
+            servos.elbow.destination,
+            servos.wrist.destination,
+            servos.claw.destination);
+    node_handle->loginfo(buffer);
+    snprintf(buffer, sizeof(buffer), "   %.1f, %.1f, %.1f, %.1f",
+            servos.shoulder.elapsed_time_ms,
+            servos.elbow.elapsed_time_ms,
+            servos.wrist.elapsed_time_ms,
+            servos.claw.elapsed_time_ms);
+    node_handle->loginfo(buffer);
+    snprintf(buffer, sizeof(buffer), "   %.1f, %.1f, %.1f, %.1f",
+            servos.shoulder.duration_ms,
+            servos.elbow.duration_ms,
+            servos.wrist.duration_ms,
+            servos.claw.duration_ms);
+    node_handle->loginfo(buffer);
+}
+
 void BrandeisArm::configure_ease_algorithm(int duration_in_ms)
 {
     servos.shoulder.destination = destination_shoulder;
     servos.elbow.destination = destination_elbow;
     servos.wrist.destination = destination_wrist;
+    servos.claw.destination = destination_wrist;
     servos.shoulder.duration_ms = duration_in_ms;
     servos.elbow.duration_ms = duration_in_ms;
-    servos.wrist.duration_ms = duration_in_ms;
+    servos.wrist.start_time_ms = duration_in_ms;
+    servos.claw.start_time_ms = duration_in_ms;
+    servos.shoulder.start_time_ms = millis();
+    servos.elbow.start_time_ms = millis();
+    servos.wrist.start_time_ms = millis();
+    servos.claw.start_time_ms = millis();
+
+    BrandeisArm::traceOut2("config ease");
 }
 
 int BrandeisArm::move()
@@ -120,16 +157,28 @@ int BrandeisArm::move()
     return iterations;
 }
 
+bool BrandeisArm::arm_motion_stopped(void)
+{
+    boolean stopped =
+        servos.shoulder.elapsed_time_ms >= servos.shoulder.duration_ms &&
+        servos.elbow.elapsed_time_ms >= servos.elbow.duration_ms &&
+        servos.wrist.elapsed_time_ms >= servos.wrist.duration_ms &&
+        servos.claw.elapsed_time_ms >= servos.claw.duration_ms;
+    traceOut2("arm_motion_stopped");
+    return stopped;
+}
+
 void BrandeisArm::movex()
 {
-    servos.shoulder.calc_elapsed(millis());
-    servos.elbow.calc_elapsed(millis());
-    servos.wrist.calc_elapsed(millis());
-    servos.claw.calc_elapsed(millis());
-    servos.shoulder.update_current();
-    servos.elbow.update_current();
-    servos.wrist.update_current();
-    servos.claw.update_current();
+    BrandeisArm::traceOut2("moveX");
+    servos.shoulder.update_elapsed_time(millis());
+    servos.elbow.update_elapsed_time(millis());
+    servos.wrist.update_elapsed_time(millis());
+    servos.claw.update_elapsed_time(millis());
+    servos.shoulder.upadate_current_time();
+    servos.elbow.upadate_current_time();
+    servos.wrist.upadate_current_time();
+    servos.claw.upadate_current_time();
 }
 
 void BrandeisArm::elbow(float deg)

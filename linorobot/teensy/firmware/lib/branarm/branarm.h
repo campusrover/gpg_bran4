@@ -14,10 +14,11 @@ class BrandeisArm {
 public:
     BrandeisArm();
     void setup(ros::NodeHandle& nh);
-    String getState();
+    String getState(void);
     void arm_command(String command);
     void arm_command(String command, float arg);
-    void loop();
+    bool arm_motion_stopped(void);
+    void loop(void);
 
 private:
     Adafruit_PWMServoDriver ARM;
@@ -62,6 +63,8 @@ private:
     int move();
     void movex();
     void traceOut(String msg);
+    void traceOut2(String msg);
+
 };
 
 struct ServoCoords {
