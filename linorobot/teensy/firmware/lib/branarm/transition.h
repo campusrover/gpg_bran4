@@ -8,7 +8,7 @@ public:
 
     double check_duration(double calc, double current_time, double duration, double start_time, double target_angle);
 
-    int linear_tween(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle);
+    double linear_tween(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle);
 
     int ease_in_out_quad(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle);
 

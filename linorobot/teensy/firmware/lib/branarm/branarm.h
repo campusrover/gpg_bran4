@@ -63,7 +63,7 @@ private:
     int move();
     void movex();
     void traceOut(String msg);
-    void traceOut2(String msg);
+    void traceOut2(String msg, int mod);
 
 };
 

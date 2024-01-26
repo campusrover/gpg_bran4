@@ -30,14 +30,13 @@ double Transition::check_exceptions(double calc, double change_in_value, double 
     return calc;
 }
 
-
 // Tweening functions
-int Transition::linear_tween(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle)
+double Transition::linear_tween(double current_time, double start_value, double change_in_value, double duration, double start_time, double target_angle)
 {
     double calc = ((change_in_value * current_time) / duration) + start_value;
     calc = check_exceptions(calc, change_in_value, start_value);
     calc = check_duration(calc, current_time, duration, start_time, target_angle);
-    return static_cast<int>(calc);
+    return calc;
 };
 
 // Ease In Out Quad
