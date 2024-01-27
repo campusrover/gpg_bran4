@@ -59,7 +59,7 @@ private:
     void open_claw();
     void close_claw();
     void calculate_iteration_deltas();
-    void configure_ease_algorithm(int duration_in_ms);
+    void configure_ease_algorithm(long duration_in_ms);
     int move();
     void movex();
     void traceOut(String msg);

@@ -46,7 +46,6 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
   servos.elbow.setup(*node_handle);
   servos.wrist.setup(*node_handle);
   servos.claw.setup(*node_handle);
-
 }
 
 void BrandeisArm::traceOut(String msg) {
@@ -57,6 +56,9 @@ void BrandeisArm::traceOut(String msg) {
 }
 
 void BrandeisArm::loop() {
+  if (millis() <= iteration_time + iteration_interval)
+    return;
+  iteration_time = millis(); 
   if (state == "idle")
     return;
   if (state == "move") {
@@ -107,9 +109,9 @@ void BrandeisArm::traceOut2(String msg, int mod = 1) {
     return;
   // node_handle->loginfo(msg.c_str());
   snprintf(buffer, sizeof(buffer),
-           "  s, %.1f, %.1f, %.1f, %.1f, %.1f"
-           "  e, %.1f, %.1f, %.1f, %.1f, %.1f "
-           "  w, %.1f, %.1f, %.1f %.1f, %.1f",
+           "  s, %.1f, %.1f, %.1f, %lu, %.1f"
+           "  e, %.1f, %.1f, %.1f, %lu, %.1f"
+           "  w, %.1f, %.1f, %.1f, %lu, %.1f",
            servos.shoulder.current_angle, servos.shoulder.target_angle,
            servos.shoulder.change_in_value_angle, servos.shoulder.duration_ms,
            servos.shoulder.elapsed_time_ms, servos.elbow.current_angle,
@@ -121,7 +123,7 @@ void BrandeisArm::traceOut2(String msg, int mod = 1) {
   node_handle->loginfo(buffer);
 }
 
-void BrandeisArm::configure_ease_algorithm(int duration_in_ms) {
+void BrandeisArm::configure_ease_algorithm(long duration_in_ms) {
   servos.shoulder.set_variables(current_shoulder, destination_shoulder,
                                 duration_in_ms, millis());
   servos.elbow.set_variables(current_elbow, destination_elbow, duration_in_ms,
@@ -157,10 +159,17 @@ bool BrandeisArm::arm_motion_stopped(void) {
 
 void BrandeisArm::movex() {
   BrandeisArm::traceOut2("moveX", 90000);
-  servos.shoulder.loop_update_current_ms(millis());
-  servos.elbow.loop_update_current_ms(millis());
-  servos.wrist.loop_update_current_ms(millis());
-  servos.claw.loop_update_current_ms(millis());
+  if (servos.shoulder.moving) {
+    current_shoulder = servos.shoulder.loop_update_current_ms(millis());
+    shoulder(current_shoulder);
+  }
+  // servos.elbow.loop_update_current_ms(millis());
+  // servos.wrist.loop_update_current_ms(millis());
+  // servos.claw.loop_update_current_ms(millis());
+
+  // char buffer[400];
+  // sprintf(buffer, "shoulder: %g", current_shoulder);
+  // node_handle->loginfo(buffer);
 }
 
 void BrandeisArm::elbow(float deg) {
