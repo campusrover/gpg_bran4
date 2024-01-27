@@ -58,12 +58,13 @@ void BrandeisArm::traceOut(String msg) {
 void BrandeisArm::loop() {
   if (millis() <= iteration_time + iteration_interval)
     return;
-  iteration_time = millis(); 
-  if (state == "idle")
+  iteration_time = millis();
+  if (state == "idle") {
     return;
-  if (state == "move") {
-    iteration_time = millis();
+  } else if (state == "move") {
     move();
+    if (iterations < 1)
+      state = "idle";
   } else if (state == "movex") {
     movex();
     if (arm_motion_stopped()) {
@@ -134,7 +135,7 @@ void BrandeisArm::configure_ease_algorithm(long duration_in_ms) {
 }
 
 int BrandeisArm::move() {
-  node_handle->loginfo("movex");
+  node_handle->loginfo("move");
   current_wrist = current_wrist + wristDelta;
   wrist(current_wrist);
   current_elbow = current_elbow + elbowDelta;
