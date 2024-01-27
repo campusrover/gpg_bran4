@@ -134,6 +134,7 @@ void BrandeisArm::configure_ease_algorithm(long duration_in_ms) {
 }
 
 int BrandeisArm::move() {
+  node_handle->loginfo("movex");
   current_wrist = current_wrist + wristDelta;
   wrist(current_wrist);
   current_elbow = current_elbow + elbowDelta;
@@ -148,16 +149,14 @@ bool BrandeisArm::arm_motion_stopped(void) {
   // elapsed_time_ms >= duration_ms means that motion is complete because
   // more time has passed than what we were going for
   boolean stopped =
-      servos.shoulder.elapsed_time_ms >= servos.shoulder.duration_ms &&
-      servos.elbow.elapsed_time_ms >= servos.elbow.duration_ms &&
-      servos.wrist.elapsed_time_ms >= servos.wrist.duration_ms &&
-      servos.claw.elapsed_time_ms >= servos.claw.duration_ms;
+      !(servos.shoulder.moving || servos.elbow.moving || servos.wrist.moving);
   if (stopped)
     traceOut2("arm_motion_stopped");
   return stopped;
 }
 
 void BrandeisArm::movex() {
+  node_handle->loginfo("movex");
   BrandeisArm::traceOut2("moveX", 90000);
   if (servos.shoulder.moving) {
     current_shoulder = servos.shoulder.loop_update_current_ms(millis());
@@ -311,7 +310,6 @@ void BrandeisArm::arm_command(String command, float arg) {
     char buffer[100];
     sprintf(buffer, "destination shoulder: %d", destination_shoulder);
     node_handle->loginfo(buffer);
-
     destination_wrist = current_wrist;
     destination_elbow = current_elbow;
     state = "movex";
