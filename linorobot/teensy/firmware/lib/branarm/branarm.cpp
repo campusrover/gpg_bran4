@@ -126,11 +126,11 @@ void BrandeisArm::traceOut2(String msg, int mod = 1) {
 }
 
 void BrandeisArm::configure_ease_algorithm(long duration_in_ms) {
-  servos.shoulder.set_variables(current_shoulder, destination_shoulder,
+  servos.shoulder.prepare_ease(current_shoulder, destination_shoulder,
                                 duration_in_ms, millis());
-  servos.elbow.set_variables(current_elbow, destination_elbow, duration_in_ms,
+  servos.elbow.prepare_ease(current_elbow, destination_elbow, duration_in_ms,
                              millis());
-  servos.wrist.set_variables(current_wrist, destination_wrist, duration_in_ms,
+  servos.wrist.prepare_ease(current_wrist, destination_wrist, duration_in_ms,
                              millis());
   BrandeisArm::traceOut2("config ease");
 }
