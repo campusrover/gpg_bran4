@@ -10,14 +10,15 @@ ServoCoords arm_locs[] = {
 
 ServoInfo servos = {BrandeisServo(), BrandeisServo(), BrandeisServo(),
                     BrandeisServo()};
-int counter;
+int log_counter = 0;
+int shoulder_counter = 0;
+int skipped_loop_counter = 0;
 
 BrandeisArm::BrandeisArm() : node_handle(nullptr) {
   ARM = Adafruit_PWMServoDriver(0x40);
   iteration_time = millis();
   iteration_interval = 20; // 20 milli second
   state = "idle";
-  counter = 0;
 };
 
 void BrandeisArm::setup(ros::NodeHandle &nh) {
@@ -56,8 +57,9 @@ void BrandeisArm::traceOut(String msg) {
 }
 
 void BrandeisArm::loop() {
-  if (millis() <= iteration_time + iteration_interval)
+  if (millis() <= iteration_time + iteration_interval) {
     return;
+  }
   iteration_time = millis();
   if (state == "idle") {
     return;
@@ -106,13 +108,12 @@ void BrandeisArm::calculate_iteration_deltas() {
 
 void BrandeisArm::traceOut2(String msg, int mod = 1) {
   char buffer[400];
-  if ((++counter % mod) != 0)
+  if ((++log_counter % mod) != 0)
     return;
-  // node_handle->loginfo(msg.c_str());
   snprintf(buffer, sizeof(buffer),
-           "  s, %.1f, %.1f, %.1f, %lu, %.1f"
-           "  e, %.1f, %.1f, %.1f, %lu, %.1f"
-           "  w, %.1f, %.1f, %.1f, %lu, %.1f",
+           "  s, %.1f, %.1f, %.1f, %lu, %lu"
+           "  e, %.1f, %.1f, %.1f, %lu, %lu"
+           "  w, %.1f, %.1f, %.1f, %lu, %lu",
            servos.shoulder.current_angle, servos.shoulder.target_angle,
            servos.shoulder.change_in_value_angle, servos.shoulder.duration_ms,
            servos.shoulder.elapsed_time_ms, servos.elbow.current_angle,
@@ -149,16 +150,18 @@ int BrandeisArm::move() {
 bool BrandeisArm::arm_motion_stopped(void) {
   // elapsed_time_ms >= duration_ms means that motion is complete because
   // more time has passed than what we were going for
+  
   boolean stopped =
       !(servos.shoulder.moving || servos.elbow.moving || servos.wrist.moving);
-  if (stopped)
+  char buffer[100]; sprintf(buffer, "arm_motion_stopped %d %d %d %d", stopped, servos.shoulder.moving, servos.elbow.moving, servos.wrist.moving); node_handle->loginfo(buffer);
+if (stopped)
     traceOut2("arm_motion_stopped");
   return stopped;
 }
 
 void BrandeisArm::movex() {
-  node_handle->loginfo("movex");
-  BrandeisArm::traceOut2("moveX", 90000);
+  char buffer[100]; sprintf(buffer, "movex: state: %s", state.c_str()); node_handle->loginfo(buffer);
+  BrandeisArm::traceOut2("moveX trace", 10);
   if (servos.shoulder.moving) {
     current_shoulder = servos.shoulder.loop_update_current_ms(millis());
     shoulder(current_shoulder);
@@ -179,6 +182,7 @@ void BrandeisArm::elbow(float deg) {
 }
 
 void BrandeisArm::shoulder(float deg) {
+  shoulder_counter++;
   int deglen =
       (deg + SH_DEGOFFSET) * SH_DEGSCALE; // pulselen of commanded degrees
   ARM.setPWM(SHOULDER, 0, deglen);
@@ -314,7 +318,7 @@ void BrandeisArm::arm_command(String command, float arg) {
     destination_wrist = current_wrist;
     destination_elbow = current_elbow;
     state = "movex";
-    configure_ease_algorithm(5000);
+    configure_ease_algorithm(1500);
     // calculate_iteration_deltas();
   }
 }
