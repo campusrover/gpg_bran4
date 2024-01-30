@@ -31,6 +31,8 @@ void BrandeisServo::setup_ease(double tar_angle, long curr_time_ms,
   start_time_ms = curr_time_ms;
   change_in_value_angle = tar_angle - start_angle;
   moving = change_in_value_angle != 0;
+  target_angle = tar_angle;
+  char buffer[100]; sprintf(buffer, "setup_ease %f %d %f %f", target_angle, moving, change_in_value_angle, start_angle); node_handle->loginfo(buffer);
 }
 
 double BrandeisServo::compute_next_increment(long current_time_ms) {
@@ -39,6 +41,7 @@ double BrandeisServo::compute_next_increment(long current_time_ms) {
   double ease_amount = quad_equation(time_increment);
   double new_angle =
       (target_angle * ease_amount) + start_angle * (1 - ease_amount);
+  char buffer[199]; sprintf(buffer, "compute_next_increment %ld %.1f %.1f %.1f", current_time_ms, time_increment, ease_amount, new_angle); node_handle->loginfo(buffer);
   return new_angle;
 }
 

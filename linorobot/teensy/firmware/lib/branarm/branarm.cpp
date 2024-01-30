@@ -28,8 +28,8 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
 
   servos.shoulder.setup(*node_handle, servo_driver, SHOULDER, SHOULDERMAXDEG,
                         SHOULDERMINDEG, SH_DEGOFFSET, SH_DEGSCALE);
-  servos.elbow.setup(*node_handle, servo_driver, ELBOW, ELBOWMAXDEG, ELBOWMINDEG,
-                     EL_DEGOFFSET, EL_DEGSCALE);
+  servos.elbow.setup(*node_handle, servo_driver, ELBOW, ELBOWMAXDEG,
+                     ELBOWMINDEG, EL_DEGOFFSET, EL_DEGSCALE);
   servos.wrist.setup(*node_handle, servo_driver, WRIST, WRISTMAXDEG,
                      WRISTMINDEG, WR_DEGOFFSET, WR_DEGSCALE);
   servos.claw.setup(*node_handle, servo_driver, CLAW, CLAWMAXDEG, CLAWMINDEG,
@@ -38,7 +38,8 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
 
 void BrandeisArm::traceOut(String msg) {
   char buffer[100];
-  sprintf(buffer, "%s, %f, %f, %f, %f", msg.c_str(), servos.shoulder.current_angle);
+  sprintf(buffer, "%s, %.2f", msg.c_str(),
+          servos.shoulder.current_angle);
   node_handle->loginfo(buffer);
 }
 
@@ -101,16 +102,15 @@ void BrandeisArm::calculate_iteration_deltas() {
 //            "  e, %.1f, %.1f, %.1f, %lu, %lu"
 //            "  w, %.1f, %.1f, %.1f, %lu, %lu",
 //            servos.shoulder.current_angle, servos.shoulder.target_angle,
-//            servos.shoulder.change_in_value_angle, servos.shoulder.duration_ms,
-//            servos.shoulder.elapsed_time_ms, servos.elbow.current_angle,
-//            servos.elbow.target_angle, servos.elbow.change_in_value_angle,
-//            servos.elbow.duration_ms, servos.elbow.elapsed_time_ms,
-//            servos.wrist.current_angle, servos.wrist.target_angle,
-//            servos.wrist.change_in_value_angle, servos.wrist.duration_ms,
-//            servos.wrist.elapsed_time_ms);
+//            servos.shoulder.change_in_value_angle,
+//            servos.shoulder.duration_ms, servos.shoulder.elapsed_time_ms,
+//            servos.elbow.current_angle, servos.elbow.target_angle,
+//            servos.elbow.change_in_value_angle, servos.elbow.duration_ms,
+//            servos.elbow.elapsed_time_ms, servos.wrist.current_angle,
+//            servos.wrist.target_angle, servos.wrist.change_in_value_angle,
+//            servos.wrist.duration_ms, servos.wrist.elapsed_time_ms);
 //   node_handle->loginfo(buffer);
 // }
-
 
 int BrandeisArm::move() {
   node_handle->loginfo("move");
@@ -130,8 +130,10 @@ bool BrandeisArm::arm_motion_stopped(void) {
 
   boolean stopped =
       !(servos.shoulder.moving || servos.elbow.moving || servos.wrist.moving);
-  char buffer[100]; sprintf(buffer, "arm_motion_stopped %d %d %d %d", stopped,
-          servos.shoulder.moving, servos.elbow.moving, servos.wrist.moving); node_handle->loginfo(buffer);
+  char buffer[100];
+  sprintf(buffer, "arm_motion_stopped %d %d %d %d", stopped,
+          servos.shoulder.moving, servos.elbow.moving, servos.wrist.moving);
+  node_handle->loginfo(buffer);
   return stopped;
 }
 
@@ -281,7 +283,9 @@ void BrandeisArm::arm_command(String command, float arg) {
   }
 
   if (command == "shoulder") {
-    char buffer[100];sprintf(buffer, "destination shoulder: %f", (double)arg);node_handle->loginfo(buffer);
+    char buffer[100];
+    sprintf(buffer, "destination shoulder: %f", (double)arg);
+    node_handle->loginfo(buffer);
     servos.shoulder.setup_ease((double)arg, millis(), 4000);
     state = "movex";
   }
