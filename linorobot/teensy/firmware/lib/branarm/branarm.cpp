@@ -302,9 +302,36 @@ void BrandeisArm::arm_command(String command, float arg) {
   if (command == "shoulder") {
     double arg_double = (double) arg;
     char buffer[100];
-    sprintf(buffer, "destination shoulder: %f", arg_double);
-    node_handle->loginfo(buffer);
+    sprintf(buffer, "destination shoulder: %f", arg_double); node_handle->loginfo(buffer);
     servos.shoulder.setup_ease(arg_double, millis(), 2000);
     state = "movex";
   }
+    if (command == "combo") {
+      double arg_double = (double) arg;
+      char buffer[100];
+      sprintf(buffer, "combined: %f", arg_double); node_handle->loginfo(buffer);
+      servos.shoulder.setup_ease(45, millis(), 2000);
+      servos.wrist.setup_ease(90, millis(), 2000);
+      state = "movex";
+    }
+
+    if (command == "test") {
+      char buffer[100];
+      if (arg == 1) {
+        servos.shoulder.test_mode = true;
+        servos.elbow.test_mode = true;
+        servos.wrist.test_mode = true;
+        servos.claw.test_mode = true;
+        sprintf(buffer, "test mode on. no motion"); node_handle->loginfo(buffer);
+
+      } else if (arg == 0) {
+        servos.shoulder.test_mode = false;
+        servos.elbow.test_mode = false;
+        servos.wrist.test_mode = false;
+        servos.claw.test_mode = false;
+        sprintf(buffer, "test mode off. arm WILL MOVE"); node_handle->loginfo(buffer);
+
+      }
+    }
+
 }

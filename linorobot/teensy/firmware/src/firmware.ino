@@ -207,7 +207,11 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg)
 
     const char *command = arm_msg.command;
 
-    if (strcmp(command, "wrist") == 0 || strcmp(command, "elbow") == 0 || strcmp(command, "shoulder") == 0)
+    if (strcmp(command, "wrist") == 0 || 
+        strcmp(command, "elbow") == 0 || 
+        strcmp(command, "shoulder") == 0 || 
+        strcmp(command, "combo") == 0 || 
+        strcmp(command, "test") == 0)
     {
         the_arm.arm_command(command, arm_msg.arg1);
     }

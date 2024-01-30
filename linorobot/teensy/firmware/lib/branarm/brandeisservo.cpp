@@ -7,7 +7,7 @@ BrandeisServo::BrandeisServo() {
   start_angle = 0;
   change_in_value_angle = 0;
   moving = false;
-  test_mode = false;
+  test_mode = true;
   counter = 0;
   error_counter = 0;
 }
