@@ -1,8 +1,7 @@
 #ifndef BRANDEOSSERVO_H
 #define BRANDEOSSERVO_H
-#include <ros.h>
 #include <Adafruit_PWMServoDriver.h>
-
+#include <ros.h>
 
 class BrandeisServo {
 public:
@@ -16,14 +15,13 @@ public:
   BrandeisServo();
 
   void setup(ros::NodeHandle &nh, Adafruit_PWMServoDriver ser_drr, int port,
-             long max_ang, long min_ang, double conv_scale, double conv_offset);
+             long max_ang, long min_ang, double conv_offset, double conv_scale,
+             long park_deg);
 
-  void setup_ease(double tar_angle, long curr_time_ms,
-                               long dur_ms);
+  void setup_ease(double tar_angle, long curr_time_ms, long dur_ms);
   double compute_next_increment(long current_time_ms);
   void move(double deg);
   void status(char buffer[200]);
-
 
 private:
   long max_angle;
@@ -36,8 +34,8 @@ private:
   double target_angle;
   double start_angle;
   double change_in_value_angle;
-  double quad_equation(long time_increment);
-  double smooth_step_equation(long time_increment);
+  double quad_equation(double time_increment);
+  double smooth_step_equation(double time_increment);
 
 private:
   Adafruit_PWMServoDriver servo_driver;
