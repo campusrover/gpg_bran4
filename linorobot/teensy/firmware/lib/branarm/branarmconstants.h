@@ -8,12 +8,17 @@
 #define WRIST 13      // servo number
 #define CLAW 12       // servo number
 
+// Convert pulse -> degrees (pulse + 43) * 2.5
 #define CLAWPARK 160  // claw closed
 #define CLAWMIN 160   // claw closed
 #define CLAWMAX 120   // claw open
 #define CLAWOPEN 120
-#define CLAWPARKDEG 21  // claw closed deglen = (deg + 43) * 2.5;
 #define CLAWCLOSED 160
+#define CLAWPARKDEG 21  
+#define CLAWMAXDEG 5
+#define CLAWMINDEG 21
+#define CLAWOPENDEG 5
+#define CLAWCLOSEDDEG 21
 
 #define EL_DEGOFFSET 43
 #define EL_DEGSCALE 2.5
@@ -21,6 +26,8 @@
 #define SH_DEGSCALE 1.77
 #define WR_DEGOFFSET 75
 #define WR_DEGSCALE 1.77
+#define CL_DEGOFFSET 43
+#define CL_DEGSCALE 2.5
 
 
 //  wrist pulse length  = (degrees + 75)*1.77

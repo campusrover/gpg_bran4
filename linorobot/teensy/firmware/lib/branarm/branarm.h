@@ -6,14 +6,13 @@
 #include <ros.h>
 #include <Adafruit_PWMServoDriver.h>
 #include "branarmconstants.h"
-#include "transition.h"
 #include "brandeisservo.h"
 
 class BrandeisArm {
 
 public:
-    BrandeisArm();
     void setup(ros::NodeHandle& nh);
+    BrandeisArm();
     String getState(void);
     void arm_command(String command);
     void arm_command(String command, float arg);
@@ -21,7 +20,7 @@ public:
     void loop(void);
 
 private:
-    Adafruit_PWMServoDriver ARM;
+    Adafruit_PWMServoDriver servo_driver;
     float iteration_time;
     float iteration_interval;
 
@@ -51,6 +50,7 @@ private:
     void elbow(float deg);
     void shoulder(float deg);
     void wrist(float deg);
+    
     void elbow(int deg);
     void shoulder(int deg);
     void wrist(int deg);

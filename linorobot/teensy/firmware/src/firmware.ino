@@ -63,7 +63,7 @@ float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
 
-BrandeisArm theArm = BrandeisArm();
+BrandeisArm the_arm = BrandeisArm();
 
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
@@ -103,7 +103,7 @@ void setup()
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
     // nh.advertise(inst_pub);
-    theArm.setup(nh);
+    the_arm.setup(nh);
 
     while (!nh.connected())
     {
@@ -113,7 +113,7 @@ void setup()
     char buffer[50];
     sprintf(buffer, "PID %f %f %f", K_P, K_D, K_I);
     nh.loginfo(buffer);
-    theArm.setup(nh);
+    the_arm.setup(nh);
     delay(1);
 }
 
@@ -141,7 +141,7 @@ void loop()
         stopBase();
     }
 
-    theArm.loop();
+    the_arm.loop();
 
     // this block publishes the IMU data based on defined rate
     if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE))
@@ -209,14 +209,14 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg)
 
     if (strcmp(command, "wrist") == 0 || strcmp(command, "elbow") == 0 || strcmp(command, "shoulder") == 0)
     {
-        theArm.arm_command(command, arm_msg.arg1);
+        the_arm.arm_command(command, arm_msg.arg1);
     }
     else if (strcmp(command, "park") == 0 || strcmp(command, "floordown") == 0 || strcmp(command, "open") == 0 ||
              strcmp(command, "close") == 0 || strcmp(command, "straightup") == 0 ||
              strcmp(command, "verthorizhand") == 0 || strcmp(command, "allforward") == 0 || strcmp(command, "allback") == 0 ||
              strcmp(command, "floorup") == 0)
     {
-        theArm.arm_command(command);
+        the_arm.arm_command(command);
     }
     else
     {
