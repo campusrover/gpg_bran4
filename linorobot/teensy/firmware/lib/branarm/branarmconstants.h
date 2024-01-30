@@ -98,7 +98,6 @@
 #define EL_ALL_FORWARD_DEG 90
 #define WR_ALL_FORWARD_DEG 90
 
-
 // Floor up, same as floor down except tip is offset
 // vertically 
 #define SH_FLOOR_UP_DEG 51
