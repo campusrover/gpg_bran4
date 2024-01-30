@@ -31,6 +31,7 @@ void BrandeisServo::setup_ease(double tar_angle, long curr_time_ms,
   start_time_ms = curr_time_ms;
   change_in_value_angle = tar_angle - start_angle;
   moving = change_in_value_angle != 0;
+  duration_ms = dur_ms;
 }
 
 double BrandeisServo::compute_next_increment(long current_time_ms) {
