@@ -2,7 +2,8 @@
 
 ArmPositions arm_locs[] = {
     {"park", SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG, 5000},
-    {"floordown", SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG, 5000},
+    {"floordown", SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG,
+     5000},
     {"straightup", SH_STRAIGHTUP, EL_STRAIGHTUP, WR_STRAIGHTUP, 5000},
     {"vert1", SH_VERT_HORIZ_HAND, EL_VERT_HORIZ_HAND, WR_VERT_HORIZ_HAND, 5000},
     {"straightback", SH_ALL_BACKWARD_DEG, EL_ALL_BACKWARD_DEG,
@@ -121,7 +122,7 @@ void BrandeisArm::arm_command(String command, float arg) {
       LOG_INFO("test mode off. ARM WILL MOVE", state.c_str());
     }
   }
-  for (ArmPositions pos: arm_locs) {
+  for (ArmPositions pos : arm_locs) {
     if (command == pos.name) {
       LOG_INFO("arm_command: %s", command.c_str());
       servos.shoulder.setup_ease(pos.shoulder, millis(), pos.duration);
