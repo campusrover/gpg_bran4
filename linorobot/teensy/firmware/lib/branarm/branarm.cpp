@@ -87,32 +87,29 @@ long BrandeisArm::move_duration_heuristic(long new_shoulder, long new_elbow, lon
 }
 
 void BrandeisArm::arm_command(String command, float arg) {
+  double arg_double = (double)arg;  
   if (command == "wrist") {
-    double arg_double = (double)arg;
     long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
-    LOG_INFO("destination wrist: %.1f %ld", arg_double, duration);
+    LOG_INFO("command wrist: %.1f %ld", arg_double, duration);
     wrist_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
 
   if (command == "elbow") {
-    double arg_double = (double)arg;
     long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
-    LOG_INFO("destination elbow: %f %ld", arg_double, duration);
+    LOG_INFO("command elbow: %f %ld", arg_double, duration);
     elbow_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
 
   if (command == "shoulder") {
-    double arg_double = (double)arg;
     long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
-    LOG_INFO("destination shoulder: %.1f %ld", arg_double, duration);
+    LOG_INFO("command shoulder: %.1f %ld", arg_double, duration);
     shoulder_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
   if (command == "claw") {
-    double arg_double = (double)arg;
-    LOG_INFO("destination claw: %f", arg_double);
+    LOG_INFO("command claw: %f", arg_double);
     claw_servo.setup_ease(arg_double, 1000);
     state = "movex";
   }

@@ -28,9 +28,10 @@ void BrandeisServo::setup(int id, ros::NodeHandle &nh,
 }
 
 void BrandeisServo::setup_ease(double tar_angle, long dur) {
+
   start_time_ms = millis();
   start_angle = current_angle;
-  duration_ms = dur;
+  duration_ms = max(dur, 1000); // 1 second minimm
   change_in_value_angle = tar_angle - start_angle;
   moving = change_in_value_angle != 0;
   target_angle = tar_angle;
