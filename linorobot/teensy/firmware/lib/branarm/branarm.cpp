@@ -13,15 +13,15 @@ int log_counter = 0;
 int shoulder_counter = 0;
 int skipped_loop_counter = 0;
 
+BrandeisServo shoulder_servo;
+BrandeisServo elbow_servo;
+BrandeisServo wrist_servo;
+BrandeisServo claw_servo;
+
 BrandeisArm::BrandeisArm() : node_handle(nullptr) {
   servo_driver = Adafruit_PWMServoDriver(0x40);
   iteration_time = millis();
   iteration_interval = 20; // 20 milli second
-  shoulder_servo = BrandeisServo();
-  elbow_servo = BrandeisServo();
-  wrist_servo = BrandeisServo();
-  claw_servo = BrandeisServo();
-
   state = "idle";
 };
 
@@ -31,14 +31,14 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
   servo_driver.setPWMFreq(60);
 
   shoulder_servo.setup(100, *node_handle, servo_driver, SHOULDER,
-                       SHOULDERMAXDEG, SHOULDERMINDEG, SH_DEGOFFSET,
+                       SH_MAX_DEG, SH_MIN_DEG, SH_DEGOFFSET,
                        SH_DEGSCALE, SH_PARK_DEG);
-  elbow_servo.setup(101, *node_handle, servo_driver, ELBOW, ELBOWMAXDEG,
-                    ELBOWMINDEG, EL_DEGOFFSET, EL_DEGSCALE, EL_PARK_DEG);
-  wrist_servo.setup(102, *node_handle, servo_driver, WRIST, WRISTMAXDEG,
-                    WRISTMINDEG, WR_DEGOFFSET, WR_DEGSCALE, WR_PARK_DEG);
-  claw_servo.setup(103, *node_handle, servo_driver, CLAW, CLAWMAXDEG,
-                   CLAWMINDEG, CL_DEGOFFSET, CL_DEGSCALE, CLAWPARKDEG);
+  elbow_servo.setup(101, *node_handle, servo_driver, ELBOW, EL_MAX_DEG,
+                    EL_MIN_DEG, EL_DEGOFFSET, EL_DEGSCALE, EL_PARK_DEG);
+  wrist_servo.setup(102, *node_handle, servo_driver, WRIST, WR_MAX_DEG,
+                    WR_MIN_DEG, WR_DEGOFFSET, WR_DEGSCALE, WR_PARK_DEG);
+  claw_servo.setup(103, *node_handle, servo_driver, CLAW, CL_MAX_DEG,
+                   CL_MIN_DEG, CL_DEGOFFSET, CL_DEGSCALE, CL_PARK_DEG);
 }
 
 void BrandeisArm::loop() {
@@ -58,7 +58,7 @@ void BrandeisArm::loop() {
 
 bool BrandeisArm::arm_motion_stopped(void) {
   boolean stopped =
-      !(shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving);
+      !(shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving || claw_servo.moving);
   return stopped;
 }
 
@@ -74,6 +74,10 @@ void BrandeisArm::movex() {
   if (wrist_servo.moving) {
     double new_angle = wrist_servo.compute_next_increment(millis());
     wrist_servo.move(new_angle);
+  }
+  if (claw_servo.moving) {
+    double new_angle = claw_servo.compute_next_increment(millis());
+    claw_servo.move(new_angle);
   }
 }
 
@@ -100,12 +104,20 @@ void BrandeisArm::arm_command(String command, float arg) {
     shoulder_servo.setup_ease(arg_double);
     state = "movex";
   }
-  if (command == "combo") {
+  if (command == "claw") {
     double arg_double = (double)arg;
-    LOG_INFO("combined: %f", arg_double);
-    shoulder_servo.setup_ease(45);
-    wrist_servo.setup_ease(90);
+    LOG_INFO("destination claw: %f", arg_double);
+    claw_servo.setup_ease(arg_double);
     state = "movex";
+  }
+
+  if (command == "reset") {
+    double arg_double = (double)arg;
+    LOG_INFO("reset: %f", arg_double);
+    shoulder_servo.move(SH_PARK_DEG);
+    elbow_servo.move(EL_PARK_DEG);
+    wrist_servo.move(WR_PARK_DEG);
+    claw_servo.move(CL_PARK_DEG);
   }
   if (command == "test") {
     if (arg == 1) {
@@ -127,8 +139,8 @@ void BrandeisArm::arm_command(String command, float arg) {
     if (command == pos.name) {
       LOG_INFO("arm_command: %s", command.c_str());
       shoulder_servo.setup_ease(pos.shoulder);
-      elbow_servo.setup_ease(pos.shoulder);
-      wrist_servo.setup_ease(pos.shoulder);
+      elbow_servo.setup_ease(pos.elbow);
+      wrist_servo.setup_ease(pos.wrist);
       state = "movex";
     }
   }

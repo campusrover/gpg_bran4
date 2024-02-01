@@ -11,7 +11,7 @@
 
 class BrandeisServo {
 public:
-  int id;
+  int ident;
   ros::NodeHandle *node_handle;
   bool moving;
   bool test_mode;

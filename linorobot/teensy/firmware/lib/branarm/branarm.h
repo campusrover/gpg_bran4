@@ -19,18 +19,13 @@ struct ArmPositions {
 class BrandeisArm {
 
 public:
-    BrandeisServo shoulder_servo;
-    BrandeisServo elbow_servo;
-    BrandeisServo wrist_servo;
-    BrandeisServo claw_servo;
-    
-    void setup(ros::NodeHandle& nh);
     BrandeisArm();
-    String getState(void);
+    void setup(ros::NodeHandle& nh);
     void arm_command(String command);
     void arm_command(String command, float arg);
     bool arm_motion_stopped(void);
     void loop(void);
+    String getState(void);
 
 private:
     Adafruit_PWMServoDriver servo_driver;
