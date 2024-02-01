@@ -9,9 +9,21 @@
 #include "brandeisservo.h"
 
 
+struct ArmPositions {
+    String name;
+    float shoulder;
+    float elbow;
+    float wrist;
+};
+
 class BrandeisArm {
 
 public:
+    BrandeisServo shoulder_servo;
+    BrandeisServo elbow_servo;
+    BrandeisServo wrist_servo;
+    BrandeisServo claw_servo;
+    
     void setup(ros::NodeHandle& nh);
     BrandeisArm();
     String getState(void);
@@ -42,21 +54,6 @@ private:
     void movex();
     char buffer[300];
 
-};
-
-struct ArmPositions {
-    String name;
-    float shoulder;
-    float elbow;
-    float wrist;
-    long duration;  // how long in milliseconds does the whole mpvement take
-};
-
-struct ServoInfo {
-    BrandeisServo shoulder;
-    BrandeisServo elbow;
-    BrandeisServo wrist;
-    BrandeisServo claw;
 };
 
 #endif

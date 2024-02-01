@@ -12,31 +12,31 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/Users/pitosalas/mydev/gpg_bran4/linorobot/teensy/firmware/.pio/build/teensy41/firmware.elf",
+            "executable": "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/.pio/build/teensy41/firmware.elf",
             "projectEnvName": "teensy41",
-            "toolchainBinDir": "/Users/pitosalas/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin",
+            "toolchainBinDir": "/home/ubuntu/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
-                "task": "Pre-Debug"
+                "task": "Pre-Debug (teensy41)"
             }
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/Users/pitosalas/mydev/gpg_bran4/linorobot/teensy/firmware/.pio/build/teensy41/firmware.elf",
+            "executable": "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/.pio/build/teensy41/firmware.elf",
             "projectEnvName": "teensy41",
-            "toolchainBinDir": "/Users/pitosalas/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin",
+            "toolchainBinDir": "/home/ubuntu/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin",
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "/Users/pitosalas/mydev/gpg_bran4/linorobot/teensy/firmware/.pio/build/teensy41/firmware.elf",
+            "executable": "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/.pio/build/teensy41/firmware.elf",
             "projectEnvName": "teensy41",
-            "toolchainBinDir": "/Users/pitosalas/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin",
+            "toolchainBinDir": "/home/ubuntu/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
         }
