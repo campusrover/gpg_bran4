@@ -27,13 +27,11 @@ void BrandeisServo::setup(int id, ros::NodeHandle &nh,
   move(park_ang);
 }
 
-void BrandeisServo::setup_ease(double tar_angle) {
+void BrandeisServo::setup_ease(double tar_angle, long dur) {
   start_time_ms = millis();
   start_angle = current_angle;
+  duration_ms = dur;
   change_in_value_angle = tar_angle - start_angle;
-
-  // trying 1 second for every 30 degrees
-  duration_ms = abs((change_in_value_angle * 1000) / 15);
   moving = change_in_value_angle != 0;
   target_angle = tar_angle;
   LOG_INFO("setup_ease [%d] %.1f %d %.1f %.1f %ld", ident, target_angle, moving,
@@ -72,8 +70,8 @@ void BrandeisServo::move(double deg) {
 }
 
 // Basic status of the servo. Name, current position, is it moving, and counters
-void BrandeisServo::status(char buffer[200]) {
-  sprintf(buffer, "[%d] %f %d %d", ident, current_angle, counter,
+void BrandeisServo::status() {
+  LOG_INFO(buffer, "[%d] %f %d %d", ident, current_angle, counter,
           error_counter);
 }
 

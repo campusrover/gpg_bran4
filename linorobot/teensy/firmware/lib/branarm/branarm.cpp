@@ -30,9 +30,8 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
   servo_driver.begin();
   servo_driver.setPWMFreq(60);
 
-  shoulder_servo.setup(100, *node_handle, servo_driver, SHOULDER,
-                       SH_MAX_DEG, SH_MIN_DEG, SH_DEGOFFSET,
-                       SH_DEGSCALE, SH_PARK_DEG);
+  shoulder_servo.setup(100, *node_handle, servo_driver, SHOULDER, SH_MAX_DEG,
+                       SH_MIN_DEG, SH_DEGOFFSET, SH_DEGSCALE, SH_PARK_DEG);
   elbow_servo.setup(101, *node_handle, servo_driver, ELBOW, EL_MAX_DEG,
                     EL_MIN_DEG, EL_DEGOFFSET, EL_DEGSCALE, EL_PARK_DEG);
   wrist_servo.setup(102, *node_handle, servo_driver, WRIST, WR_MAX_DEG,
@@ -57,8 +56,8 @@ void BrandeisArm::loop() {
 }
 
 bool BrandeisArm::arm_motion_stopped(void) {
-  boolean stopped =
-      !(shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving || claw_servo.moving);
+  boolean stopped = !(shoulder_servo.moving || elbow_servo.moving ||
+                      wrist_servo.moving || claw_servo.moving);
   return stopped;
 }
 
@@ -81,33 +80,40 @@ void BrandeisArm::movex() {
   }
 }
 
-String BrandeisArm::getState() { return state; }
+// heuristic to generate time for a compounde move.
+long BrandeisArm::move_duration_heuristic(long new_shoulder, long new_elbow, long new_wrist) {
+  long shoulder_travel = abs(new_shoulder - shoulder_servo.current_angle);
+  return max(1000, (shoulder_travel * 1000) / 30.0);
+}
 
 void BrandeisArm::arm_command(String command, float arg) {
   if (command == "wrist") {
     double arg_double = (double)arg;
-    LOG_INFO("destination wrist: %f", arg_double);
-    wrist_servo.setup_ease(arg_double);
+    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    LOG_INFO("destination wrist: %.1f %ld", arg_double, duration);
+    wrist_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
 
   if (command == "elbow") {
     double arg_double = (double)arg;
-    LOG_INFO("destination elbow: %f", arg_double);
-    elbow_servo.setup_ease(arg_double);
+    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    LOG_INFO("destination elbow: %f %ld", arg_double, duration);
+    elbow_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
 
   if (command == "shoulder") {
     double arg_double = (double)arg;
-    LOG_INFO("destination shoulder: %f", arg_double);
-    shoulder_servo.setup_ease(arg_double);
+    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    LOG_INFO("destination shoulder: %.1f %ld", arg_double, duration);
+    shoulder_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
   if (command == "claw") {
     double arg_double = (double)arg;
     LOG_INFO("destination claw: %f", arg_double);
-    claw_servo.setup_ease(arg_double);
+    claw_servo.setup_ease(arg_double, 1000);
     state = "movex";
   }
 
@@ -119,28 +125,35 @@ void BrandeisArm::arm_command(String command, float arg) {
     wrist_servo.move(WR_PARK_DEG);
     claw_servo.move(CL_PARK_DEG);
   }
-  if (command == "test") {
-    if (arg == 1) {
+  if (command == "diag") {
+    LOG_INFO("diag: %f", arg);
+    if (arg == 99) {
       shoulder_servo.test_mode = true;
       elbow_servo.test_mode = true;
       wrist_servo.test_mode = true;
       claw_servo.test_mode = true;
       LOG_INFO("test mode off. ARM NO MOTION: %s", state.c_str());
 
-    } else if (arg == 0) {
+    } else if (arg == 88) {
       shoulder_servo.test_mode = false;
       elbow_servo.test_mode = false;
       wrist_servo.test_mode = false;
       claw_servo.test_mode = false;
       LOG_INFO("test mode off. ARM WILL MOVE: %s", state.c_str());
+    } else if (arg == 1) {
+      shoulder_servo.status();
+      elbow_servo.status();
+      wrist_servo.status();
+      claw_servo.status();
     }
   }
   for (ArmPositions pos : arm_locs) {
     if (command == pos.name) {
-      LOG_INFO("arm_command: %s", command.c_str());
-      shoulder_servo.setup_ease(pos.shoulder);
-      elbow_servo.setup_ease(pos.elbow);
-      wrist_servo.setup_ease(pos.wrist);
+      long duration = move_duration_heuristic(pos.shoulder, pos.elbow, pos.wrist);
+      LOG_INFO("arm_command: %s, time: %ld", command.c_str(), duration);
+      shoulder_servo.setup_ease(pos.shoulder, duration);
+      elbow_servo.setup_ease(pos.elbow, duration);
+      wrist_servo.setup_ease(pos.wrist, duration);
       state = "movex";
     }
   }

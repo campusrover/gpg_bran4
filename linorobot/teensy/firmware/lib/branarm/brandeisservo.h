@@ -19,7 +19,7 @@ public:
   int error_counter;
   double current_angle;
   char buffer[300];
-  void status(char buffer[200]);
+  void status();
 
   BrandeisServo();
 
@@ -27,7 +27,7 @@ public:
              int port, long max_ang, long min_ang, double conv_offset,
              double conv_scale, long park_deg);
 
-  void setup_ease(double tar_angle);
+  void setup_ease(double tar_angle, long duration);
   double compute_next_increment(long current_time_ms);
   void move(double deg);
 

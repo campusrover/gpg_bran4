@@ -25,7 +25,6 @@ public:
     void arm_command(String command, float arg);
     bool arm_motion_stopped(void);
     void loop(void);
-    String getState(void);
 
 private:
     Adafruit_PWMServoDriver servo_driver;
@@ -45,6 +44,7 @@ private:
     void wrist(int deg);
     void claw(bool open_close); 
 
+    long move_duration_heuristic(long new_shoulder, long new_elbow, long new_wrist);
     void configure_ease_algorithm(long duration_in_ms);
     void movex();
     char buffer[300];
