@@ -3,11 +3,6 @@
 #include <Adafruit_PWMServoDriver.h>
 #include <ros.h>
 
-#define LOG_INFO(format, ...)                                                  \
-  do {                                                                         \
-    sprintf(buffer, format, __VA_ARGS__);                                      \
-    node_handle->loginfo(buffer);                                              \
-  } while (0)
 
 class BrandeisServo {
 public:

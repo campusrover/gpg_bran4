@@ -67,21 +67,21 @@ float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
-
-BrandeisArm the_arm = BrandeisArm();
+char buffer[300]; // for debug macros
+BrandeisArm the_arm;
 
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
 void PIDCallback(const lino_msgs::PID &pid);
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg);
 
-// Pito added
 long m1_pid_error = 0;
 long m2_pid_error = 0;
 long m1_curr_rpm = 0;
 long m2_curr_rpm = 0;
 
 ros::NodeHandle nh;
+ros::NodeHandle* node_handle = &nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
@@ -97,6 +97,7 @@ ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 // ros::Publisher inst_pub("inst", &inst_msg);
 
 void setup() {
+  node_handle = nh;
   nh.initNode();
   nh.getHardware()->setBaud(57600);
   nh.subscribe(pid_sub);
@@ -107,14 +108,12 @@ void setup() {
   nh.advertise(raw_vel_pub);
   nh.advertise(raw_imu_pub);
   // nh.advertise(inst_pub);
-  the_arm.setup(nh);
 
   while (!nh.connected()) {
     nh.spinOnce();
   }
   nh.loginfo("LINOBASE CONNECTED");
   char buffer[50];
-  sprintf(buffer, "PID %f %f %f", K_P, K_D, K_I);
   nh.loginfo(buffer);
   the_arm.setup(nh);
   delay(1);
