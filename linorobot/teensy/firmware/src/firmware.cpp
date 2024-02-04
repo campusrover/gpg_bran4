@@ -16,7 +16,7 @@
 #include "geometry_msgs/Twist.h"
 #include "lino_msgs/ArmMsg.h"
 #include "lino_msgs/Imu.h"
-#include "lino_msgs/Inst.h"
+// #include "lino_msgs/Inst.h"
 #include "lino_msgs/PID.h"
 #include "lino_msgs/Velocities.h"
 #include "ros/node_handle.h"
@@ -86,8 +86,8 @@ ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
-lino_msgs::Inst inst_msg;
-ros::Publisher inst_pub("inst", &inst_msg);
+// lino_msgs::Inst inst_msg;
+// ros::Publisher inst_pub("inst", &inst_msg);
 
 void setup() {
   nh.initNode();
@@ -97,16 +97,13 @@ void setup() {
   nh.subscribe(armMsg_sub);
   nh.advertise(raw_vel_pub);
   nh.advertise(raw_imu_pub);
-  nh.advertise(inst_pub);
-
+  // nh.advertise(inst_pub);
   while (!nh.connected()) {
     nh.spinOnce();
   }
-  nh.loginfo("LINOBASE CONNECTED");
   LOG_INFO("CAMPUSROVER BASE CONNECTED %d", 100);
-
-  the_arm.setup(nh);
   delay(1);
+  the_arm.setup(nh);
 }
 
 void stopBase() {
@@ -124,18 +121,18 @@ void publishIMU() {
   raw_imu_pub.publish(&raw_imu_msg);
 }
 
-void publish_inst() {
-  // collect data for instrumentation message
-  inst_msg.l_encoder = motor1_encoder.read();
-  inst_msg.r_encoder = motor2_encoder.read();
-  inst_msg.l_piderror = m1_pid_error;
-  inst_msg.r_piderror = m2_pid_error;
-  inst_msg.l_rpm = m1_curr_rpm;
-  inst_msg.r_rpm = m2_curr_rpm;
+// void publish_inst() {
+//   // collect data for instrumentation message
+//   inst_msg.l_encoder = motor1_encoder.read();
+//   inst_msg.r_encoder = motor2_encoder.read();
+//   inst_msg.l_piderror = m1_pid_error;
+//   inst_msg.r_piderror = m2_pid_error;
+//   inst_msg.l_rpm = m1_curr_rpm;
+//   inst_msg.r_rpm = m2_curr_rpm;
 
-  // publish instrumentation message
-  inst_pub.publish(&inst_msg);
-}
+//   // publish instrumentation message
+//   inst_pub.publish(&inst_msg);
+// }
 
 void moveBase() {
   // get the required rpm for each motor based on required velocities, and base
@@ -193,15 +190,15 @@ void loop() {
     stopBase();
   }
 
-  publish_inst();
+  // publish_inst();
   the_arm.loop();
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
-    LOG_INFO("IMU Address: %d", getIMUaddrs());
+    // LOG_INFO("IMU Address: %d", getIMUaddrs());
     if (!imu_is_initialized) {
       imu_is_initialized = initIMU();
-      LOG_INFO("Initialize IMU Success: %d", imu_is_initialized);
+      // LOG_ERROR("Initialize IMU Success: %d", imu_is_initialized);
     } else {
         publishIMU();
     }
