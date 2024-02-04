@@ -4,25 +4,7 @@
 #include <WProgram.h>
 #endif
 
-#include "ros/node_handle.h"
-#include "ros/time.h"
-#include <Servo.h>
-#include <Wire.h>
 #include "lino_base_config.h"
-
-// header file for publishing velocities for odom
-#include "lino_msgs/Velocities.h"
-// header file for cmd_subscribing to "cmd_vel"
-#include "geometry_msgs/Twist.h"
-// header file for pid server
-#include "lino_msgs/PID.h"
-// header file for imu
-#include "lino_msgs/ArmMsg.h"
-#include "lino_msgs/Imu.h"
-// //(Pito) header for instrumentation
-// #include "lino_msgs/Inst.h"
-// //(Pito) Header for camera servo
-// #include "std_msgs/UInt16.h"
 #include "Adafruit_AW9523.h"
 #include "Adafruit_PWMServoDriver.h"
 #include "Imu.h"
@@ -30,6 +12,17 @@
 #include "Motor.h"
 #include "PID.h"
 #include "branarm.h"
+#include "campusrover.h"
+#include "geometry_msgs/Twist.h"
+#include "lino_msgs/ArmMsg.h"
+#include "lino_msgs/Imu.h"
+#include "lino_msgs/Inst.h"
+#include "lino_msgs/PID.h"
+#include "lino_msgs/Velocities.h"
+#include "ros/node_handle.h"
+#include "ros/time.h"
+#include <Servo.h>
+#include <Wire.h>
 
 #define ENCODER_OPTIMIZE_INTERRUPTS // comment this out on Non-Teensy boards
 #include "Encoder.h"
@@ -67,7 +60,7 @@ float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
-char buffer[300]; // for debug macros
+char buffer[500]; // for debug macros
 BrandeisArm the_arm;
 
 // callback function prototypes
@@ -81,7 +74,7 @@ long m1_curr_rpm = 0;
 long m2_curr_rpm = 0;
 
 ros::NodeHandle nh;
-ros::NodeHandle* node_handle = &nh;
+ros::NodeHandle *node_handle = &nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
@@ -93,44 +86,104 @@ ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
-// lino_msgs::Inst inst_msg;
-// ros::Publisher inst_pub("inst", &inst_msg);
+lino_msgs::Inst inst_msg;
+ros::Publisher inst_pub("inst", &inst_msg);
 
 void setup() {
-  node_handle = nh;
   nh.initNode();
   nh.getHardware()->setBaud(57600);
   nh.subscribe(pid_sub);
   nh.subscribe(cmd_sub);
-  // nh.subscribe(led_sub);
   nh.subscribe(armMsg_sub);
-  // nh.subscribe(cam_sub);
   nh.advertise(raw_vel_pub);
   nh.advertise(raw_imu_pub);
-  // nh.advertise(inst_pub);
+  nh.advertise(inst_pub);
 
   while (!nh.connected()) {
     nh.spinOnce();
   }
   nh.loginfo("LINOBASE CONNECTED");
-  char buffer[50];
-  nh.loginfo(buffer);
+  LOG_INFO("CAMPUSROVER BASE CONNECTED %d", 100);
+
   the_arm.setup(nh);
   delay(1);
+}
+
+void stopBase() {
+  g_req_linear_vel_x = 0;
+  g_req_linear_vel_y = 0;
+  g_req_angular_vel_z = 0;
+}
+
+void publishIMU() {
+  // pass accelerometer, gyroscope, accelerometer data to imu object
+  raw_imu_msg.linear_acceleration = readAccelerometer();
+  raw_imu_msg.angular_velocity = readGyroscope();
+  raw_imu_msg.magnetic_field = readMagnetometer();
+  // publish raw_imu_msg
+  raw_imu_pub.publish(&raw_imu_msg);
+}
+
+void publish_inst() {
+  // collect data for instrumentation message
+  inst_msg.l_encoder = motor1_encoder.read();
+  inst_msg.r_encoder = motor2_encoder.read();
+  inst_msg.l_piderror = m1_pid_error;
+  inst_msg.r_piderror = m2_pid_error;
+  inst_msg.l_rpm = m1_curr_rpm;
+  inst_msg.r_rpm = m2_curr_rpm;
+
+  // publish instrumentation message
+  inst_pub.publish(&inst_msg);
+}
+
+void moveBase() {
+  // get the required rpm for each motor based on required velocities, and base
+  // used
+  Kinematics::rpm req_rpm = kinematics.getRPM(
+      g_req_linear_vel_x, g_req_linear_vel_y, g_req_angular_vel_z);
+
+  // get the current speed of each motor
+  int current_rpm1 = motor1_encoder.getRPM();
+  int current_rpm2 = motor2_encoder.getRPM();
+  int current_rpm3 = motor3_encoder.getRPM();
+  int current_rpm4 = motor4_encoder.getRPM();
+
+  // the required rpm is capped at -/+ MAX_RPM to prevent the PID from having
+  // too much error the PWM value sent to the motor driver is the calculated PID
+  // based on required RPM vs measured RPM
+  motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
+  motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
+
+  // Used when setting up new hardware to tell left from right and forward from
+  // backward. motor1_controller.spin(50); // PITO LEFT MOTOR
+  // motor2_controller.spin(100); // PITO RIGHT MOTOR
+
+  m1_pid_error = req_rpm.motor1 - current_rpm1;
+  m2_pid_error = req_rpm.motor2 - current_rpm2;
+  m1_curr_rpm = current_rpm1;
+  m2_curr_rpm = current_rpm2;
+
+  Kinematics::velocities current_vel;
+  current_vel = kinematics.getVelocities(current_rpm1, current_rpm2,
+                                         current_rpm3, current_rpm4);
+
+  // pass velocities to publisher object
+  raw_vel_msg.linear_x = current_vel.linear_x;
+  raw_vel_msg.linear_y = current_vel.linear_y;
+  raw_vel_msg.angular_z = current_vel.angular_z;
+
+  // publish raw_vel_msg
+  raw_vel_pub.publish(&raw_vel_msg);
 }
 
 void loop() {
   static unsigned long prev_control_time = 0;
   static unsigned long prev_imu_time = 0;
   static unsigned long prev_debug_time = 0;
-  static bool imu_is_initialized;
+  static bool imu_is_initialized = false;
 
-  // char buffer[50];
-  // sprintf(buffer, "&&&&&&&&&&& Pulse Length: %d", pulselen);
-  // nh.loginfo(buffer);
-  // this block drives the robot based on defined rate
   if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE)) {
-    // LEDUpdate();
     moveBase();
     prev_control_time = millis();
   }
@@ -140,23 +193,15 @@ void loop() {
     stopBase();
   }
 
+  publish_inst();
   the_arm.loop();
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
-    // char buffer[50];
-    // sprintf(buffer, "*********** IMU Address: %d", getIMUaddrs());
-    // nh.loginfo(buffer);
-    // aw.digitalWrite(LedPin, LOW);
+      LOG_INFO("IMU Address: %d", getIMUaddrs());
     if (!imu_is_initialized) {
       imu_is_initialized = initIMU();
-
-      //     if(imu_is_initialized)
-      //         nh.loginfo("IMU Initialized");
-      //     else
-      //         nh.logfatal("IMU failed to initialize. Check your IMU
-      //         connection.");
-    } else {
+      LOG_INFO("Initialize IMU Success: %d", imu_is_initialized);
       publishIMU();
     }
     prev_imu_time = millis();
@@ -198,80 +243,6 @@ void commandCallback(const geometry_msgs::Twist &cmd_msg) {
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg) {
   const char *command = arm_msg.command;
   the_arm.arm_command(command, arm_msg.arg1);
-}
-
-void moveBase() {
-  // get the required rpm for each motor based on required velocities, and base
-  // used
-  Kinematics::rpm req_rpm = kinematics.getRPM(
-      g_req_linear_vel_x, g_req_linear_vel_y, g_req_angular_vel_z);
-
-  // get the current speed of each motor
-  int current_rpm1 = motor1_encoder.getRPM();
-  int current_rpm2 = motor2_encoder.getRPM();
-  int current_rpm3 = motor3_encoder.getRPM();
-  int current_rpm4 = motor4_encoder.getRPM();
-
-  // the required rpm is capped at -/+ MAX_RPM to prevent the PID from having
-  // too much error the PWM value sent to the motor driver is the calculated PID
-  // based on required RPM vs measured RPM
-  motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
-  motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
-  // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));
-  // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));
-
-  // motor1_controller.spin(50); // PITO LEFT MOTOR
-  // motor2_controller.spin(100); // PITO RIGHT MOTOR
-
-  // Pito added this
-  m1_pid_error = req_rpm.motor1 - current_rpm1;
-  m2_pid_error = req_rpm.motor2 - current_rpm2;
-  m1_curr_rpm = current_rpm1;
-  m2_curr_rpm = current_rpm2;
-
-  Kinematics::velocities current_vel;
-  current_vel = kinematics.getVelocities(current_rpm1, current_rpm2,
-                                         current_rpm3, current_rpm4);
-
-  // pass velocities to publisher object
-  raw_vel_msg.linear_x = current_vel.linear_x;
-  raw_vel_msg.linear_y = current_vel.linear_y;
-  raw_vel_msg.angular_z = current_vel.angular_z;
-
-  // publish raw_vel_msg
-  raw_vel_pub.publish(&raw_vel_msg);
-
-  //     //collect data for instrumentation message
-  //     inst_msg.l_encoder = motor1_encoder.read();
-  //     inst_msg.r_encoder = motor2_encoder.read();
-  //     inst_msg.l_piderror = m1_pid_error;
-  //     inst_msg.r_piderror = m2_pid_error;
-  //     inst_msg.l_rpm = m1_curr_rpm;
-  //     inst_msg.r_rpm = m2_curr_rpm;
-
-  //     // publish instrumentation message
-  //     inst_pub.publish(&inst_msg);
-  //
-}
-
-void stopBase() {
-  g_req_linear_vel_x = 0;
-  g_req_linear_vel_y = 0;
-  g_req_angular_vel_z = 0;
-}
-
-void publishIMU() {
-  // pass accelerometer data to imu object
-  raw_imu_msg.linear_acceleration = readAccelerometer();
-
-  // pass gyroscope data to imu object
-  raw_imu_msg.angular_velocity = readGyroscope();
-
-  // pass accelerometer data to imu object
-  raw_imu_msg.magnetic_field = readMagnetometer();
-
-  // publish raw_imu_msg
-  raw_imu_pub.publish(&raw_imu_msg);
 }
 
 float mapFloat(float x, float in_min, float in_max, float out_min,

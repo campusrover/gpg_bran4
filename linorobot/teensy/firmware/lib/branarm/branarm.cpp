@@ -1,4 +1,5 @@
 #include "branarm.h"
+#include "campusrover.h"
 
 ArmPositions arm_locs[] = {
     {"park", SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},

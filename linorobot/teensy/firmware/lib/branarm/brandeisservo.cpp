@@ -1,4 +1,5 @@
 #include "brandeisservo.h"
+#include "campusrover.h"
 
 BrandeisServo::BrandeisServo() {
   target_angle = 0;
