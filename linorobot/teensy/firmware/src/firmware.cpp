@@ -198,11 +198,12 @@ void loop() {
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
-      LOG_INFO("IMU Address: %d", getIMUaddrs());
+    LOG_INFO("IMU Address: %d", getIMUaddrs());
     if (!imu_is_initialized) {
       imu_is_initialized = initIMU();
       LOG_INFO("Initialize IMU Success: %d", imu_is_initialized);
-      publishIMU();
+    } else {
+        publishIMU();
     }
     prev_imu_time = millis();
   }
