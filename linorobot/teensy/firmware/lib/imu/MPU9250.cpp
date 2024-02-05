@@ -76,7 +76,7 @@ void MPU9250::initialize() {
  */
 bool MPU9250::testConnection() {
     uint8_t device_id = getDeviceID();
-    if(device_id == 0x38 || device_id == 0x71 || device_id == 0x68 || device_id == 0x39 ) 
+    if(device_id == 0x38 || device_id == 0x71 || device_id == 0x68 || device_id == 0x39  || device_id == 0x3A) 
         return true;
     else 
         return false;

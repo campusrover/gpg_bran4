@@ -39,7 +39,7 @@ int getIMUaddrs()
     int ret2 = gyroscope.getDeviceID();
     magnetometer.initialize();
     int ret3 = magnetometer.getDeviceID();
-    return(ret1*1000+ret2*100+ret3);
+    return(ret1*100000+ret2*1000+ret3);
 }
 
 geometry_msgs::Vector3 readAccelerometer()
