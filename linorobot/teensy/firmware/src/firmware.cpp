@@ -5,6 +5,7 @@
 #endif
 
 #include "lino_base_config.h"
+
 #include "Adafruit_AW9523.h"
 #include "Adafruit_PWMServoDriver.h"
 #include "Imu.h"
@@ -174,6 +175,17 @@ void moveBase() {
   raw_vel_pub.publish(&raw_vel_msg);
 }
 
+void logIMUaddresses() {
+  Wire.begin();
+  accelerometer.initialize();
+  gyroscope.initialize();
+  magnetometer.initialize();
+  LOG_INFO("IMU Addresses: %x %x %x", accelerometer.getDeviceID(),
+           gyroscope.getDeviceID(), magnetometer.getDeviceID());
+  LOG_INFO("IMU Testconnections: %x %x %x", accelerometer.testConnection(),
+           gyroscope.testConnection(), magnetometer.testConnection());
+}
+
 void loop() {
   static unsigned long prev_control_time = 0;
   static unsigned long prev_imu_time = 0;
@@ -195,12 +207,11 @@ void loop() {
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
-    // LOG_INFO("IMU Address: %d", getIMUaddrs());
     if (!imu_is_initialized) {
       imu_is_initialized = initIMU();
-      // LOG_ERROR("Initialize IMU Success: %d", imu_is_initialized);
+      logIMUaddresses();
     } else {
-        publishIMU();
+      publishIMU();
     }
     prev_imu_time = millis();
   }
