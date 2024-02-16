@@ -1204,7 +1204,7 @@ int start_capture(RASPIVID_STATE& state) {
       }
     }
   }
-  ROS_INFO("Video capture started!!\n");
+  ROS_INFO("Video capture started\n");
   return 0;
 }
 
@@ -1265,7 +1265,7 @@ int close_cam(RASPIVID_STATE& state) {
 }
 
 void reconfigure_callback(raspicam_node::CameraConfig& config, uint32_t level, RASPIVID_STATE& state) {
-  ROS_INFO("Reconfigure Request: contrast %d, sharpness %d, brightness %d, "
+  ROS_DEBUG("figure Request: contrast %d, sharpness %d, brightness %d, "
             "saturation %d, ISO %d, exposureCompensation %d,"
             " videoStabilisation %d, vFlip %d, hFlip %d,"
             " zoom %.2f, exposure_mode %s, awb_mode %s, shutter_speed %d",
