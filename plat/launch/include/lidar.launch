@@ -1,6 +1,1 @@
-<launch>
-    <!-- Run Linorobot compatible laser drivers. Takes reference from env var LINOLIDAR. ie. export LINOLIDAR=xv11 -->
-    <include file="$(find   <arg name="rvizconfig" default="$(find platplat)/rviz/urdf.rviz" />
-)/launch/include/lidar/ydlidar.launch" />
-
-</launch>
+ 
