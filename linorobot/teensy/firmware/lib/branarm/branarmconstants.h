@@ -69,7 +69,7 @@
 #define CL_PARK_DEG 21
 #define CL_OPEN_DEG 6
 #define CL_CLOSED_DEG 21
-
+#define CL_CAN_CLOSED_DEG 12
 
 #endif
 
