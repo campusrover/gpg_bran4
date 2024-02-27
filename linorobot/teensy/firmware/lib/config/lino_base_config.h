@@ -1,4 +1,4 @@
-// FOR PLATFORM2
+// FOR PLATFORM3
 
 #ifndef LINO_BASE_CONFIG_H
 #define LINO_BASE_CONFIG_H
@@ -27,9 +27,9 @@
 // #define K_I 0.3 // I constant
 // #define K_D 0.2 // D constant
 
-#define K_P 0.6 // P constant
+#define K_P 0.8 // P constant
 #define K_I 0.3 // I constant
-#define K_D 0.2 // D constant
+#define K_D 0.5 // D constant
 
 //define your robot' specs here
 #define MAX_RPM 100              // motor's maximum RPM
