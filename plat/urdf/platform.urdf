@@ -27,7 +27,6 @@
       <material name="red">
         <color rgba="1 0 0 1" />
       </material>
-
     </visual>
   </link>
 
@@ -54,4 +53,7 @@
     <child link="right_wheel"/>
     <origin xyz="0 0 -0.03" rpy="0 0 0"/>
   </joint>
+
+
+
 </robot>
