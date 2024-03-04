@@ -64,6 +64,8 @@ unsigned long g_prev_command_time = 0;
 char buffer[500]; // for debug macros
 BrandeisArm the_arm;
 
+BrandeisLED the_led;
+
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
 void PIDCallback(const lino_msgs::PID &pid);
@@ -90,6 +92,8 @@ ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 // lino_msgs::Inst inst_msg;
 // ros::Publisher inst_pub("inst", &inst_msg);
 
+
+
 void setup() {
   nh.initNode();
   nh.getHardware()->setBaud(57600);
@@ -111,6 +115,10 @@ void stopBase() {
   g_req_linear_vel_x = 0;
   g_req_linear_vel_y = 0;
   g_req_angular_vel_z = 0;
+}
+
+void notconnected() {
+
 }
 
 void publishIMU() {
