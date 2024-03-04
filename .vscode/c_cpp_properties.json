@@ -6,7 +6,8 @@
                 "limitSymbolsToIncludedHeaders": false
             },
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/linorobot/teensy/firmware/lib/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
