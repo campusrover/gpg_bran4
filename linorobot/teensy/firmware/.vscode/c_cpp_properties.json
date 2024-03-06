@@ -10,6 +10,7 @@
             "includePath": [
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/src",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/config",
+                "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branled",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branarm",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/campusrover",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/pid",
@@ -27,8 +28,6 @@
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Wire",
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Wire/utility",
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/cores/teensy4",
-                "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branled",
-                "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/led",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/pincer",
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/ADC",
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/AccelStepper/src",
@@ -131,6 +130,7 @@
                 "path": [
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/src",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/config",
+                    "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branled",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branarm",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/campusrover",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/pid",
@@ -148,8 +148,6 @@
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Wire",
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Wire/utility",
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/cores/teensy4",
-                    "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branled",
-                    "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/led",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/pincer",
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/ADC",
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/AccelStepper/src",

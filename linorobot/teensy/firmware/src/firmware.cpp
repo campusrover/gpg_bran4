@@ -13,6 +13,7 @@
 #include "Motor.h"
 #include "PID.h"
 #include "branarm.h"
+#include "branled.h"
 #include "campusrover.h"
 #include "geometry_msgs/Twist.h"
 #include "lino_msgs/ArmMsg.h"
@@ -63,7 +64,6 @@ float g_req_angular_vel_z = 0;
 unsigned long g_prev_command_time = 0;
 char buffer[500]; // for debug macros
 BrandeisArm the_arm;
-
 BrandeisLED the_led;
 
 // callback function prototypes
@@ -92,8 +92,6 @@ ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 // lino_msgs::Inst inst_msg;
 // ros::Publisher inst_pub("inst", &inst_msg);
 
-
-
 void setup() {
   nh.initNode();
   nh.getHardware()->setBaud(57600);
@@ -102,23 +100,20 @@ void setup() {
   nh.subscribe(armMsg_sub);
   nh.advertise(raw_vel_pub);
   nh.advertise(raw_imu_pub);
-  // nh.advertise(inst_pub);
   while (!nh.connected()) {
     nh.spinOnce();
+    the_led.not_connected();
   }
   LOG_INFO("CAMPUSROVER BASE CONNECTED %d", 100);
   delay(1);
   the_arm.setup(nh);
+  the_led.setup(nh);
 }
 
 void stopBase() {
   g_req_linear_vel_x = 0;
   g_req_linear_vel_y = 0;
   g_req_angular_vel_z = 0;
-}
-
-void notconnected() {
-
 }
 
 void publishIMU() {
@@ -210,8 +205,8 @@ void loop() {
     stopBase();
   }
 
-  // publish_inst();
   the_arm.loop();
+  the_led.loop();
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
