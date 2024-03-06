@@ -34,6 +34,7 @@
 #define COMMAND_RATE 20     // hz
 #define DEBUG_RATE 60
 #define CAMERA_SERVO_PIN 7
+#define LEDLOOP_RATE 250 // ms
 
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV);
@@ -102,12 +103,12 @@ void setup() {
   nh.advertise(raw_imu_pub);
   while (!nh.connected()) {
     nh.spinOnce();
-    the_led.not_connected();
+    the_led.left_right_alternate(250);
   }
   LOG_INFO("CAMPUSROVER BASE CONNECTED %d", 100);
   delay(1);
   the_arm.setup(nh);
-  the_led.setup(nh);
+  the_led.setup(nh, LEDLOOP_RATE);
 }
 
 void stopBase() {
@@ -204,8 +205,9 @@ void loop() {
   if ((millis() - g_prev_command_time) >= 400) {
     stopBase();
   }
-
   the_arm.loop();
+
+  the_led.set_state("both_on");
   the_led.loop();
 
   // this block publishes the IMU data based on defined rate
