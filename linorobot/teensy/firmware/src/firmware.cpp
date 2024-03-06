@@ -20,6 +20,7 @@
 #include "lino_msgs/Imu.h"
 // #include "lino_msgs/Inst.h"
 #include "lino_msgs/PID.h"
+#include "lino_msgs/CampusRover.h"
 #include "lino_msgs/Velocities.h"
 #include "ros/node_handle.h"
 #include "ros/time.h"

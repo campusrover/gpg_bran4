@@ -12,6 +12,7 @@ add_message_files(
   Inst.msg
   Led.msg
   ArmMsg.msg
+  CR.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
