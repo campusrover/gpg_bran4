@@ -13,21 +13,19 @@
 #include "Motor.h"
 #include "PID.h"
 #include "branarm.h"
+#include "brandiag.h"
 #include "branled.h"
-#include "campusrover.h"
+#include "branutils.h"
 #include "geometry_msgs/Twist.h"
 #include "lino_msgs/ArmMsg.h"
+#include "lino_msgs/Diag.h"
 #include "lino_msgs/Imu.h"
-// #include "lino_msgs/Inst.h"
 #include "lino_msgs/PID.h"
-#include "lino_msgs/CampusRover.h"
 #include "lino_msgs/Velocities.h"
 #include "ros/node_handle.h"
 #include "ros/time.h"
 #include <Servo.h>
 #include <Wire.h>
-
-#define ENCODER_OPTIMIZE_INTERRUPTS // comment this out on Non-Teensy boards
 #include "Encoder.h"
 #include "std_msgs/UInt16.h"
 
@@ -67,6 +65,7 @@ unsigned long g_prev_command_time = 0;
 char buffer[500]; // for debug macros
 BrandeisArm the_arm;
 BrandeisLED the_led;
+BrandeisDiag the_diag;
 
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
