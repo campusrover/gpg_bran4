@@ -40,8 +40,8 @@
 #define WR_FLOOR_DOWN_DEG -9     //touching flooor degrees*************** should be -10
 
 // Straight up 
-#define SH_STRAIGHTUP 90
-#define EL_STRAIGHTUP 90
+#define SH_STRAIGHTUP 85
+#define EL_STRAIGHTUP 95
 #define WR_STRAIGHTUP 90
 
 // Straight up with wrist parallel to ground
