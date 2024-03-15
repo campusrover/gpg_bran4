@@ -71,6 +71,7 @@ BrandeisDiag the_diag;
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
 void PIDCallback(const lino_msgs::PID &pid);
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg);
+void diagMsgCallback(const lino_msgs::Diag &diag_msg); // Part 1
 
 long m1_pid_error = 0;
 long m2_pid_error = 0;
@@ -83,6 +84,7 @@ ros::NodeHandle *node_handle = &nh;
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
 ros::Subscriber<lino_msgs::ArmMsg> armMsg_sub("arm", armMsgCallback);
+ros::Subscriber<lino_msgs::Diag> diag_sub("diag", diagMsgCallback); // Part 2
 
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
@@ -99,6 +101,7 @@ void setup() {
   nh.subscribe(pid_sub);
   nh.subscribe(cmd_sub);
   nh.subscribe(armMsg_sub);
+  nh.subscribe(diag_sub);
   nh.advertise(raw_vel_pub);
   nh.advertise(raw_imu_pub);
   while (!nh.connected()) {
@@ -109,6 +112,7 @@ void setup() {
   delay(1);
   the_arm.setup(nh);
   the_led.setup(nh, LEDLOOP_RATE);
+  the_diag.setup(nh);
 }
 
 void stopBase() {
@@ -206,7 +210,6 @@ void loop() {
     stopBase();
   }
   the_arm.loop();
-
   the_led.set_state("both_on");
   the_led.loop();
 
@@ -257,6 +260,12 @@ void commandCallback(const geometry_msgs::Twist &cmd_msg) {
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg) {
   const char *command = arm_msg.command;
   the_arm.arm_command(command, arm_msg.arg1);
+}
+
+void diagMsgCallback(const lino_msgs::Diag &diag_msg) { // part 3
+  const char *cmd = diag_msg.command;
+  const char *sub = diag_msg.subcommand;
+  the_diag.command(cmd, sub, diag_msg.arg1, diag_msg.arg2, diag_msg.arg3);
 }
 
 float mapFloat(float x, float in_min, float in_max, float out_min,

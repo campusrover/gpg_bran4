@@ -1,20 +1,22 @@
 #ifndef BRANDIAG_H
 #define BRANDIAG_H
 
+#include "lino_msgs/Diag.h"
 #include <ros.h>
 
 class BrandeisDiag {
+
 public:
   BrandeisDiag();
+  void command(const char *cmd, const char *sub, float arg1, float arg2, float arg3);
   void setup(ros::NodeHandle &nh);
-  void loop();
 
 private:
-  char buffer[300];
   ros::NodeHandle *node_handle;
-  // ros::Subscriber<lino_msgs::CampusRover> armMsg_sub("cr", cr_cb);
-  // void campusrover_cb(const lino_msgs::Cr &cr){};
-
+  void led_commands(const char *sub, float arg1, float arg2, float arg3);
+  void beep_commands(const char *sub, float arg1, float arg2, float arg3);
+  void help_commands(const char *sub, float arg1, float arg2, float arg3);
+  char buffer[300];
 };
 
-#endif 
+#endif

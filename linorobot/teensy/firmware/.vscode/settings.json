@@ -8,7 +8,8 @@
         "vector": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cstring": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "python.autoComplete.extraPaths": [
