@@ -3,12 +3,13 @@
 
 #include "lino_msgs/Diag.h"
 #include <ros.h>
+#include "branarm.h"
 
 class BrandeisDiag {
 
 public:
   BrandeisDiag();
-  void command(const char *cmd, const char *sub, float arg1, float arg2, float arg3);
+  void command(const char *cmd, const char *sub, float arg1, float arg2, float arg3, BrandeisArm &the_arm);
   void setup(ros::NodeHandle &nh);
 
 private:

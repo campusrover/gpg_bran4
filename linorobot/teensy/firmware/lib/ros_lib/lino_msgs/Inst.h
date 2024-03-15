@@ -12,169 +12,110 @@ namespace lino_msgs
   class Inst : public ros::Msg
   {
     public:
-      typedef float _l_encoder_type;
-      _l_encoder_type l_encoder;
-      typedef float _r_encoder_type;
-      _r_encoder_type r_encoder;
-      typedef float _l_piderror_type;
-      _l_piderror_type l_piderror;
-      typedef float _r_piderror_type;
-      _r_piderror_type r_piderror;
-      typedef float _l_rpm_type;
-      _l_rpm_type l_rpm;
-      typedef float _r_rpm_type;
-      _r_rpm_type r_rpm;
+      typedef const char* _header_type;
+      _header_type header;
+      typedef int32_t _array_len_type;
+      _array_len_type array_len;
+      uint32_t data_length;
+      typedef float _data_type;
+      _data_type st_data;
+      _data_type * data;
 
     Inst():
-      l_encoder(0),
-      r_encoder(0),
-      l_piderror(0),
-      r_piderror(0),
-      l_rpm(0),
-      r_rpm(0)
+      header(""),
+      array_len(0),
+      data_length(0), st_data(), data(nullptr)
     {
     }
 
     virtual int serialize(unsigned char *outbuffer) const override
     {
       int offset = 0;
+      uint32_t length_header = strlen(this->header);
+      varToArr(outbuffer + offset, length_header);
+      offset += 4;
+      memcpy(outbuffer + offset, this->header, length_header);
+      offset += length_header;
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_array_len;
+      u_array_len.real = this->array_len;
+      *(outbuffer + offset + 0) = (u_array_len.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_array_len.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_array_len.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_array_len.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->array_len);
+      *(outbuffer + offset + 0) = (this->data_length >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->data_length >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->data_length >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->data_length >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->data_length);
+      for( uint32_t i = 0; i < data_length; i++){
       union {
         float real;
         uint32_t base;
-      } u_l_encoder;
-      u_l_encoder.real = this->l_encoder;
-      *(outbuffer + offset + 0) = (u_l_encoder.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_l_encoder.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_l_encoder.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_l_encoder.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->l_encoder);
-      union {
-        float real;
-        uint32_t base;
-      } u_r_encoder;
-      u_r_encoder.real = this->r_encoder;
-      *(outbuffer + offset + 0) = (u_r_encoder.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_r_encoder.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_r_encoder.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_r_encoder.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->r_encoder);
-      union {
-        float real;
-        uint32_t base;
-      } u_l_piderror;
-      u_l_piderror.real = this->l_piderror;
-      *(outbuffer + offset + 0) = (u_l_piderror.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_l_piderror.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_l_piderror.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_l_piderror.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->l_piderror);
-      union {
-        float real;
-        uint32_t base;
-      } u_r_piderror;
-      u_r_piderror.real = this->r_piderror;
-      *(outbuffer + offset + 0) = (u_r_piderror.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_r_piderror.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_r_piderror.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_r_piderror.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->r_piderror);
-      union {
-        float real;
-        uint32_t base;
-      } u_l_rpm;
-      u_l_rpm.real = this->l_rpm;
-      *(outbuffer + offset + 0) = (u_l_rpm.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_l_rpm.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_l_rpm.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_l_rpm.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->l_rpm);
-      union {
-        float real;
-        uint32_t base;
-      } u_r_rpm;
-      u_r_rpm.real = this->r_rpm;
-      *(outbuffer + offset + 0) = (u_r_rpm.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_r_rpm.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_r_rpm.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_r_rpm.base >> (8 * 3)) & 0xFF;
-      offset += sizeof(this->r_rpm);
+      } u_datai;
+      u_datai.real = this->data[i];
+      *(outbuffer + offset + 0) = (u_datai.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_datai.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_datai.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_datai.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->data[i]);
+      }
       return offset;
     }
 
     virtual int deserialize(unsigned char *inbuffer) override
     {
       int offset = 0;
+      uint32_t length_header;
+      arrToVar(length_header, (inbuffer + offset));
+      offset += 4;
+      for(unsigned int k= offset; k< offset+length_header; ++k){
+          inbuffer[k-1]=inbuffer[k];
+      }
+      inbuffer[offset+length_header-1]=0;
+      this->header = (char *)(inbuffer + offset-1);
+      offset += length_header;
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_array_len;
+      u_array_len.base = 0;
+      u_array_len.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_array_len.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_array_len.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_array_len.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->array_len = u_array_len.real;
+      offset += sizeof(this->array_len);
+      uint32_t data_lengthT = ((uint32_t) (*(inbuffer + offset))); 
+      data_lengthT |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1); 
+      data_lengthT |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2); 
+      data_lengthT |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3); 
+      offset += sizeof(this->data_length);
+      if(data_lengthT > data_length)
+        this->data = (float*)realloc(this->data, data_lengthT * sizeof(float));
+      data_length = data_lengthT;
+      for( uint32_t i = 0; i < data_length; i++){
       union {
         float real;
         uint32_t base;
-      } u_l_encoder;
-      u_l_encoder.base = 0;
-      u_l_encoder.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_l_encoder.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_l_encoder.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_l_encoder.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->l_encoder = u_l_encoder.real;
-      offset += sizeof(this->l_encoder);
-      union {
-        float real;
-        uint32_t base;
-      } u_r_encoder;
-      u_r_encoder.base = 0;
-      u_r_encoder.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_r_encoder.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_r_encoder.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_r_encoder.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->r_encoder = u_r_encoder.real;
-      offset += sizeof(this->r_encoder);
-      union {
-        float real;
-        uint32_t base;
-      } u_l_piderror;
-      u_l_piderror.base = 0;
-      u_l_piderror.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_l_piderror.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_l_piderror.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_l_piderror.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->l_piderror = u_l_piderror.real;
-      offset += sizeof(this->l_piderror);
-      union {
-        float real;
-        uint32_t base;
-      } u_r_piderror;
-      u_r_piderror.base = 0;
-      u_r_piderror.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_r_piderror.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_r_piderror.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_r_piderror.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->r_piderror = u_r_piderror.real;
-      offset += sizeof(this->r_piderror);
-      union {
-        float real;
-        uint32_t base;
-      } u_l_rpm;
-      u_l_rpm.base = 0;
-      u_l_rpm.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_l_rpm.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_l_rpm.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_l_rpm.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->l_rpm = u_l_rpm.real;
-      offset += sizeof(this->l_rpm);
-      union {
-        float real;
-        uint32_t base;
-      } u_r_rpm;
-      u_r_rpm.base = 0;
-      u_r_rpm.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_r_rpm.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_r_rpm.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_r_rpm.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->r_rpm = u_r_rpm.real;
-      offset += sizeof(this->r_rpm);
+      } u_st_data;
+      u_st_data.base = 0;
+      u_st_data.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_st_data.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_st_data.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_st_data.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->st_data = u_st_data.real;
+      offset += sizeof(this->st_data);
+        memcpy( &(this->data[i]), &(this->st_data), sizeof(float));
+      }
      return offset;
     }
 
     virtual const char * getType() override { return "lino_msgs/Inst"; };
-    virtual const char * getMD5() override { return "f1994f0f04917e939ed782420b6a1041"; };
+    virtual const char * getMD5() override { return "894546f5acfd9dd6353c34503ca087fc"; };
 
   };
 

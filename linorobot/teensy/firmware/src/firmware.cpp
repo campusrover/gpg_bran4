@@ -16,11 +16,13 @@
 #include "brandiag.h"
 #include "branled.h"
 #include "branutils.h"
+#include "branbuzz.h"
 #include "geometry_msgs/Twist.h"
 #include "lino_msgs/ArmMsg.h"
 #include "lino_msgs/Diag.h"
 #include "lino_msgs/Imu.h"
 #include "lino_msgs/PID.h"
+#include "lino_msgs/Inst.h"
 #include "lino_msgs/Velocities.h"
 #include "ros/node_handle.h"
 #include "ros/time.h"
@@ -29,17 +31,21 @@
 #include "Encoder.h"
 #include "std_msgs/UInt16.h"
 
+// Important Parameters
 #define IMU_PUBLISH_RATE 20 // hz
 #define COMMAND_RATE 20     // hz
 #define DEBUG_RATE 60
 #define CAMERA_SERVO_PIN 7
 #define LEDLOOP_RATE 250 // ms
 
+// Encoder Objects
 Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV);
 Encoder motor3_encoder(MOTOR3_ENCODER_A, MOTOR3_ENCODER_B, COUNTS_PER_REV);
 Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV);
 
+
+// Motor Control Objects
 Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A,
                              MOTOR1_IN_B);
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A,
@@ -49,23 +55,27 @@ Controller motor3_controller(Controller::MOTOR_DRIVER, MOTOR3_PWM, MOTOR3_IN_A,
 Controller motor4_controller(Controller::MOTOR_DRIVER, MOTOR4_PWM, MOTOR4_IN_A,
                              MOTOR4_IN_B);
 
+// PID objjects
 PID motor1_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor2_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor3_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 PID motor4_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 
-Kinematics kinematics(Kinematics::LINO_BASE, MAX_RPM, WHEEL_DIAMETER,
-                      FR_WHEELS_DISTANCE, LR_WHEELS_DISTANCE);
+// Kinematics Objects
+Kinematics kinematics(Kinematics::LINO_BASE, MAX_RPM, WHEEL_DIAMETER, FR_WHEELS_DISTANCE, LR_WHEELS_DISTANCE);
 
+// Requested (or target) velocities)
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
 char buffer[500]; // for debug macros
+
 BrandeisArm the_arm;
 BrandeisLED the_led;
 BrandeisDiag the_diag;
+BrandeisBuzz the_buzzer;
 
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
@@ -73,27 +83,31 @@ void PIDCallback(const lino_msgs::PID &pid);
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg);
 void diagMsgCallback(const lino_msgs::Diag &diag_msg); // Part 1
 
+// Variables for intrumentation
 long m1_pid_error = 0;
 long m2_pid_error = 0;
 long m1_curr_rpm = 0;
 long m2_curr_rpm = 0;
 
+// ROSSERIAL Nodehandle
 ros::NodeHandle nh;
 ros::NodeHandle *node_handle = &nh;
 
+// ROSSERIAL subscriber Objects
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
 ros::Subscriber<lino_msgs::ArmMsg> armMsg_sub("arm", armMsgCallback);
 ros::Subscriber<lino_msgs::Diag> diag_sub("diag", diagMsgCallback); // Part 2
 
+// Publisher Objects and messages
 lino_msgs::Imu raw_imu_msg;
 ros::Publisher raw_imu_pub("raw_imu", &raw_imu_msg);
 
 lino_msgs::Velocities raw_vel_msg;
 ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 
-// lino_msgs::Inst inst_msg;
-// ros::Publisher inst_pub("inst", &inst_msg);
+lino_msgs::Inst inst_msg;
+ros::Publisher inst_pub("inst", &inst_msg);
 
 void setup() {
   nh.initNode();
@@ -108,7 +122,7 @@ void setup() {
     nh.spinOnce();
     the_led.left_right_alternate(250);
   }
-  LOG_INFO("CAMPUSROVER BASE CONNECTED %d", 100);
+  LOG_INFO("CAMPUSROVER BASE CONNECTED!");
   delay(1);
   the_arm.setup(nh);
   the_led.setup(nh, LEDLOOP_RATE);
@@ -126,6 +140,7 @@ void publishIMU() {
   raw_imu_msg.linear_acceleration = readAccelerometer();
   raw_imu_msg.angular_velocity = readGyroscope();
   raw_imu_msg.magnetic_field = readMagnetometer();
+
   // publish raw_imu_msg
   raw_imu_pub.publish(&raw_imu_msg);
 }
@@ -155,6 +170,7 @@ void moveBase() {
   int current_rpm3 = motor3_encoder.getRPM();
   int current_rpm4 = motor4_encoder.getRPM();
 
+
   // the required rpm is capped at -/+ MAX_RPM to prevent the PID from having
   // too much error the PWM value sent to the motor driver is the calculated PID
   // based on required RPM vs measured RPM
@@ -171,8 +187,7 @@ void moveBase() {
   m2_curr_rpm = current_rpm2;
 
   Kinematics::velocities current_vel;
-  current_vel = kinematics.getVelocities(current_rpm1, current_rpm2,
-                                         current_rpm3, current_rpm4);
+  current_vel = kinematics.getVelocities(current_rpm1, current_rpm2, current_rpm3, current_rpm4);
 
   // pass velocities to publisher object
   raw_vel_msg.linear_x = current_vel.linear_x;
@@ -242,8 +257,6 @@ void PIDCallback(const lino_msgs::PID &pid) {
   // stored
   motor1_pid.updateConstants(pid.p, pid.i, pid.d);
   motor2_pid.updateConstants(pid.p, pid.i, pid.d);
-  motor3_pid.updateConstants(pid.p, pid.i, pid.d);
-  motor4_pid.updateConstants(pid.p, pid.i, pid.d);
 }
 
 void commandCallback(const geometry_msgs::Twist &cmd_msg) {
@@ -265,7 +278,7 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg) {
 void diagMsgCallback(const lino_msgs::Diag &diag_msg) { // part 3
   const char *cmd = diag_msg.command;
   const char *sub = diag_msg.subcommand;
-  the_diag.command(cmd, sub, diag_msg.arg1, diag_msg.arg2, diag_msg.arg3);
+  the_diag.command(cmd, sub, diag_msg.arg1, diag_msg.arg2, diag_msg.arg3, the_arm);
 }
 
 float mapFloat(float x, float in_min, float in_max, float out_min,

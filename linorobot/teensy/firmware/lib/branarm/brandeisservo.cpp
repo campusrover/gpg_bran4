@@ -58,7 +58,7 @@ double BrandeisServo::compute_next_increment(long current_time_ms) {
 void BrandeisServo::move(double deg) {
   if (deg < min_angle || deg > max_angle) {
     error_counter++;
-    LOG_INFO("**** Invalid Move: [%d], %ld %ld %.3f", ident, min_angle,
+    LOG_ERROR("**** Invalid Move: [%d], %ld %ld %.3f", ident, min_angle,
              max_angle, deg);
   } else {
     current_angle = deg;
