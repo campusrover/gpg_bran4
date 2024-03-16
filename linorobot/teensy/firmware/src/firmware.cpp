@@ -81,7 +81,7 @@ BrandeisBuzz the_buzz;
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
 void PIDCallback(const lino_msgs::PID &pid);
 void armMsgCallback(const lino_msgs::ArmMsg &arm_msg);
-void diagMsgCallback(const lino_msgs::Diag &diag_msg); // Part 1
+void diagMsgCallback(const lino_msgs::Diag &diag_msg); 
 
 // Variables for intrumentation
 long m1_pid_error = 0;
@@ -97,7 +97,7 @@ ros::NodeHandle *node_handle = &nh;
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
 ros::Subscriber<lino_msgs::ArmMsg> armMsg_sub("arm", armMsgCallback);
-ros::Subscriber<lino_msgs::Diag> diag_sub("diag", diagMsgCallback); // Part 2
+ros::Subscriber<lino_msgs::Diag> diag_sub("diag", diagMsgCallback); 
 
 // Publisher Objects and messages
 lino_msgs::Imu raw_imu_msg;
@@ -277,7 +277,7 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg) {
   the_arm.arm_command(command, arm_msg.arg1);
 }
 
-void diagMsgCallback(const lino_msgs::Diag &diag_msg) { // part 3
+void diagMsgCallback(const lino_msgs::Diag &diag_msg) { 
   const char *cmd = diag_msg.command;
   const char *sub = diag_msg.subcommand;
   the_diag.command(cmd, sub, diag_msg.arg1, diag_msg.arg2, diag_msg.arg3, the_arm, the_buzz);

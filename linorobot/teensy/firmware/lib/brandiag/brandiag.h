@@ -19,6 +19,7 @@ private:
   void beep_commands(const char *sub, float arg1, float arg2, float arg3);
   void help_commands(const char *sub, float arg1, float arg2, float arg3);
   char buffer[300];
+  BrandeisBuzz* the_buzz;
 };
 
 #endif
