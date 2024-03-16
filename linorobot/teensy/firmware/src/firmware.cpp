@@ -75,7 +75,7 @@ char buffer[500]; // for debug macros
 BrandeisArm the_arm;
 BrandeisLED the_led;
 BrandeisDiag the_diag;
-BrandeisBuzz the_buzzer;
+BrandeisBuzz the_buzz;
 
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
@@ -127,6 +127,7 @@ void setup() {
   the_arm.setup(nh);
   the_led.setup(nh, LEDLOOP_RATE);
   the_diag.setup(nh);
+  the_buzz.setup(nh);
 }
 
 void stopBase() {
@@ -227,6 +228,7 @@ void loop() {
   the_arm.loop();
   the_led.set_state("both_on");
   the_led.loop();
+  the_buzz.loop();
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
@@ -278,7 +280,7 @@ void armMsgCallback(const lino_msgs::ArmMsg &arm_msg) {
 void diagMsgCallback(const lino_msgs::Diag &diag_msg) { // part 3
   const char *cmd = diag_msg.command;
   const char *sub = diag_msg.subcommand;
-  the_diag.command(cmd, sub, diag_msg.arg1, diag_msg.arg2, diag_msg.arg3, the_arm);
+  the_diag.command(cmd, sub, diag_msg.arg1, diag_msg.arg2, diag_msg.arg3, the_arm, the_buzz);
 }
 
 float mapFloat(float x, float in_min, float in_max, float out_min,

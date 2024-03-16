@@ -8,7 +8,7 @@ BrandeisDiag::BrandeisDiag() : node_handle(nullptr) {}
 void BrandeisDiag::setup(ros::NodeHandle &nh) { node_handle = &nh; }
 
 void BrandeisDiag::command(const char *cmd, const char *sub, float arg1, float arg2,
-                           float arg3, BrandeisArm &the_arm) {
+                           float arg3, BrandeisArm &the_arm, BrandeisBuzz &the_buzz) {
   LOG_INFO("Diag: %s %s %.1f %.1f %.1f", cmd, sub, arg1, arg2, arg3);
   if (strcmp(cmd,"led") == 0) {
     led_commands(sub, arg1, arg2, arg3);
@@ -28,9 +28,12 @@ void BrandeisDiag::led_commands(const char *sub, float arg1, float arg2, float a
   LOG_INFO("Led: %s %.1f %.1f %.1f", sub, arg1, arg2, arg3);
 }
 
+// sub: "beep-beep"
+// arg1: millisecond interval between beeps or zero to stop
 void BrandeisDiag::beep_commands(const char *sub, float arg1, float arg2,
                                  float arg3) {
   LOG_INFO("Beep: %s %.1f %.1f %.1f", sub, arg1, arg2, arg3);
+
 }
 
 void BrandeisDiag::help_commands(const char *sub, float arg1, float arg2,
