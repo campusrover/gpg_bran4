@@ -19,11 +19,12 @@ private:
     QwiicBuzzer buzzer;
     ros::NodeHandle* node_handle;
     String state;
+    long previous_time;
     bool buzz_ok;
     int rate;
     uint8_t volume;
     bool play(const uint16_t toneFrequency, const uint16_t duration, const uint8_t volume);
-    bool every_other(int period_length_ms);
+    bool once_per_ms(int interval);
     char buffer[300];
 };
 

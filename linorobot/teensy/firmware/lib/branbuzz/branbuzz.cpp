@@ -51,16 +51,21 @@ void BrandeisBuzz::set_state(String new_state, int new_rate) {
   }
 }
 
-bool BrandeisBuzz::every_other(int period_length_ms) {
-  return (millis() / (2 * period_length_ms)) % 2 == 0;
+bool BrandeisBuzz::once_per_ms(int interval) {
+  long elapsed_time = millis() - previous_time;
+  if (elapsed_time > interval) {
+    previous_time = millis();
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void BrandeisBuzz::loop() {
-  LOG_INFO("Loop called rate is %d and state is %s", rate, state.c_str());
-  if (!every_other(rate) || state.equals("stop")) {
+  if (!once_per_ms(rate) || state.equals("stop")) {
     return;
   } else if (state.equals("beep-beep")) {
     LOG_INFO("Chirp Called");
-    //    chirp(150);
+    chirp(150);
   }
 }

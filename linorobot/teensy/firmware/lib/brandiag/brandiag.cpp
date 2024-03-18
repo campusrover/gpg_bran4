@@ -33,7 +33,8 @@ void BrandeisDiag::led_commands(const char *sub, float arg1, float arg2,
 void BrandeisDiag::beep_commands(const char *sub, float arg1, float arg2,
                                  float arg3) {
   LOG_INFO("Buzz: %s %.1f %.1f %.1f", sub, arg1, arg2, arg3);
-  the_buzz->set_state("beep-beep", int(arg1));
+  String string_sub(sub);
+  the_buzz->set_state(string_sub, int(arg1));
 }
 
 void BrandeisDiag::help_commands(const char *sub, float arg1, float arg2,
