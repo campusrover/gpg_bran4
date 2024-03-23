@@ -124,10 +124,10 @@ void setup() {
   }
   LOG_INFO("CAMPUSROVER BASE CONNECTED!");
   delay(1);
-  the_arm.setup(nh);
-  the_led.setup(nh, LEDLOOP_RATE);
-  the_diag.setup(nh);
-  the_buzz.setup(nh);
+  // the_arm.setup(nh);
+  // the_led.setup(nh, LEDLOOP_RATE);
+  // the_diag.setup(nh);
+  // the_buzz.setup(nh);
 }
 
 void stopBase() {
@@ -225,10 +225,10 @@ void loop() {
   if ((millis() - g_prev_command_time) >= 400) {
     stopBase();
   }
-  the_arm.loop();
-  the_led.set_state("both_on");
-  the_led.loop();
-  the_buzz.loop();
+  // the_arm.loop();
+  // the_led.set_state("both_on");
+  // the_led.loop();
+  // the_buzz.loop();
 
   // this block publishes the IMU data based on defined rate
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
