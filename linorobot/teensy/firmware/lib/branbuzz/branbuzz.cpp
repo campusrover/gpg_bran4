@@ -40,7 +40,7 @@ bool BrandeisBuzz::play(const uint16_t toneFrequency, const uint16_t duration,
 }
 
 void BrandeisBuzz::set_state(String new_state, int new_rate) {
-  if (new_state.equals("beep-beep")) {
+  if (new_state.equals("beep-beep") && new_rate > 0) {
     state = new_state;
     rate = new_rate;
     LOG_INFO("BranBuzz set_state %s rate is %d", new_state.c_str(), rate);
