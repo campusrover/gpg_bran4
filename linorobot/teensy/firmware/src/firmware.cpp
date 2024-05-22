@@ -127,16 +127,16 @@ void setup() {
 
   the_diag.setup(nh);
 
-  #if PLAT_HAS_ARM
+  #ifdef PLAT_HAS_ARM
     the_arm.setup(nh);
   #endif
 
-  #if PLAT_HAS_LED
+  #ifdef PLAT_HAS_LED
     the_led.setup(nh, LEDLOOP_RATE);
   #endif
 
-  #if PLAT_HAS_BUZZER
-    // the_buzz.setup(nh);
+  #ifdef PLAT_HAS_BUZZER
+    the_buzz.setup(nh);
   #endif
 }
 
