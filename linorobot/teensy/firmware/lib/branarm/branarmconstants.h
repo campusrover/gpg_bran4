@@ -33,11 +33,22 @@
 #define EL_PARK_DEG 90
 #define WR_PARK_DEG 245     //park degrees
 
-
 // To the floor
 #define SH_FLOOR_DOWN_DEG 196    //
 #define EL_FLOOR_DOWN_DEG 0
 #define WR_FLOOR_DOWN_DEG -9     //touching flooor degrees*************** should be -10
+
+// Floor up, same as floor down except tip is offset
+// vertically 
+#define SH_FLOOR_UP_DEG 51
+#define EL_FLOOR_UP_DEG 25
+#define WR_FLOOR_UP_DEG 153
+
+// Floor out, same as floor down but reaching as far as possible
+// vertically 
+#define SH_FLOOR_OUT_DEG 200
+#define EL_FLOOR_OUT_DEG 110
+#define WR_FLOOR_OUT_DEG 65
 
 // Straight up 
 #define SH_STRAIGHTUP 85
@@ -59,11 +70,6 @@
 #define EL_ALL_FORWARD_DEG 90
 #define WR_ALL_FORWARD_DEG 90
 
-// Floor up, same as floor down except tip is offset
-// vertically 
-#define SH_FLOOR_UP_DEG 51
-#define EL_FLOOR_UP_DEG 25
-#define WR_FLOOR_UP_DEG 153
 
 // Claw
 #define CL_PARK_DEG 21

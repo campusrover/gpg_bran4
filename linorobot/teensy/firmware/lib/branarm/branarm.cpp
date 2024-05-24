@@ -8,7 +8,8 @@ ArmPositions arm_locs[] = {
     {"vert1", SH_VERT_HORIZ_HAND, EL_VERT_HORIZ_HAND, WR_VERT_HORIZ_HAND},
     {"straightback", SH_ALL_BACKWARD_DEG, EL_ALL_BACKWARD_DEG,
      WR_ALL_BACKWARD_DEG},
-    {"floorup", SH_FLOOR_UP_DEG, EL_FLOOR_UP_DEG, WR_FLOOR_UP_DEG}};
+    {"floorup", SH_FLOOR_UP_DEG, EL_FLOOR_UP_DEG, WR_FLOOR_UP_DEG},
+    {"floorout", SH_FLOOR_OUT_DEG, EL_FLOOR_OUT_DEG, WR_FLOOR_OUT_DEG}};
 
 int log_counter = 0;
 int shoulder_counter = 0;
