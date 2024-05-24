@@ -146,14 +146,41 @@ void BrandeisArm::arm_command(String command, float arg) {
       claw_servo.status();
     }
   }
+
   for (ArmPositions pos : arm_locs) {
     if (command == pos.name) {
       long duration = move_duration_heuristic(pos.shoulder, pos.elbow, pos.wrist);
       LOG_INFO("arm_command: %s, time: %ld", command.c_str(), duration);
       shoulder_servo.setup_ease(pos.shoulder, duration);
+      state = "movex";
+      if (!wait_for_servo()) {
+        return;
+      }
       elbow_servo.setup_ease(pos.elbow, duration);
+      state = "movex";
+      if (!wait_for_servo()) {
+        return;
+      }
       wrist_servo.setup_ease(pos.wrist, duration);
       state = "movex";
+      if (!wait_for_servo()) {
+        return;
+      }
     }
   }
+
+  // Method will return true once the arm is no longer moving. 
+  // If after 30 seconds the arm is still moving, the method will return false.
+  bool wait_for_servo() {
+    int wait_timeout_count = 30
+    while (shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving) {
+      wait_timeout_count--;
+      if (wait_timeout_count == ) {
+        LOG_ERROR("Wait timeout"2);
+        return false;
+      }
+      delay(1);
+    }
+    return true;
+  } 
 }
