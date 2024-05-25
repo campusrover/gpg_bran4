@@ -43,11 +43,13 @@ private:
     void shoulder(int deg);
     void wrist(int deg);
     void claw(bool open_close); 
+    bool wait_for_servo();
 
     long move_duration_heuristic(long new_shoulder, long new_elbow, long new_wrist);
     void configure_ease_algorithm(long duration_in_ms);
     void movex();
     char buffer[300];
+
 
 };
 

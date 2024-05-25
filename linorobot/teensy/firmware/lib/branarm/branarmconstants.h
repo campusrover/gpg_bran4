@@ -70,7 +70,6 @@
 #define EL_ALL_FORWARD_DEG 90
 #define WR_ALL_FORWARD_DEG 90
 
-
 // Claw
 #define CL_PARK_DEG 21
 #define CL_OPEN_DEG 6

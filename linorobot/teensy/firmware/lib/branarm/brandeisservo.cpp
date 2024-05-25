@@ -67,13 +67,13 @@ void BrandeisServo::move(double deg) {
     if (!test_mode) {
       servo_driver.setPWM(pin_number, 0, deglen);
     }
-    LOG_INFO("move: [%d] %.1f %d", ident, deg, deglen);
+    LOG_INFO("servo setPWM command: [%d] %.1f %d", ident, deg, deglen);
   }
 }
 
 // Basic status of the servo. Name, current position, is it moving, and counters
 void BrandeisServo::status() {
-  LOG_INFO(buffer, "[%d] %f %d %d", ident, current_angle, counter,
+  LOG_INFO(buffer, "![%d] %f %d %d!", ident, current_angle, counter,
           error_counter);
 }
 

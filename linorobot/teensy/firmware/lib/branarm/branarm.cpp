@@ -124,6 +124,7 @@ void BrandeisArm::arm_command(String command, float arg) {
     wrist_servo.move(WR_PARK_DEG);
     claw_servo.move(CL_PARK_DEG);
   }
+
   if (command == "diag") {
     LOG_INFO("diag: %f", arg);
     if (arg == 99) {
@@ -132,7 +133,6 @@ void BrandeisArm::arm_command(String command, float arg) {
       wrist_servo.test_mode = true;
       claw_servo.test_mode = true;
       LOG_INFO("test mode off. ARM NO MOTION: %s", state.c_str());
-
     } else if (arg == 88) {
       shoulder_servo.test_mode = false;
       elbow_servo.test_mode = false;
@@ -168,19 +168,20 @@ void BrandeisArm::arm_command(String command, float arg) {
       }
     }
   }
-
-  // Method will return true once the arm is no longer moving. 
-  // If after 30 seconds the arm is still moving, the method will return false.
-  bool wait_for_servo() {
-    int wait_timeout_count = 30
-    while (shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving) {
-      wait_timeout_count--;
-      if (wait_timeout_count == ) {
-        LOG_ERROR("Wait timeout"2);
-        return false;
-      }
-      delay(1);
-    }
-    return true;
-  } 
 }
+
+// Method will return true once the arm is no longer moving. 
+// If after 30 seconds the arm is still moving, the method will return false.
+bool BrandeisArm::wait_for_servo() {
+  int wait_timeout_count = 30;
+  while (shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving) {
+    wait_timeout_count--;
+    if (wait_timeout_count == 0) {
+      LOG_ERROR("Wait timeout");
+      return false;
+    }
+    delay(1);
+  }
+  return true;
+} 
+
