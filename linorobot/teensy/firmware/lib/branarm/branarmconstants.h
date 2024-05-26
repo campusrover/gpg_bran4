@@ -25,8 +25,17 @@
 #define CL_MAX_DEG 21
 #define CL_MIN_DEG 5
 
+// Notes:
+// elbow
+//  90 means inline with upper arm
+// shoulder
+//  0 means parallel to the ground
+//  90 means straight up
+
+
 
 // Standard arm positions, aka armlocs
+
 
 // Park
 #define SH_PARK_DEG 0       // parallel to ground

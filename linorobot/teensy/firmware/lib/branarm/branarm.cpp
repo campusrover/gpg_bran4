@@ -138,8 +138,9 @@ void BrandeisArm::arm_command(String command, float arg) {
       elbow_servo.test_mode = false;
       wrist_servo.test_mode = false;
       claw_servo.test_mode = false;
-      LOG_INFO("test mode off. ARM WILL MOVE: %s", state.c_str());
+      LOG_INFO("test mode off. ARM WILL MOVE. state = %s", state.c_str());
     } else if (arg == 1) {
+      LOG_INFO("Current arm status; state = %s", state.c_str());
       shoulder_servo.status();
       elbow_servo.status();
       wrist_servo.status();

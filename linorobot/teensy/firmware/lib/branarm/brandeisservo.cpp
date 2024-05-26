@@ -67,7 +67,7 @@ void BrandeisServo::move(double deg) {
     if (!test_mode) {
       servo_driver.setPWM(pin_number, 0, deglen);
     }
-    LOG_INFO("servo setPWM command: [%d] %.1f %d", ident, deg, deglen);
+    LOG_INFO("servo setPWM command: [%d] deg: %.1f pulse: %d", ident, deg, deglen);
   }
 }
 
