@@ -26,11 +26,15 @@
 #define CL_MIN_DEG 5
 
 // Notes:
-// elbow
-//  90 means inline with upper arm
 // shoulder
 //  0 means parallel to the ground
 //  90 means straight up
+// elbow
+//  90 means inline with upper arm
+//  0 means 90 degrees from upper arm
+// wrist
+//   180 means 90 degrees to lower arm
+//   90 means inline with lower arm
 
 
 

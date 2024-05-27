@@ -1,7 +1,8 @@
 #include "brandeisservo.h"
 #include "branutils.h"
 
-BrandeisServo::BrandeisServo() {
+BrandeisServo::BrandeisServo()
+{
   target_angle = 0;
   start_time_ms = 0;
   current_angle = 0;
@@ -15,7 +16,8 @@ BrandeisServo::BrandeisServo() {
 void BrandeisServo::setup(int id, ros::NodeHandle &nh,
                           Adafruit_PWMServoDriver ser_drr, int pin,
                           long max_ang, long min_ang, double conv_offs,
-                          double conv_scale, long park_ang) {
+                          double conv_scale, long park_ang)
+{
   ident = id;
   node_handle = &nh;
   servo_driver = ser_drr;
@@ -28,7 +30,8 @@ void BrandeisServo::setup(int id, ros::NodeHandle &nh,
   move(park_ang);
 }
 
-void BrandeisServo::setup_ease(double tar_angle, long dur) {
+void BrandeisServo::setup_ease(double tar_angle, long dur)
+{
 
   start_time_ms = millis();
   start_angle = current_angle;
@@ -40,7 +43,8 @@ void BrandeisServo::setup_ease(double tar_angle, long dur) {
            change_in_value_angle, start_angle, duration_ms);
 }
 
-double BrandeisServo::compute_next_increment(long current_time_ms) {
+double BrandeisServo::compute_next_increment(long current_time_ms)
+{
   double time_increment =
       static_cast<double>(current_time_ms - start_time_ms) / duration_ms;
   double ease_amount = quad_equation(time_increment);
@@ -55,29 +59,29 @@ double BrandeisServo::compute_next_increment(long current_time_ms) {
   return new_angle;
 }
 
-void BrandeisServo::move(double deg) {
-  if (deg < min_angle || deg > max_angle) {
+void BrandeisServo::move(double deg)
+{
+  if (deg < min_angle || deg > max_angle)
+  {
     error_counter++;
     LOG_ERROR("**** Invalid Move: [%d], %ld %ld %.3f", ident, min_angle,
-             max_angle, deg);
-  } else {
+              max_angle, deg);
+  }
+  else
+  {
     current_angle = deg;
     counter++;
     int deglen = (deg + convert_offset) * convert_scale;
-    if (!test_mode) {
+    if (!test_mode)
+    {
       servo_driver.setPWM(pin_number, 0, deglen);
     }
     LOG_INFO("servo setPWM command: [%d] deg: %.1f pulse: %d", ident, deg, deglen);
   }
 }
 
-// Basic status of the servo. Name, current position, is it moving, and counters
-void BrandeisServo::status() {
-  LOG_INFO(buffer, "![%d] %f %d %d!", ident, current_angle, counter,
-          error_counter);
-}
-
-double BrandeisServo::quad_equation(double time_increment) {
+double BrandeisServo::quad_equation(double time_increment)
+{
   double term = -2 * time_increment + 2;
   double ease_amount = time_increment < 0.5
                            ? 2 * time_increment * time_increment
@@ -85,10 +89,18 @@ double BrandeisServo::quad_equation(double time_increment) {
   return ease_amount;
 }
 
-double BrandeisServo::smooth_step_equation(double time_increment) {
+double BrandeisServo::smooth_step_equation(double time_increment)
+{
   double smooth_amount =
       (time_increment) * (time_increment) * (3 - 2 * (time_increment));
   double ease_amount =
       (target_angle * smooth_amount) + start_angle * (1 - smooth_amount);
   return ease_amount;
+}
+
+// Basic status of the servo. Name, current position, is it moving, and counters
+void BrandeisServo::status()
+{
+  LOG_INFO("[%d] %f %d %d", ident, current_angle, counter,
+           error_counter);
 }
