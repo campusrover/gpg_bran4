@@ -18,7 +18,6 @@
 #include "branutils.h"
 #include "branbuzz.h"
 #include "geometry_msgs/Twist.h"
-#include "lino_msgs/ArmMsg.h"
 #include "lino_msgs/Diag.h"
 #include "lino_msgs/Imu.h"
 #include "lino_msgs/PID.h"
@@ -80,7 +79,6 @@ BrandeisBuzz the_buzz;
 // callback function prototypes
 void commandCallback(const geometry_msgs::Twist &cmd_msg);
 void PIDCallback(const lino_msgs::PID &pid);
-void armMsgCallback(const lino_msgs::ArmMsg &arm_msg);
 void diagMsgCallback(const lino_msgs::Diag &diag_msg); 
 
 // Variables for intrumentation
@@ -96,7 +94,6 @@ ros::NodeHandle *node_handle = &nh;
 // ROSSERIAL subscriber Objects
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
-ros::Subscriber<lino_msgs::ArmMsg> armMsg_sub("arm", armMsgCallback);
 ros::Subscriber<lino_msgs::Diag> diag_sub("diag", diagMsgCallback); 
 
 // Publisher Objects and messages
@@ -114,7 +111,6 @@ void setup() {
   nh.getHardware()->setBaud(57600);
   nh.subscribe(pid_sub);
   nh.subscribe(cmd_sub);
-  nh.subscribe(armMsg_sub);
   nh.subscribe(diag_sub);
   nh.advertise(raw_vel_pub);
   nh.advertise(raw_imu_pub);
@@ -292,10 +288,6 @@ void commandCallback(const geometry_msgs::Twist &cmd_msg) {
   g_prev_command_time = millis();
 }
 
-void armMsgCallback(const lino_msgs::ArmMsg &arm_msg) {
-  const char *command = arm_msg.command;
-  the_arm.arm_command(command, arm_msg.arg1);
-}
 
 void diagMsgCallback(const lino_msgs::Diag &diag_msg) { 
   const char *cmd = diag_msg.command;

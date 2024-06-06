@@ -31,8 +31,9 @@
 // shoulder
 //  0 means parallel to the ground
 //  90 means straight up
-
-
+// wrist
+//   90 means inline with forarn
+//   245 maximum towards elbow
 
 // Standard arm positions, aka armlocs
 

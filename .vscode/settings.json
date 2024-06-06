@@ -6,7 +6,8 @@
         "markdown"
     ],
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "cstring": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/home/ubuntu/catkin_ws/devel/lib/python3/dist-packages",
