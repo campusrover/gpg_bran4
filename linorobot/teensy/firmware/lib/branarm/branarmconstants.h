@@ -26,14 +26,23 @@
 #define CL_MIN_DEG 5
 
 // Notes:
-// elbow
-//  90 means inline with upper arm
 // shoulder
 //  0 means parallel to the ground
 //  90 means straight up
+<<<<<<< HEAD
 // wrist
 //   90 means inline with forarn
 //   245 maximum towards elbow
+=======
+// elbow
+//  90 means inline with upper arm
+//  0 means 90 degrees from upper arm
+// wrist
+//   180 means 90 degrees to lower arm
+//   90 means inline with lower arm
+
+
+>>>>>>> 51095957de124494ec890061158584736f20ec31
 
 // Standard arm positions, aka armlocs
 

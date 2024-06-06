@@ -39,8 +39,6 @@ private:
   double change_in_value_angle;
   double quad_equation(double time_increment);
   double smooth_step_equation(double time_increment);
-
-private:
   Adafruit_PWMServoDriver servo_driver;
   int pin_number;
 };
