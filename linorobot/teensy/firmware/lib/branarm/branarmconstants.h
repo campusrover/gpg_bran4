@@ -29,24 +29,15 @@
 // shoulder
 //  0 means parallel to the ground
 //  90 means straight up
-<<<<<<< HEAD
 // wrist
-//   90 means inline with forarn
 //   245 maximum towards elbow
-=======
+//   180 means 90 degrees to lower arm
+//   90 means inline with lower arm
 // elbow
 //  90 means inline with upper arm
 //  0 means 90 degrees from upper arm
-// wrist
-//   180 means 90 degrees to lower arm
-//   90 means inline with lower arm
 
-
->>>>>>> 51095957de124494ec890061158584736f20ec31
-
-// Standard arm positions, aka armlocs
-
-
+// Named standard arm positions
 // Park
 #define SH_PARK_DEG 0       // parallel to ground
 #define EL_PARK_DEG 90
