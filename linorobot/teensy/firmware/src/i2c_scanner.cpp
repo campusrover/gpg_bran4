@@ -9,7 +9,7 @@ void setup()
 
   Serial.begin(9600);
   while (!Serial);             // Leonardo: wait for serial monitor
-  Serial.println("\nPlatform Teensy Hardware Inventory");
+  Serial.println("\nBranbot Test Suite");
 }
 
 
