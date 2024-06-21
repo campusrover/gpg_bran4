@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import glib
 import gudev
 import sys
@@ -35,10 +35,10 @@ def callback(client, action, device, user_data):
             else:
                 pass
 
-        print "Plug in next device. Press CTRL+C to save your udev rules.\r\n"
+        print ("Plug in next device. Press CTRL+C to save your udev rules.\r\n")
 
 if __name__ == "__main__":
-    print "Plug in your usb device\r\n"
+    print ("Plug in your usb device\r\n")
     client = gudev.Client(["usb/usb_device"])
     client.connect("uevent", callback, None)
     udev_rules=""
@@ -54,9 +54,9 @@ if __name__ == "__main__":
                 if len(udev_rules) > 0:
                     with io.FileIO("58-lino.rules", "w") as file:
                         file.write(udev_rules)
-                    print "\r\n58-lino.rules saved."
-                    print "\r\nRUN: $ sudo cp 58-lino.rules /etc/udev/rules.d"
-                    print "\r\nRestart the computer once done."
+                    print ("\r\n58-lino.rules saved.")
+                    print ("\r\nRUN: $ sudo cp 58-lino.rules /etc/udev/rules.d")
+                    print ("\r\nRestart the computer once done.")
                     break
                 else:
                     break

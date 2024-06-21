@@ -1,8 +1,10 @@
 #include "lino_base_config.h"
 #include "Motor.h"
 #include "Encoder.h"
+#include <Wire.h>
 
-#define COMMAND_RATE 20     // hz
+
+#define COMMAND_RATE 1     // hz
 
 
 void setup()
@@ -25,17 +27,28 @@ Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A,
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A,
                              MOTOR2_IN_B);
 
+void test_encoders() {
+  Serial.print("Motor1 encoder: ");
+  Serial.println(motor1_encoder.read());
+  Serial.print("Motor2 encoder: ");
+  Serial.println(motor2_encoder.read());
+}
+
+void test_motors() {
+  
+  motor1_controller.spin(10);
+  motor2_controller.spin(100);
+
+}
+
+
+
 void loop() {
   static unsigned long prev_control_time = 0;
   if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE)) {
-    test_encoder();
+    test_encoders();
+    test_motors();
     prev_control_time = millis();
-  }
+  };
+};
 
-  void test_encoder() {
-    Serial.print("Motor1: ");
-    Serial.println(motor1_encoder.read());
-    Serial.print("Motor2: ");
-    Serial.println(motor2_encoder.read());
-  }
-  
