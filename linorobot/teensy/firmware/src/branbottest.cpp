@@ -36,8 +36,8 @@ void test_encoders() {
 
 void test_motors() {
   
-  motor1_controller.spin(10);
-  motor2_controller.spin(100);
+  motor1_controller.spin(-100);
+  motor2_controller.spin(200);
 
 }
 
