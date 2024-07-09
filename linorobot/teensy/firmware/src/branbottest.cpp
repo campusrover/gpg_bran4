@@ -14,6 +14,8 @@ void setup()
   Serial.begin(9600);
   while (!Serial);             // Leonardo: wait for serial monitor
   Serial.println("\nBranBot Test");
+  analogWriteFrequency(MOTOR1_PWM, 4482);
+  analogWriteFrequency(MOTOR2_PWM, 4482);
 }
 
 // Encloder Objects
@@ -36,8 +38,8 @@ void test_encoders() {
 
 void test_motors() {
   
-  motor1_controller.spin(10);
-  motor2_controller.spin(100);
+  motor1_controller.spin(200);
+  motor2_controller.spin(1);
 
 }
 
