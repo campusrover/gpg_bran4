@@ -10,8 +10,15 @@ void setup()
   Wire.begin();
 
   Serial.begin(9600);
+<<<<<<< HEAD
+  while (!Serial);             // Leonardo: wait for serial monitor
+  Serial.println("\nBranBot Test");
+  analogWriteFrequency(MOTOR1_PWM, 4482);
+  analogWriteFrequency(MOTOR2_PWM, 4482);
+=======
   while (!Serial)
     Serial.println("\nBranBot Test");
+>>>>>>> 163d735075699f6029f54661cc6771eab7fcbbd1
 }
 
 // Encloder Objects
@@ -32,10 +39,23 @@ void test_encoders() {
   Serial.println(motor2_encoder.read());
 }
 
+<<<<<<< HEAD
 void test_motors()
 {
   motor1_controller.spin(-200);
   motor2_controller.spin(100);
+=======
+void test_motors() {
+  
+<<<<<<< HEAD
+  motor1_controller.spin(200);
+  motor2_controller.spin(1);
+=======
+  motor1_controller.spin(-100);
+  motor2_controller.spin(200);
+>>>>>>> 163d735075699f6029f54661cc6771eab7fcbbd1
+
+>>>>>>> 35f6828e6dc91563a9aebe26eb808e354571a3a5
 }
 
 static unsigned long prev_control_time = -(COMMAND_RATE * 1000);
