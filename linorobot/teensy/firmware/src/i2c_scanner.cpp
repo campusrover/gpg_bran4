@@ -5,15 +5,16 @@
 
 void setup()
 {
-  pinMode(16, INPUT_PULLUP);
-  pinMode(17, INPUT_PULLUP);
-  pinMode(18, INPUT_PULLUP);
-  pinMode(19, INPUT_PULLUP);
-  pinMode(24, INPUT_PULLUP);
-  pinMode(25, INPUT_PULLUP);
+  // pinMode(16, INPUT_PULLUP);
+  // pinMode(17, INPUT_PULLUP);
+  // pinMode(18, INPUT_PULLUP);
+  // pinMode(19, INPUT_PULLUP);
+  // pinMode(24, INPUT_PULLUP);
+  // pinMode(25, INPUT_PULLUP);
   Wire.begin();
-  Wire.setSDA(18);
-  Wire.setSCL(19);
+  // Wire.setClock(100000L);
+  // Wire.setSDA(18);
+  // Wire.setSCL(19);
 
   Serial.begin(9600);
   while (!Serial)
