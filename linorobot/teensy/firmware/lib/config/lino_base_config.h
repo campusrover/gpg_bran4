@@ -8,10 +8,12 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
 
 #ifdef PLAT1
   #define PLAT_HAS_CAMERA
+  #define USE_MPU9250_IMU
 #endif
 
 #ifdef PLAT2
-    #define PLAT_HAS_CAMERA
+  #define PLAT_HAS_CAMERA
+  #define USE_MPU9250_IMU
 #endif
 
 #ifdef PLAT3
@@ -19,15 +21,18 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
   #define PLAT_HAS_BUZZER
   #define PLAT_HAS_LED
   #define PLAT_HAS_ARM
+  #define USE_MPU9250_IMU
 #endif
 
 #ifdef PLAT4
   #define PLAT_HAS_CAMERA
+  #define USE_MPU9250_IMU
 #endif
 
 #ifdef BRANBOT1
   #define PLAT_HAS_CAMERA
   #define PLAT_HAS_LED
+  #define USE_20948_IMU
 #endif
 
 /* 
@@ -44,7 +49,6 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
 #define K_D 0.2 // D constant
 
 #define USE_L298_DRIVER
-#define USE_MPU9250_IMU
 #define MAX_RPM 100              // motor's maximum RPM
 #define COUNTS_PER_REV 3200      // wheel encoder's no of ticks per rev
 
