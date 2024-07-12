@@ -9,29 +9,32 @@
 #include "geometry_msgs/Vector3.h"
 
 #ifdef USE_20948_IMU
+
 bool initIMU()
 {
-void setup(void) {
   Serial.begin(115200);
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
   Serial.println("Adafruit Initializing!");
 
   // Try to initialize!
-  if (!icm.begin_I2C()) {
+  if (!icm.begin_I2C())
+  {
     // if (!icm.begin_SPI(ICM_CS)) {
     // if (!icm.begin_SPI(ICM_CS, ICM_SCK, ICM_MISO, ICM_MOSI)) {
 
-    Serial.println("Failed to find ICM20948 chip");
-    while (1) {
-      delay(10);
+    Serial.println("Failed to find ICM20948 chip. Trying again in 1 second");
+    while (1)
+    {
+      delay(1000);
     }
   }
 
   Serial.println("ICM20948 Found!");
   // icm.setAccelRange(ICM20948_ACCEL_RANGE_16_G);
   Serial.print("Accelerometer range set to: ");
-  switch (icm.getAccelRange()) {
+  switch (icm.getAccelRange())
+  {
   case ICM20948_ACCEL_RANGE_2_G:
     Serial.println("+-2G");
     break;
@@ -49,7 +52,8 @@ void setup(void) {
 
   // icm.setGyroRange(ICM20948_GYRO_RANGE_2000_DPS);
   Serial.print("Gyro range set to: ");
-  switch (icm.getGyroRange()) {
+  switch (icm.getGyroRange())
+  {
   case ICM20948_GYRO_RANGE_250_DPS:
     Serial.println("250 degrees/s");
     break;
@@ -84,7 +88,8 @@ void setup(void) {
 
   // icm.setMagDataRate(AK09916_MAG_DATARATE_10_HZ);
   Serial.print("Magnetometer data rate set to: ");
-  switch (icm.getMagDataRate()) {
+  switch (icm.getMagDataRate())
+  {
   case AK09916_MAG_DATARATE_SHUTDOWN:
     Serial.println("Shutdown");
     break;
@@ -104,9 +109,10 @@ void setup(void) {
     Serial.println("100 Hz");
     break;
   }
-  Serial.println();   
-  return false;
+  Serial.println();
+  return true;
 }
+
 geometry_msgs::Vector3 readAccelerometer()
 {
   sensors_event_t accel;
@@ -128,13 +134,13 @@ geometry_msgs::Vector3 readAccelerometer()
   ax = accel.acceleration.x;
   ay = accel.acceleration.y;
   az = accel.acceleration.z;
-  accel_vector.x = ax * (double) ACCEL_SCALE * G_TO_ACCEL;
-  accel_vector.y = ay * (double) ACCEL_SCALE * G_TO_ACCEL;
-  accel_vector.z = az * (double) ACCEL_SCALE * G_TO_ACCEL;
+  accel_vector.x = ax;
+  accel_vector.y = ay;
+  accel_vector.z = az;
   return accel_vector;
 }
 
-geometry_msgs::Vector3 readGyroscope()
+geometry_msgs::Vector3 readGyroscope() 
 {
   sensors_event_t accel;
   sensors_event_t gyro;
@@ -142,7 +148,7 @@ geometry_msgs::Vector3 readGyroscope()
   sensors_event_t temp;
   icm.getEvent(&accel, &gyro, &temp, &mag);
 
-/* Display the results (acceleration is measured in m/s^2) */
+  /* Display the results (acceleration is measured in m/s^2) */
   Serial.print("\t\tGyro X: ");
   Serial.print(gyro.gyro.x);
   Serial.print(" \tY: ");
@@ -153,15 +159,16 @@ geometry_msgs::Vector3 readGyroscope()
   Serial.println();
 
   geometry_msgs::Vector3 gyro_vector;
-  int16_t gx, gy, gz;
-  gx = gyro.gyro.x
-  gy = gyro.gyro.y
-  gz = gyro.gyro.z
-  gyro_vector.x = gx * (double) GYRO_SCALE * DEG_TO_RAD;
-  gyro_vector.y = gy * (double) GYRO_SCALE * DEG_TO_RAD;
-  gyro_vector.z = gz * (double) GYRO_SCALE * DEG_TO_RAD;
 
-  return gyro;
+  int16_t gx, gy, gz;
+  gx = gyro.gyro.x;
+  gy = gyro.gyro.y;
+  gz = gyro.gyro.z;
+  gyro_vector.x = gyro.gyro.x;
+  gyro_vector.y = gyro.gyro.y;
+  gyro_vector.z = gyro.gyro.z;
+
+  return gyro_vector;
 }
 
 geometry_msgs::Vector3 readMagnetometer()
@@ -172,7 +179,7 @@ geometry_msgs::Vector3 readMagnetometer()
   sensors_event_t temp;
   icm.getEvent(&accel, &gyro, &temp, &mag);
 
-/* Display the results (acceleration is measured in m/s^2) */
+  /* Display the results (acceleration is measured in m/s^2) */
   Serial.print("\t\tMag X: ");
   Serial.print(mag.magnetic.x);
   Serial.print(" \tY: ");
@@ -183,93 +190,91 @@ geometry_msgs::Vector3 readMagnetometer()
 
   geometry_msgs::Vector3 mag_vector;
   int16_t mx, my, mz;
-  mx = mag.magnetic.x
-  my = mag.magnetic.y
-  mz = mag.magnetic.z
-  mag_vector.x = mx * (double) MAG_SCALE * UTESLA_TO_TESLA;
-  mag_vector.y = my * (double) MAG_SCALE * UTESLA_TO_TESLA;
-  mag_vector.z = mz * (double) MAG_SCALE * UTESLA_TO_TESLA;
+  mx = mag.magnetic.x;
+  my = mag.magnetic.y;
+  mz = mag.magnetic.z;
+  mag_vector.x = mx;
+  mag_vector.y = my;
+  mag_vector.z = mz;
   return mag_vector;
 }
 
-}
-
-#else // all but USE_20948_IMU
+#else  // all but USE_20948_IMU
 bool initIMU()
 {
-    Wire.begin();
-    bool ret;
-    
-    accelerometer.initialize();
-    ret = accelerometer.testConnection();
-    if(!ret)
-        return false;
+  Wire.begin();
+  bool ret;
 
-    gyroscope.initialize();
-    ret = gyroscope.testConnection();
-    if(!ret)
-        return false;
-  
-    magnetometer.initialize();
-    ret = magnetometer.testConnection();
-    if(!ret)
-        return false;
+  accelerometer.initialize();
+  ret = accelerometer.testConnection();
+  if (!ret)
+    return false;
 
-    return true;
+  gyroscope.initialize();
+  ret = gyroscope.testConnection();
+  if (!ret)
+    return false;
+
+  magnetometer.initialize();
+  ret = magnetometer.testConnection();
+  if (!ret)
+    return false;
+
+  return true;
 }
 
 int getIMUaddrs()
 {
-    Wire.begin();
-    accelerometer.initialize();
-    int ret1 = accelerometer.getDeviceID();
-    gyroscope.initialize();
-    int ret2 = gyroscope.getDeviceID();
-    magnetometer.initialize();
-    int ret3 = magnetometer.getDeviceID();
-    return(ret1*100000+ret2*1000+ret3);
+  Wire.begin();
+  accelerometer.initialize();
+  int ret1 = accelerometer.getDeviceID();
+  gyroscope.initialize();
+  int ret2 = gyroscope.getDeviceID();
+  magnetometer.initialize();
+  int ret3 = magnetometer.getDeviceID();
+  return (ret1 * 100000 + ret2 * 1000 + ret3);
 }
 
 geometry_msgs::Vector3 readAccelerometer()
 {
-    geometry_msgs::Vector3 accel;
-    int16_t ax, ay, az;
-    
-    accelerometer.getAcceleration(&ax, &ay, &az);
+  geometry_msgs::Vector3 accel;
+  int16_t ax, ay, az;
 
-    accel.x = ax * (double) ACCEL_SCALE * G_TO_ACCEL;
-    accel.y = ay * (double) ACCEL_SCALE * G_TO_ACCEL;
-    accel.z = az * (double) ACCEL_SCALE * G_TO_ACCEL;
+  accelerometer.getAcceleration(&ax, &ay, &az);
 
-    return accel;
+  accel.x = ax * (double)ACCEL_SCALE * G_TO_ACCEL;
+  accel.y = ay * (double)ACCEL_SCALE * G_TO_ACCEL;
+  accel.z = az * (double)ACCEL_SCALE * G_TO_ACCEL;
+
+  return accel;
 }
 
 geometry_msgs::Vector3 readGyroscope()
 {
-    geometry_msgs::Vector3 gyro;
-    int16_t gx, gy, gz;
+  geometry_msgs::Vector3 gyro;
+  int16_t gx, gy, gz;
 
-    gyroscope.getRotation(&gx, &gy, &gz);
+  gyroscope.getRotation(&gx, &gy, &gz);
 
-    gyro.x = gx * (double) GYRO_SCALE * DEG_TO_RAD;
-    gyro.y = gy * (double) GYRO_SCALE * DEG_TO_RAD;
-    gyro.z = gz * (double) GYRO_SCALE * DEG_TO_RAD;
+  gyro.x = gx * (double)GYRO_SCALE * DEG_TO_RAD;
+  gyro.y = gy * (double)GYRO_SCALE * DEG_TO_RAD;
+  gyro.z = gz * (double)GYRO_SCALE * DEG_TO_RAD;
 
-    return gyro;
+  return gyro;
 }
 
 geometry_msgs::Vector3 readMagnetometer()
 {
-    geometry_msgs::Vector3 mag;
-    int16_t mx, my, mz;
+  geometry_msgs::Vector3 mag;
+  int16_t mx, my, mz;
 
-    magnetometer.getHeading(&mx, &my, &mz);
+  magnetometer.getHeading(&mx, &my, &mz);
 
-    mag.x = mx * (double) MAG_SCALE * UTESLA_TO_TESLA;
-    mag.y = my * (double) MAG_SCALE * UTESLA_TO_TESLA;
-    mag.z = mz * (double) MAG_SCALE * UTESLA_TO_TESLA;
+  mag.x = mx * (double)MAG_SCALE * UTESLA_TO_TESLA;
+  mag.y = my * (double)MAG_SCALE * UTESLA_TO_TESLA;
+  mag.z = mz * (double)MAG_SCALE * UTESLA_TO_TESLA;
 
-    return mag;
+  return mag;
 }
 #endif // all but USE_20948_IMU
 

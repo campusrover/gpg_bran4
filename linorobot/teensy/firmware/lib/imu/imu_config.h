@@ -60,7 +60,7 @@
 #endif
 
 #ifdef USE_20948_IMU
-    #include "Adafruit_ICM20948.h"
+    #include <Adafruit_ICM20948.h>
     Adafruit_ICM20948 icm;
 #endif
 

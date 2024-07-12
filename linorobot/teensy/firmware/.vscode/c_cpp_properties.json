@@ -9,7 +9,6 @@
             "name": "PlatformIO",
             "includePath": [
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/src",
-                "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/config",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branled",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/brandiag",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branbuzz",
@@ -21,6 +20,7 @@
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Servo",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/kinematics",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/imu",
+                "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/config",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/ros_lib",
                 "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Ethernet/src",
                 "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/encoder",
@@ -133,7 +133,6 @@
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/src",
-                    "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/config",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branled",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/brandiag",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/branbuzz",
@@ -145,6 +144,7 @@
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Servo",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/kinematics",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/imu",
+                    "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/config",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/ros_lib",
                     "/home/ubuntu/.platformio/packages/framework-arduinoteensy/libraries/Ethernet/src",
                     "/home/ubuntu/catkin_ws/src/gpg_bran4/linorobot/teensy/firmware/lib/encoder",
