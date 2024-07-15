@@ -1,7 +1,7 @@
 #include "Imu.h"
 #include <Wire.h>
 #define USE_20948_IMU
-#define IMU_PUBLISH_RATE 20 // hz
+#define IMU_PUBLISH_RATE 2 // hz
 
 void setup()
 {
