@@ -5,11 +5,21 @@
 
 void setup()
 {
+  // pinMode(16, INPUT_PULLUP);
+  // pinMode(17, INPUT_PULLUP);
+  // pinMode(18, INPUT_PULLUP);
+  // pinMode(19, INPUT_PULLUP);
+  // pinMode(24, INPUT_PULLUP);
+  // pinMode(25, INPUT_PULLUP);
   Wire.begin();
+  // Wire.setClock(100000L);
+  // Wire.setSDA(18);
+  // Wire.setSCL(19);
 
   Serial.begin(9600);
-  while (!Serial);             // Leonardo: wait for serial monitor
-  Serial.println("\nBranbot Test Suite");
+  while (!Serial)
+    delay(10);             // Leonardo: wait for serial monitor
+  Serial.println("\nBranbot I2C test");
 }
 
 
@@ -47,8 +57,10 @@ void loop()
       Serial.println(address,HEX);
     }    
   }
-  if (nDevices == 0)
+  if (nDevices == 0) {
     Serial.println("No I2C devices found\n");
+    delay(60000);           // wait 5 seconds for next scan
+  }
   else
     Serial.println("done\n");
   delay(5000);           // wait 5 seconds for next scan

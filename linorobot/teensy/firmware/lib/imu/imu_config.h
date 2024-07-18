@@ -2,6 +2,7 @@
 #define _IMU_CONFIG_H_
 
 #include "I2Cdev.h"
+#include "lino_base_config.h"
 
 #define G_TO_ACCEL 9.81
 #define MGAUSS_TO_UTESLA 0.1
@@ -57,6 +58,12 @@
     MPU9250 gyroscope;    
     MPU9250 magnetometer;
 #endif
+
+#ifdef USE_20948_IMU
+    #include <Adafruit_ICM20948.h>
+    Adafruit_ICM20948 icm;
+#endif
+
 
 #endif
 

@@ -3,16 +3,14 @@
 #include "Encoder.h"
 #include <Wire.h>
 
-
-#define COMMAND_RATE 1     // hz
-
+#define COMMAND_RATE 1 // hz
 
 void setup()
 {
   Wire.begin();
 
   Serial.begin(9600);
-  while (!Serial);             // Leonardo: wait for serial monitor
+  while (!Serial);
   Serial.println("\nBranBot Test");
 }
 
@@ -34,21 +32,29 @@ void test_encoders() {
   Serial.println(motor2_encoder.read());
 }
 
+<<<<<<< HEAD
 void test_motors() {
   
   motor1_controller.spin(-50);
   motor2_controller.spin(150);
 
+=======
+void test_motors()
+{
+  motor1_controller.spin(-200);
+  motor2_controller.spin(100);
+>>>>>>> 5e808732e5f313f3d5a93a3f4ca6058a11c2b290
 }
 
+static unsigned long prev_control_time = -(COMMAND_RATE * 1000);
 
+void loop()
+{
+  if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE))
+  {
+    prev_control_time = millis();
 
-void loop() {
-  static unsigned long prev_control_time = 0;
-  if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE)) {
     test_encoders();
     test_motors();
-    prev_control_time = millis();
   };
-};
-
+}
