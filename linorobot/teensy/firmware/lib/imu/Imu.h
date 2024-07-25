@@ -1,4 +1,4 @@
-#ifndef _IMU2_H_
+#ifndef _IMU2_H_ 
 #define _IMU2_H_
 
 #include "I2Cdev.h"
@@ -9,7 +9,12 @@
 
 bool initIMU()
 {
+    pinMode(18, INPUT_PULLUP);
+    pinMode(19, INPUT_PULLUP);
     Wire.begin();
+    Wire.setSDA(18);
+    Wire.setSCL(19);
+
     bool ret;
     
     accelerometer.initialize();

@@ -2,9 +2,9 @@
 #define PLATFAM_CONFIG_H
 
 /*
-Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
+Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1, BRANBOT2
 */
-#define BRANBOT1
+#define BRANBOT2
 
 #ifdef PLAT1
   #define PLAT_HAS_CAMERA
@@ -29,6 +29,12 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
   #define PLAT_HAS_CAMERA
   #define PLAT_HAS_LED
 #endif
+
+#ifdef BRANBOT2
+  #define PLAT_HAS_CAMERA
+  #define PLAT_HAS_LED
+#endif
+
 
 /* 
   Universal configuration of all the Platfam Robots.

@@ -19,10 +19,6 @@ void setup()
   while (!Serial)
     delay(10);             // Leonardo: wait for serial monitor
   Serial.println("\nBranbot I2C test");
-<<<<<<< HEAD
-=======
-
->>>>>>> 163d735075699f6029f54661cc6771eab7fcbbd1
 }
 
 

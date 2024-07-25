@@ -205,7 +205,7 @@ void moveBase() {
   raw_vel_pub.publish(&raw_vel_msg);
 }
 
-void logIMUaddresses() {
+void logIMUaddresses() { 
   Wire.begin();
   accelerometer.initialize();
   gyroscope.initialize();
