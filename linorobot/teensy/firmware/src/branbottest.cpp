@@ -10,15 +10,8 @@ void setup()
   Wire.begin();
 
   Serial.begin(9600);
-<<<<<<< HEAD
-  while (!Serial);             // Leonardo: wait for serial monitor
+  while (!Serial);
   Serial.println("\nBranBot Test");
-  analogWriteFrequency(MOTOR1_PWM, 4482);
-  analogWriteFrequency(MOTOR2_PWM, 4482);
-=======
-  while (!Serial)
-    Serial.println("\nBranBot Test");
->>>>>>> 163d735075699f6029f54661cc6771eab7fcbbd1
 }
 
 // Encloder Objects
@@ -32,7 +25,6 @@ Controller motor1_controller(Controller::MOTOR_DRIVER, MOTOR1_PWM, MOTOR1_IN_A,
 Controller motor2_controller(Controller::MOTOR_DRIVER, MOTOR2_PWM, MOTOR2_IN_A,
                              MOTOR2_IN_B);
 
-<<<<<<< HEAD
 void test_encoders() {
   Serial.print("Motor1 encoder: ");
   Serial.println(motor1_encoder.read());
@@ -40,21 +32,21 @@ void test_encoders() {
   Serial.println(motor2_encoder.read());
 }
 
+<<<<<<< HEAD
 void test_motors() {
   
-<<<<<<< HEAD
-  motor1_controller.spin(200);
-  motor2_controller.spin(1);
-=======
-  motor1_controller.spin(-100);
-  motor2_controller.spin(200);
->>>>>>> 163d735075699f6029f54661cc6771eab7fcbbd1
+  motor1_controller.spin(-50);
+  motor2_controller.spin(150);
 
+=======
+void test_motors()
+{
+  motor1_controller.spin(-200);
+  motor2_controller.spin(100);
+>>>>>>> 5e808732e5f313f3d5a93a3f4ca6058a11c2b290
 }
 
-=======
 static unsigned long prev_control_time = -(COMMAND_RATE * 1000);
->>>>>>> 765a0dcf57a2e94699bd252adc3ad73fca80696b
 
 void loop()
 {
@@ -65,18 +57,4 @@ void loop()
     test_encoders();
     test_motors();
   };
-}
-
-void test_motors()
-{
-  motor1_controller.spin(10);
-  motor2_controller.spin(100);
-}
-
-void test_encoders()
-{
-  Serial.print("Motor1 encoder: ");
-  Serial.println(motor1_encoder.read());
-  Serial.print("Motor2 encoder: ");
-  Serial.println(motor2_encoder.read());
 }

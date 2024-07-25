@@ -205,6 +205,7 @@ void moveBase() {
   raw_vel_pub.publish(&raw_vel_msg);
 }
 
+<<<<<<< HEAD
 void logIMUaddresses() { 
   Wire.begin();
   accelerometer.initialize();
@@ -216,6 +217,8 @@ void logIMUaddresses() {
            gyroscope.testConnection(), magnetometer.testConnection());
 }
 
+=======
+>>>>>>> 1949ced814aadffbe401cd58dbeb07969fb33594
 void loop() {
   static unsigned long prev_control_time = 0;
   static unsigned long prev_imu_time = 0;
@@ -250,8 +253,8 @@ void loop() {
   if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE)) {
     if (!imu_is_initialized) {
       imu_is_initialized = initIMU();
-      logIMUaddresses();
-    } else {
+      LOG_ERROR("Imu failed to initialize.");
+      } else {
       publishIMU();
     }
     prev_imu_time = millis();
