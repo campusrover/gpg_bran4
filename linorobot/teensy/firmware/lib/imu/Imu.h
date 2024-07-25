@@ -12,31 +12,29 @@
 
 bool initIMU()
 {
-<<<<<<< HEAD
     pinMode(18, INPUT_PULLUP);
     pinMode(19, INPUT_PULLUP);
     Wire.begin();
     Wire.setSDA(18);
     Wire.setSCL(19);
 
-    bool ret;
+  //   bool ret;
     
-    accelerometer.initialize();
-    ret = accelerometer.testConnection();
-    if(!ret)
-        return false;
+  //   accelerometer.initialize();
+  //   ret = accelerometer.testConnection();
+  //   if(!ret)
+  //       return false;
 
-    gyroscope.initialize();
-    ret = gyroscope.testConnection();
-    if(!ret)
-        return false;
+  //   gyroscope.initialize();
+  //   ret = gyroscope.testConnection();
+  //   if(!ret)
+  //       return false;
   
-    magnetometer.initialize();
-    ret = magnetometer.testConnection();
-    if(!ret)
-        return false;
-=======
-  // Serial.begin(115200);
+  //   magnetometer.initialize();
+  //   ret = magnetometer.testConnection();
+  //   if(!ret)
+  //       return false;
+  // // Serial.begin(115200);
   // while (!Serial)
   //   delay(10); // will pause Zero, Leonardo, etc until serial console opens
   // Serial.println("Adafruit Initializing!");
@@ -92,7 +90,6 @@ bool initIMU()
     // Serial.println("2000 degrees/s");
     break;
   }
->>>>>>> 1949ced814aadffbe401cd58dbeb07969fb33594
 
   //  icm.setAccelRateDivisor(4095);
   uint16_t accel_divisor = icm.getAccelRateDivisor();

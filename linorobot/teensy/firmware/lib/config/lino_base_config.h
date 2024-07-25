@@ -30,7 +30,7 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1, BRANBOT2
   #define USE_MPU9250_IMU
 #endif
 
-#ifdef BRANBOT1
+#ifdef BRAN1
   #define PLAT_HAS_CAMERA
   #define PLAT_HAS_LED
   #define USE_20948_IMU
@@ -39,7 +39,7 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1, BRANBOT2
 #ifdef BRAN2
   #define PLAT_HAS_CAMERA
   #define PLAT_HAS_LED
-  #define USE_MPU9250_IMU
+  #define USE_20948_IMU
 #endif
 
 
