@@ -62,7 +62,7 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1, BRANBOT2
 
 #define WHEEL_DIAMETER 0.144	    // wheel's diameter in meters
 #define PWM_BITS 8                // PWM Resolution of the microcontroller
-#define LR_WHEELS_DISTANCE 0.28  // distance between left and right wheels
+#define LR_WHEELS_DISTANCE 0.26  // distance between left and right wheels
 #define FR_WHEELS_DISTANCE 0.30   // distance between front and rear wheels.
 #define MAX_STEERING_ANGLE 0.415  // max steering angle. This only applies to Ackermann steering
 
