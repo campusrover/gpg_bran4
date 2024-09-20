@@ -1,4 +1,4 @@
-#ifndef _IMU2_H_
+#ifndef _IMU2_H_ 
 #define _IMU2_H_
 
 #include "I2Cdev.h"
@@ -12,7 +12,29 @@
 
 bool initIMU()
 {
-  // Serial.begin(115200);
+    pinMode(18, INPUT_PULLUP);
+    pinMode(19, INPUT_PULLUP);
+    Wire.begin();
+    Wire.setSDA(18);
+    Wire.setSCL(19);
+
+  //   bool ret;
+    
+  //   accelerometer.initialize();
+  //   ret = accelerometer.testConnection();
+  //   if(!ret)
+  //       return false;
+
+  //   gyroscope.initialize();
+  //   ret = gyroscope.testConnection();
+  //   if(!ret)
+  //       return false;
+  
+  //   magnetometer.initialize();
+  //   ret = magnetometer.testConnection();
+  //   if(!ret)
+  //       return false;
+  // // Serial.begin(115200);
   // while (!Serial)
   //   delay(10); // will pause Zero, Leonardo, etc until serial console opens
   // Serial.println("Adafruit Initializing!");
