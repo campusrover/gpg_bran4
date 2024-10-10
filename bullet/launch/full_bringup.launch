@@ -25,7 +25,4 @@
 
     <!-- Run our camera drivers -->
     <include file="$(find bullet)/launch/camera_only.launch" />
-
-    <!-- Run our compatible joystick drivers -->
-    <include file="$(find bullet)/launch/joy_teleop.launch" />
 </launch>

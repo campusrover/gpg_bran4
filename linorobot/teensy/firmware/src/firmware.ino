@@ -1,3 +1,13 @@
+// Update by Pito on April 10 2023 for Bullet1
+
+#include "lino_base_config.h"
+
+#ifdef BRU_BULLET
+    #define CAMERA_SERVO 0
+    #define VERBOSE_LOGGING 0 // 0 = none; 1 = standard; 2 = super
+    #define INSTRUMENTATION 0
+#endif
+
 #if (ARDUINO >= 100)
     #include <Arduino.h>
 #else
@@ -16,13 +26,16 @@
 #include "lino_msgs/PID.h"
 //header file for imu
 #include "lino_msgs/Imu.h"
-// //(Pito) header for instrumentation
-// #include "lino_msgs/Inst.h"
-// //(Pito) Header for camera servo
-// #include "std_msgs/UInt16.h"
 
+#if (INSTRUMENTATION  == 1)
+    // (Pito) header for instrumentation
+    #include "lino_msgs/Inst.h"
+#endif 
+#if (CAMERA_SERVO == 1)
+    //(Pito) Header for camera servo
+    #include "std_msgs/UInt16.h"
+#endif
 
-#include "lino_base_config.h"
 #include "Motor.h"
 #include "Kinematics.h"
 #include "PID.h"
@@ -75,7 +88,6 @@ long m2_pid_error = 0;
 long m1_curr_rpm = 0;
 long m2_curr_rpm = 0;
 
-
 ros::NodeHandle nh;
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
@@ -96,10 +108,12 @@ ros::Publisher raw_vel_pub("raw_vel", &raw_vel_msg);
 void setup()
 {
     //steering_servo.attach(STEERING_PIN);
-    //steering_servo.write(90); 
+    //steering_servo.write(90);
 
-    //camera_servo.attach(STEERING_PIN); // Pito added
-    //camera_servo.write(0); // Pito added
+#if CAMERA_SERVO==1
+    camera_servo.attach(STEERING_PIN); // Pito added
+    camera_servo.write(0); // Pito added
+#endif
     
     nh.initNode();
     nh.getHardware()->setBaud(57600);
@@ -114,10 +128,12 @@ void setup()
     {
         nh.spinOnce();
     }
-    nh.loginfo("LINOBASE CONNECTED");
-    char buffer[50];
-    sprintf (buffer, "PID %f %f %f", K_P, K_D, K_I);
-    nh.loginfo(buffer);
+    nh.loginfo("Robot Base Connected.");
+    #if VERBOSE_LOGGING==1
+        char buffer[50];
+        sprintf (buffer, "PID %f %f %f", K_P, K_D, K_I);
+        nh.loginfo(buffer);
+    #endif
     delay(1);
 }
 
@@ -127,6 +143,11 @@ void loop()
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_debug_time = 0;
     static bool imu_is_initialized;
+
+#if VERBOSE_LOGGING > 0
+    static unsigned long prev_debug_time = 0;
+#endif
+
 
     //this block drives the robot based on defined rate
     if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE))
@@ -144,10 +165,12 @@ void loop()
     //this block publishes the IMU data based on defined rate
     if ((millis() - prev_imu_time) >= (1000 / IMU_PUBLISH_RATE))
     {
-        nh.loginfo("Checking IMU.");
-        char buffer[50];
-        sprintf(buffer, "*********** IMU Address: %d", getIMUaddrs());
-        nh.loginfo(buffer);
+        #if VERBOSE_LOGGING==2
+            nh.loginfo("Checking IMU.");
+            char buffer[50];
+            sprintf(buffer, "*********** IMU Address: %d", getIMUaddrs());
+            nh.loginfo(buffer);
+        #endif
 
         if (!imu_is_initialized)
         {
@@ -166,31 +189,30 @@ void loop()
     }
 
     //this block displays the encoder readings. change DEBUG to 0 if you don't want to display
-    if(DEBUG)
+#if VERBOSE_LOGGING==1
+    if ((millis() - prev_debug_time) >= (1000 / DEBUG_RATE))
     {
-        if ((millis() - prev_debug_time) >= (1000 / DEBUG_RATE))
-        {
-            printDebug();
-            prev_debug_time = millis();
-        }
+        printDebug();
+        prev_debug_time = millis();
     }
+#endif
     //call all the callbacks waiting to be called
     nh.spinOnce();
 }
 
-// void CameraServoCallback(const std_msgs::UInt16& servo_msg)
-// {
-//     char buffer[50];
-//     sprintf (buffer,   "Cam servo %ld", servo_msg.data);
-//     nh.loginfo(buffer);
-//     sprintf (buffer,   "Cam attached? %ld", camera_servo.attached());
-//     nh.loginfo(buffer);
-
-//     camera_servo.write(servo_msg.data);
-//     sprintf (buffer,   "Cam servo read %ld", camera_servo.read());
-//     nh.loginfo(buffer);
-
-// }
+#if CAMERA_SERVO==1
+void CameraServoCallback(const std_msgs::UInt16& servo_msg)
+{
+    char buffer[50];
+    sprintf (buffer,   "Cam servo %ld", servo_msg.data);
+    nh.loginfo(buffer);
+    sprintf (buffer,   "Cam attached? %ld", camera_servo.attached());
+    nh.loginfo(buffer);
+    camera_servo.write(servo_msg.data);
+    sprintf (buffer,   "Cam servo read %ld", camera_servo.read());
+    nh.loginfo(buffer);
+}
+#endif
 
 void PIDCallback(const lino_msgs::PID& pid)
 {
@@ -231,7 +253,7 @@ void moveBase()
     // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
     // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));  
 
-// motor1_controller.spin(50); // PITO LEFT MOTOR
+// motor1_controller.spin(50); // PITO LEFT MOTOR - Used during troublshooting
 // motor2_controller.spin(100); // PITO RIGHT MOTOR
 
     // Pito added this
@@ -262,17 +284,18 @@ void moveBase()
     //publish raw_vel_msg
     raw_vel_pub.publish(&raw_vel_msg);
 
-//     //collect data for instrumentation message
-//     inst_msg.l_encoder = motor1_encoder.read();
-//     inst_msg.r_encoder = motor2_encoder.read();
-//     inst_msg.l_piderror = m1_pid_error;
-//     inst_msg.r_piderror = m2_pid_error;
-//     inst_msg.l_rpm = m1_curr_rpm;
-//     inst_msg.r_rpm = m2_curr_rpm;
-
-//     // publish instrumentation message
-//     inst_pub.publish(&inst_msg);
-// 
+#if INSTRUMENTATION==1
+     //collect data for instrumentation message
+     inst_msg.l_encoder = motor1_encoder.read();
+     inst_msg.r_encoder = motor2_encoder.read();
+     inst_msg.l_piderror = m1_pid_error;
+     inst_msg.r_piderror = m2_pid_error;
+     inst_msg.l_rpm = m1_curr_rpm;
+     inst_msg.r_rpm = m2_curr_rpm;
+// publish instrumentation message
+     inst_pub.publish(&inst_msg);
+#endif
+ 
 }
 
 void stopBase()
@@ -317,12 +340,9 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 
 void printDebug()
 {
-    char buffer[50];
+    char buffer[100];
 
-    sprintf (buffer,   "Encoders: %ld %ld", motor1_encoder.read(), motor2_encoder.read());
+    sprintf (buffer, "enc err rpm LEFT: %ld %ld %ld    RIGHT: %ld %ld %ld", motor1_encoder.read(), m1_pid_error, m1_curr_rpm, motor2_encoder.read(), m2_pid_error, m2_curr_rpm);
     nh.loginfo(buffer);
-    sprintf (buffer,   "Pid Errors: %ld %ld", m1_pid_error, m2_pid_error);
-    nh.loginfo(buffer);
-    sprintf (buffer,   "Current RPM: %ld %ld", m1_curr_rpm, m2_curr_rpm);
-    nh.loginfo(buffer);
+
 }
