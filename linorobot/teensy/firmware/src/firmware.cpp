@@ -165,6 +165,7 @@ void publishIMU() {
 //   inst_pub.publish(&inst_msg);
 // }
 
+// ******** CONTROL THE MOTORS *******
 void moveBase() {
   // get the required rpm for each motor based on required velocities, and base
   // used
@@ -205,16 +206,8 @@ void moveBase() {
   raw_vel_pub.publish(&raw_vel_msg);
 }
 
-// void logIMUaddresses() { 
-//  Wire.begin();
-//  accelerometer.initialize();
-//  gyroscope.initialize();
-//  magnetometer.initialize();
-//  LOG_INFO("IMU Addresses: %x %x %x", accelerometer.getDeviceID(),
-//           gyroscope.getDeviceID(), magnetometer.getDeviceID());
-//  LOG_INFO("IMU Testconnections: %x %x %x", accelerometer.testConnection(),
-//           gyroscope.testConnection(), magnetometer.testConnection());
-//}
+
+// *********** MAIN LOOP ***************
 
 void loop() {
   static unsigned long prev_control_time = 0;

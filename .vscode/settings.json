@@ -6,8 +6,13 @@
         "markdown"
     ],
     "files.associations": {
+        ".rb": "ruby",
+        ".cg": "cg",
+        "*.erb": "html",
+        "*.cg": "markdown",
         "vector": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "ostream": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/home/ubuntu/catkin_ws/devel/lib/python3/dist-packages",
