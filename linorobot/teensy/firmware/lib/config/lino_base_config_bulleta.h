@@ -80,11 +80,19 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
   #define MOTOR1_ENCODER_B 12
   #define MOTOR2_ENCODER_A 15
   #define MOTOR2_ENCODER_B 14
+  #define MOTOR3_ENCODER_A 17
+  #define MOTOR3_ENCODER_B 16
+  #define MOTOR4_ENCODER_A 9
+#define MOTOR4_ENCODER_B 10
 #else
   #define MOTOR1_ENCODER_A 14
   #define MOTOR1_ENCODER_B 15
   #define MOTOR2_ENCODER_A 12
   #define MOTOR2_ENCODER_B 11
+  #define MOTOR3_ENCODER_A 17
+  #define MOTOR3_ENCODER_B 16
+  #define MOTOR4_ENCODER_A 9
+  #define MOTOR4_ENCODER_B 10
 #endif
 
 #ifdef BULLET
@@ -92,20 +100,33 @@ Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRANBOT1
   #define MOTOR1_IN_A 8
   #define MOTOR1_IN_B 6
   #define MOTOR1_PWM 5
-
   #define MOTOR2_IN_A 20
   #define MOTOR2_IN_B 1
   #define MOTOR2_PWM 21
+  #define MOTOR3_IN_A 23
+  #define MOTOR3_IN_B 0
+  #define MOTOR3_PWM 22
+  #define MOTOR4_IN_A 2
+  #define MOTOR4_IN_B 3
+  #define MOTOR4_PWM 4
 #else
+  #define MOTOR_DRIVER L298
   #define MOTOR1_IN_A 20
   #define MOTOR1_IN_B 1
   #define MOTOR1_PWM 22
   #define MOTOR2_IN_A 6
   #define MOTOR2_IN_B 8
   #define MOTOR2_PWM 5
+  #define MOTOR3_IN_A 23
+  #define MOTOR3_IN_B 0
+  #define MOTOR3_PWM 22
+  #define MOTOR4_IN_A 2
+  #define MOTOR4_IN_B 3
+  #define MOTOR4_PWM 4
 #endif
 
 #define PWM_MAX pow(2, PWM_BITS) - 1
 #define PWM_MIN -PWM_MAX
 
 #endif
+
