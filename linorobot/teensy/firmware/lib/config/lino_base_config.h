@@ -4,7 +4,7 @@
 /*
 Define what Robot. One of PLAT1, PLAT2, PLAT3, PLAT4, BRAN1, BRAN3
 */
-#define BRAN3
+#define PLAT4
 
 #ifdef PLAT1
   #define PLAT_HAS_CAMERA
