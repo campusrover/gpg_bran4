@@ -171,7 +171,6 @@ public:
 		double delta_ticks = encoder_ticks - prev_encoder_ticks_;
 
 		//calculate wheel's speed (RPM)
-
 		prev_update_time_ = current_time;
 		prev_encoder_ticks_ = encoder_ticks;
 		

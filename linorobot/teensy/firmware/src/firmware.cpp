@@ -165,6 +165,7 @@ void publishIMU() {
 //   inst_pub.publish(&inst_msg);
 // }
 
+// ******** CONTROL THE MOTORS *******
 void moveBase() {
   // get the required rpm for each motor based on required velocities, and base
   // used
@@ -204,6 +205,9 @@ void moveBase() {
   // publish raw_vel_msg
   raw_vel_pub.publish(&raw_vel_msg);
 }
+
+
+// *********** MAIN LOOP ***************
 
 void loop() {
   static unsigned long prev_control_time = 0;

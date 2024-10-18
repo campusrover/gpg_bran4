@@ -1,4 +1,4 @@
-#include "lino_base_config.h"
+z#include "lino_base_config.h"
 #include "Motor.h"
 #include "Encoder.h"
 #include <Wire.h>
@@ -32,10 +32,11 @@ void test_encoders() {
   Serial.println(motor2_encoder.read());
 }
 
-void test_motors()
-{
-  motor1_controller.spin(-200);
-  motor2_controller.spin(100);
+void test_motors() {
+  
+  motor1_controller.spin(-50);
+  motor2_controller.spin(150);
+
 }
 
 static unsigned long prev_control_time = -(COMMAND_RATE * 1000);
