@@ -28,6 +28,6 @@ void loop() {
   delay(500);
   mcp.digitalWrite(LEFT_LED_PIN, LOW);
   mcp.digitalWrite(RIGHT_LED_PIN, HIGH);
-  delay(500);
+  delay(2000);
 }
  

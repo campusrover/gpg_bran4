@@ -40,6 +40,8 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
                     WR_MIN_DEG, WR_DEGOFFSET, WR_DEGSCALE, WR_PARK_DEG);
   claw_servo.setup(103, *node_handle, servo_driver, CLAW, CL_MAX_DEG,
                    CL_MIN_DEG, CL_DEGOFFSET, CL_DEGSCALE, CL_PARK_DEG);
+  LOG_ERROR("Arm Setup Complete.");
+
 }
 
 void BrandeisArm::loop() {
