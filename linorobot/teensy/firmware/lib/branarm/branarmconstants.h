@@ -61,9 +61,9 @@
 #define WR_FLOOR_OUT_DEG 65
 
 // Straight up 
-#define SH_STRAIGHTUP 85
-#define EL_STRAIGHTUP 95
-#define WR_STRAIGHTUP 90
+#define SH_STRAIGHTUP_DEG 85
+#define EL_STRAIGHTUP_DEG 95
+#define WR_STRAIGHTUP_DEG 90
 
 // Straight up with wrist parallel to ground
 #define SH_VERT_HORIZ_HAND 90
