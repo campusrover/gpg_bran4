@@ -274,7 +274,7 @@ void loop() {
           Serial.println(wristdelta);
 
           currentCase = moveSF;
-          Serial.println("Move Park or Floor");
+          // Serial.println("Move Park or Floor");
           break;
         }
 
@@ -388,7 +388,7 @@ void recvWithEndMarker() {
 
 void showNewData() {
   if (newData == true) {
-    Serial.print("This just in ... ");
+    Serial.print("*** This just in ... ");
     Serial.println(receivedChars);
     newData = false;
   }
