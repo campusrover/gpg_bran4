@@ -106,7 +106,9 @@ const Command commands[] = {
     {"ev", "elbow vertical", FIXED_PARAM, {.fixed = {elbow, EL_STRAIGHTUP_DEG}}},
     {"pk", "park", SIMPLE, {.simple = park}},
     {"sh", "shoulder <angle>", RUNTIME_PARAM, {.runtime = {shoulder, SH_MIN_DEG, SH_MAX_DEG}}},
-    {"el", "elbow <angle>", RUNTIME_PARAM, {.runtime = {elbow, EL_MIN_DEG, EL_MAX_DEG}}}
+    {"el", "elbow <angle>", RUNTIME_PARAM, {.runtime = {elbow, EL_MIN_DEG, EL_MAX_DEG}}},
+    {"sp", "shoulder <pulse>", RUNTIME_PARAM, {.runtime = {shoulder_pulse}, 0, 300}}}
+    
   };
 
 const int numCommands = sizeof(commands) / sizeof(commands[0]);
@@ -394,6 +396,14 @@ void elbow(int deg)
   // }
 
   currentElbow = deglen;
+}
+
+void shoulder_pulse(int pulselen)
+{
+  ARM.setPWM(SHOULDER, 0, pulselen);
+  Serial.println("sholder pwm " + String(pulse));
+  delay(20);
+  currentShoulder = pulselen;
 }
 
 void shoulder(int deg)
