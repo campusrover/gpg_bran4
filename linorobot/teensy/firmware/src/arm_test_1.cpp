@@ -20,8 +20,8 @@ Adafruit_PWMServoDriver ARM = Adafruit_PWMServoDriver(0x40);
 #define SERVOMAX 160  // this is the 'maximum' pulse length count (out of 4096)
 #define Shoulder 15   // servo number
 #define Elbow 14      // servo number
-#define Wrist 13      // servo number
-#define Claw 12       // servo number
+#define Wrist 12      // servo number
+#define Claw 13      // servo number
 
 #define ClawPark 160  // claw closed
 #define ClawMIN 160   // claw closed
@@ -126,6 +126,7 @@ char rcvchar2;
 char rcvchar3;
 char rcvchar4;
 char rcvchar5;
+boolean newData = false;
 
 // case states
 static const int waitInput = 1;
@@ -136,6 +137,55 @@ int currentCase = waitInput;
 
 float iteration_time = millis();
 float iteration_interval = 20;  //20 milli second
+
+
+////////////////////////////////////////////////////////////////////////////////
+//===============================================================================
+//  Move  Wrist
+//===============================================================================
+
+
+
+void wrist(float deg) {
+
+  int deglen = (deg + 75) * 1.77;  // pulselen of commanded degrees
+  ARM.setPWM(Wrist, 0, deglen);
+  // delay(20);
+  //CurrentWrist = deg;
+}
+
+//===============================================================================
+//  Move elbow
+//===============================================================================
+
+void elbow(float deg) {
+  int deglen = (deg + 43) * 2.5;  // pulselen of commanded degrees
+  ARM.setPWM(Elbow, 0, deglen);
+  // delay(20);
+
+
+  //CurrentElbow = deg;
+}
+
+
+
+//===============================================================================
+//  Move shoulder
+//===============================================================================
+
+void shoulder(float deg) {
+
+  int deglen = (deg + 67.8) * 1.77;  // pulselen of commanded degrees
+  ARM.setPWM(Shoulder, 0, deglen);
+
+  // delay(20);
+
+
+  //CurrentShoulder = deg;
+}
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // Serial Commands
@@ -157,9 +207,39 @@ Commands  o  claw open
 
           */
 
+/////////////////////////////////////////////////////////////////
+
+void recvWithEndMarker() {
+  static byte ndx = 0;
+  char endMarker = '\n';
+  char rc;
+
+  while (Serial.available() > 0 && newData == false) {
+    rc = Serial.read();
+
+    if (rc != endMarker) {
+      receivedChars[ndx] = rc;
+      ndx++;
+      if (ndx >= numChars) {
+        ndx = numChars - 1;
+      }
+    } else {
+      receivedChars[ndx] = '\0';  // terminate the string
+      ndx = 0;
+      newData = true;
+    }
+  }
+}
+
+void showNewData() {
+  if (newData == true) {
+    Serial.print("This just in ... ");
+    Serial.println(receivedChars);
+    newData = false;
+  }
+}
 
 
-boolean newData = false;
 //===============================================================================
 //  Initialization
 //===============================================================================

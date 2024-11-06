@@ -4,7 +4,7 @@
 ArmPositions arm_locs[] = {
     {"park", SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},
     {"floordown", SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG},
-    {"straightup", SH_STRAIGHTUP, EL_STRAIGHTUP, WR_STRAIGHTUP},
+    {"straightup", SH_STRAIGHTUP_DEG, EL_STRAIGHTUP_DEG, WR_STRAIGHTUP_DEG},
     {"vert1", SH_VERT_HORIZ_HAND, EL_VERT_HORIZ_HAND, WR_VERT_HORIZ_HAND},
     {"straightback", SH_ALL_BACKWARD_DEG, EL_ALL_BACKWARD_DEG,
      WR_ALL_BACKWARD_DEG},
@@ -40,6 +40,8 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
                     WR_MIN_DEG, WR_DEGOFFSET, WR_DEGSCALE, WR_PARK_DEG);
   claw_servo.setup(103, *node_handle, servo_driver, CLAW, CL_MAX_DEG,
                    CL_MIN_DEG, CL_DEGOFFSET, CL_DEGSCALE, CL_PARK_DEG);
+  LOG_ERROR("Arm Setup Complete.");
+
 }
 
 void BrandeisArm::loop() {
