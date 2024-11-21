@@ -8,7 +8,7 @@
 
 #define EL_DEGOFFSET 43
 #define EL_DEGSCALE 2.5
-#define SH_DEGOFFSET 67.8
+#define SH_DEGOFFSET 124
 #define SH_DEGSCALE 1.77
 #define WR_DEGOFFSET 75
 #define WR_DEGSCALE 1.77
@@ -20,7 +20,7 @@
 #define SH_MIN_DEG 0        //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
 #define EL_MAX_DEG 185      //max  degrees   2.5 deg/pulselen
 #define EL_MIN_DEG 0       //min  degrees   (puls/2.5)-43
-#define WR_MAX_DEG 250      //max wrist degrees
+#define WR_MAX_DEG 240      //max wrist degrees
 #define WR_MIN_DEG -9       //min wrist degrees
 #define CL_MAX_DEG 21
 #define CL_MIN_DEG 5
@@ -61,7 +61,7 @@
 #define WR_FLOOR_OUT_DEG 65
 
 // Straight up 
-#define SH_STRAIGHTUP_DEG 85
+#define SH_STRAIGHTUP_DEG 90
 #define EL_STRAIGHTUP_DEG 95
 #define WR_STRAIGHTUP_DEG 90
 

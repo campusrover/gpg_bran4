@@ -65,6 +65,7 @@ void shoulder(int position);
 void park();
 void wrist(int position);
 void elbow(int position);
+void shoulder_pulse(int pos);
 
 // Command types
 enum CommandType
@@ -107,7 +108,7 @@ const Command commands[] = {
     {"pk", "park", SIMPLE, {.simple = park}},
     {"sh", "shoulder <angle>", RUNTIME_PARAM, {.runtime = {shoulder, SH_MIN_DEG, SH_MAX_DEG}}},
     {"el", "elbow <angle>", RUNTIME_PARAM, {.runtime = {elbow, EL_MIN_DEG, EL_MAX_DEG}}},
-    {"sp", "shoulder <pulse>", RUNTIME_PARAM, {.runtime = {shoulder_pulse}, 0, 300}}}
+    {"sp", "shoulder <pulse>", RUNTIME_PARAM, {.runtime = {shoulder_pulse, 220, 3000}}}
     
   };
 
@@ -401,14 +402,14 @@ void elbow(int deg)
 void shoulder_pulse(int pulselen)
 {
   ARM.setPWM(SHOULDER, 0, pulselen);
-  Serial.println("sholder pwm " + String(pulse));
+  Serial.println("sholder pwm " + String(pulselen));
   delay(20);
   currentShoulder = pulselen;
 }
 
 void shoulder(int deg)
 {
-  int deglen = (deg + 67.8) * 1.77; // pulselen of commanded degrees
+  int deglen = (deg + SH_DEGOFFSET) * SH_DEGSCALE; // pulselen of commanded degrees
   ARM.setPWM(SHOULDER, 0, deglen);
   Serial.println("sholder pwm " + String(deglen) + " and shoulder deg " + String(deg));
   delay(20);
