@@ -41,7 +41,7 @@
 // Park
 #define SH_PARK_DEG 0       // parallel to ground
 #define EL_PARK_DEG 90
-#define WR_PARK_DEG 245     //park degrees
+#define WR_PARK_DEG 240     //park degrees
 
 // To the floor
 #define SH_FLOOR_DOWN_DEG 196    //
