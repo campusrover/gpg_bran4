@@ -19,20 +19,17 @@
 #define SH_MAX_DEG 254      //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
 #define SH_MIN_DEG 0        //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
 #define EL_MAX_DEG 185      //max  degrees   2.5 deg/pulselen
-#define EL_MIN_DEG 0       //min  degrees   (puls/2.5)-43
-#define WR_MAX_DEG 240      //max wrist degrees
-#define WR_MIN_DEG -9       //min wrist degrees
+#define EL_MIN_DEG -50      //min  degrees   (puls/2.5)-43
+#define WR_MAX_DEG 300      //max wrist degrees
+#define WR_MIN_DEG 0      //min wrist degrees
 #define CL_MAX_DEG 21
-#define CL_MIN_DEG 5
+#define CL_MIN_DEG 6
 
 // Notes:
 // shoulder
 //  0 means parallel to the ground
 //  90 means straight up
 // wrist
-//   245 maximum towards elbow
-//   180 means 90 degrees to lower arm
-//   90 means inline with lower arm
 // elbow
 //  90 means inline with upper arm
 //  0 means 90 degrees from upper arm
@@ -41,12 +38,12 @@
 // Park
 #define SH_PARK_DEG 0       // parallel to ground
 #define EL_PARK_DEG 90
-#define WR_PARK_DEG 240     //park degrees
+#define WR_PARK_DEG 300     //park degrees
 
 // To the floor
 #define SH_FLOOR_DOWN_DEG 196    //
 #define EL_FLOOR_DOWN_DEG 0
-#define WR_FLOOR_DOWN_DEG -9     //touching flooor degrees*************** should be -10
+#define WR_FLOOR_DOWN_DEG -9
 
 // Floor up, same as floor down except tip is offset
 // vertically 

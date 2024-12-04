@@ -10,7 +10,6 @@ void BrandeisDiag::command(const char *cmd, const char *sub, float arg1,
                            float arg2, float arg3, BrandeisArm &the_arm,
                            BrandeisBuzz &buzz) {
 
-  LOG_INFO("Diag: %s %s %.1f %.1f %.1f", cmd, sub, arg1, arg2, arg3);
   the_buzz = &buzz;
   if (strcmp(cmd, "led") == 0) {
     led_commands(sub, arg1, arg2, arg3);
@@ -20,6 +19,9 @@ void BrandeisDiag::command(const char *cmd, const char *sub, float arg1,
     help_commands(sub, arg1, arg2, arg3);
   } else if (strcmp(cmd, "arm") == 0) { 
     the_arm.arm_command(sub, arg1);
+  } else {
+    LOG_INFO("Diag INVALID COMMAND: %s %s %.1f %.1f %.1f", cmd, sub, arg1, arg2, arg3);
+
   }
 };
 

@@ -23,7 +23,7 @@ BrandeisServo claw_servo;
 BrandeisArm::BrandeisArm() : node_handle(nullptr) {
   servo_driver = Adafruit_PWMServoDriver(0x40);
   iteration_time = millis();
-  iteration_interval = 20; // 20 milli second
+  iteration_interval = 100; // 20 milli second
   state = "idle";
 };
 
