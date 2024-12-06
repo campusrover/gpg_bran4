@@ -1,6 +1,13 @@
 #include "branarm.h"
 #include "branutils.h"
 
+  #define SH_POS1 140
+  #define EL_POS1 -5
+  #define WR_POS1 70
+  #define CL_POS1 21
+
+
+
 ArmPositions arm_locs[] = {
     {"park", SH_PARK_DEG, EL_PARK_DEG, WR_PARK_DEG},
     {"floordown", SH_FLOOR_DOWN_DEG, EL_FLOOR_DOWN_DEG, WR_FLOOR_DOWN_DEG},
@@ -66,6 +73,7 @@ bool BrandeisArm::arm_motion_stopped(void) {
 }
 
 void BrandeisArm::movex() {
+  delay(50);
   if (shoulder_servo.moving) {
     double new_angle = shoulder_servo.compute_next_increment(millis());
     shoulder_servo.move(new_angle);
@@ -93,21 +101,24 @@ long BrandeisArm::move_duration_heuristic(long new_shoulder, long new_elbow, lon
 void BrandeisArm::arm_command(String command, float arg) {
   double arg_double = (double)arg;  
   if (command == "wrist") {
-    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+//    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    long duration = 5000;
     LOG_INFO("command wrist: %.1f %ld", arg_double, duration);
     wrist_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
 
   if (command == "elbow") {
-    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+//    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    long duration = 5000;
     LOG_INFO("command elbow: %f %ld", arg_double, duration);
     elbow_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
 
   if (command == "shoulder") {
-    long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    // long duration = (arg_double * 1000) / 30.0; // 30 degrees per second
+    long duration = 5000;
     LOG_INFO("command shoulder: %.1f %ld", arg_double, duration);
     shoulder_servo.setup_ease(arg_double, duration);
     state = "movex";
@@ -150,6 +161,18 @@ void BrandeisArm::arm_command(String command, float arg) {
     }
   }
 
+  if (command == "pos1") {
+      LOG_INFO("pos1_sh; state = %s", state.c_str());
+      shoulder_servo.setup_ease(SH_POS1, 3000);
+      state = "movex";
+      while (state != "idle") {
+        delay(100);
+      }
+      LOG_INFO("pos1_wr; state = %s", state.c_str());
+      // wrist_servo.setup_ease(WR_POS1, 3000);
+  }      
+
+
   for (ArmPositions pos : arm_locs) {
     if (command == pos.name) {
       long duration = move_duration_heuristic(pos.shoulder, pos.elbow, pos.wrist);
@@ -176,14 +199,14 @@ void BrandeisArm::arm_command(String command, float arg) {
 // Method will return true once the arm is no longer moving. 
 // If after 30 seconds the arm is still moving, the method will return false.
 bool BrandeisArm::wait_for_servo() {
-  int wait_timeout_count = 30;
+  int wait_timeout_count = 5;
   while (shoulder_servo.moving || elbow_servo.moving || wrist_servo.moving) {
     wait_timeout_count--;
     if (wait_timeout_count == 0) {
       LOG_ERROR("Wait timeout");
       return false;
     }
-    delay(1);
+    delay(1); // Delay 1 millisecond
   }
   return true;
 } 

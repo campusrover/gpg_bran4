@@ -16,12 +16,12 @@
 #define CL_DEGSCALE 2.5
 
 // Degree Maxs and Mins
-#define SH_MAX_DEG 254      //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
-#define SH_MIN_DEG 0        //max  degrees   1.77 deg/pulselen (ie degree/1.77 = pulselen)
-#define EL_MAX_DEG 185      //max  degrees   2.5 deg/pulselen
-#define EL_MIN_DEG -50      //min  degrees   (puls/2.5)-43
-#define WR_MAX_DEG 300      //max wrist degrees
-#define WR_MIN_DEG 0      //min wrist degrees
+#define SH_MAX_DEG 254      
+#define SH_MIN_DEG 5        
+#define EL_MAX_DEG 185      
+#define EL_MIN_DEG -50      
+#define WR_MAX_DEG 290      
+#define WR_MIN_DEG 0   
 #define CL_MAX_DEG 21
 #define CL_MIN_DEG 6
 
@@ -36,9 +36,9 @@
 
 // Named standard arm positions
 // Park
-#define SH_PARK_DEG 0       // parallel to ground
+#define SH_PARK_DEG 5       // parallel to ground
 #define EL_PARK_DEG 90
-#define WR_PARK_DEG 300     //park degrees
+#define WR_PARK_DEG 290     //park degrees
 
 // To the floor
 #define SH_FLOOR_DOWN_DEG 196    //
@@ -59,8 +59,8 @@
 
 // Straight up 
 #define SH_STRAIGHTUP_DEG 90
-#define EL_STRAIGHTUP_DEG 95
-#define WR_STRAIGHTUP_DEG 90
+#define EL_STRAIGHTUP_DEG 90
+#define WR_STRAIGHTUP_DEG 145
 
 // Straight up with wrist parallel to ground
 #define SH_VERT_HORIZ_HAND 90

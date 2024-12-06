@@ -1,5 +1,9 @@
 {
     "files.associations": {
+        ".rb": "ruby",
+        ".cg": "cg",
+        "*.erb": "html",
+        "*.cg": "markdown",
         "streambuf": "cpp",
         "array": "cpp",
         "deque": "cpp",
@@ -9,7 +13,8 @@
         "string_view": "cpp",
         "initializer_list": "cpp",
         "ostream": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "arm_math.h": "c"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "python.autoComplete.extraPaths": [
