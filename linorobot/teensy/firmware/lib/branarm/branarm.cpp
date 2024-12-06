@@ -48,7 +48,6 @@ void BrandeisArm::setup(ros::NodeHandle &nh) {
   claw_servo.setup(103, *node_handle, servo_driver, CLAW, CL_MAX_DEG,
                    CL_MIN_DEG, CL_DEGOFFSET, CL_DEGSCALE, CL_PARK_DEG);
   LOG_ERROR("Arm Setup Complete.");
-
 }
 
 void BrandeisArm::loop() {
@@ -123,6 +122,7 @@ void BrandeisArm::arm_command(String command, float arg) {
     shoulder_servo.setup_ease(arg_double, duration);
     state = "movex";
   }
+
   if (command == "claw") {
     LOG_INFO("command claw: %f", arg_double);
     claw_servo.setup_ease(arg_double, 1000);
@@ -162,14 +162,7 @@ void BrandeisArm::arm_command(String command, float arg) {
   }
 
   if (command == "pos1") {
-      LOG_INFO("pos1_sh; state = %s", state.c_str());
-      shoulder_servo.setup_ease(SH_POS1, 3000);
-      state = "movex";
-      while (state != "idle") {
-        delay(100);
-      }
-      LOG_INFO("pos1_wr; state = %s", state.c_str());
-      // wrist_servo.setup_ease(WR_POS1, 3000);
+      LOG_INFO("pos1_sh; Not implemented!");
   }      
 
 
@@ -211,3 +204,18 @@ bool BrandeisArm::wait_for_servo() {
   return true;
 } 
 
+// Method will return true once the arm is no longer moving. 
+// If after 30 seconds the arm is still moving, the method will return false.
+bool BrandeisArm::wait_for_servo2() {
+  int wait_timeout_count = 5;
+  while (!arm_motion_stopped())
+  {
+    wait_timeout_count--;
+    if (wait_timeout_count == 0) {
+      LOG_ERROR("Wait timeout");
+      return false;
+    }
+    delay(100); // Delay in millisecond
+  }
+  return true;
+}
