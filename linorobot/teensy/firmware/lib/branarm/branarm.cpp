@@ -96,7 +96,7 @@ void BrandeisArm::movex() {
 
 void BrandeisArm::movepprog() {
   delay(50);
-  
+
 }
 
 // heuristic to generate time for a compounde move.
@@ -173,6 +173,7 @@ void BrandeisArm::arm_command(String command, float arg) {
     arm_prog_servo[0] = 100;
     arm_prog_angle[0] = SH_POS1;
     arm_prog_pc = 0;
+
     state = "moveprog";
   }      
 
@@ -199,6 +200,25 @@ void BrandeisArm::arm_command(String command, float arg) {
   }
 }
 
+void BrandeisArm::general_setup_ease(servo_id, angle, duration) {
+  if (servo_id == SHOULDER) {
+    shoulder_servo.setup_ease(angle, duration);
+  } else if (servo_id == ELBOW) {
+    elbow_servo.setup_ease(angle, duration);
+  } else if (servo_id == WRIST) {
+    wrist_servo.setup_ease(angle, duration);
+  } else if (servo_id == CLAW) {
+    wrist_servo.setup_ease(angle, duration);
+  } else {
+    LOG_ERR("ERROR in general_setup_ease");
+  }
+}
+
+
+
+
+
+}
 // Method will return true once the arm is no longer moving. 
 // If after 30 seconds the arm is still moving, the method will return false.
 bool BrandeisArm::wait_for_servo() {
