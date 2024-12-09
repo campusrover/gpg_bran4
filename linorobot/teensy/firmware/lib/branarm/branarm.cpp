@@ -32,7 +32,7 @@ BrandeisArm::BrandeisArm() : node_handle(nullptr) {
   iteration_time = millis();
   iteration_interval = 100; // 20 milli second
   state = "idle";
-  arm_prog_pc = 0;
+  arm_prog_pc = -1;
 };
 
 void BrandeisArm::setup(ros::NodeHandle &nh) {
@@ -62,7 +62,7 @@ void BrandeisArm::loop() {
     movex();
     if (arm_motion_stopped()) {
       state = "idle";
-    } else if (state = "moveprog") {
+    } else if (state == "moveprog") {
       moveprog();
     }
   }
@@ -94,7 +94,7 @@ void BrandeisArm::movex() {
   }
 }
 
-void BrandeisArm::movepprog() {
+void BrandeisArm::moveprog() {
   delay(50);
 
 }
@@ -173,10 +173,11 @@ void BrandeisArm::arm_command(String command, float arg) {
     arm_prog_servo[0] = 100;
     arm_prog_angle[0] = SH_POS1;
     arm_prog_pc = 0;
-
+    LOG_INFO("prog1 %d %d %d", arm_prog_servo[0], arm_prog_angle[0], arm_prog_pc);
     state = "moveprog";
   }      
 
+  
   for (ArmPositions pos : arm_locs) {
     if (command == pos.name) {
       long duration = move_duration_heuristic(pos.shoulder, pos.elbow, pos.wrist);
@@ -200,7 +201,7 @@ void BrandeisArm::arm_command(String command, float arg) {
   }
 }
 
-void BrandeisArm::general_setup_ease(servo_id, angle, duration) {
+void BrandeisArm::general_setup_ease(int servo_id, int angle, long duration) {
   if (servo_id == SHOULDER) {
     shoulder_servo.setup_ease(angle, duration);
   } else if (servo_id == ELBOW) {
@@ -210,15 +211,10 @@ void BrandeisArm::general_setup_ease(servo_id, angle, duration) {
   } else if (servo_id == CLAW) {
     wrist_servo.setup_ease(angle, duration);
   } else {
-    LOG_ERR("ERROR in general_setup_ease");
+    LOG_ERROR("ERROR in general_setup_ease");
   }
 }
 
-
-
-
-
-}
 // Method will return true once the arm is no longer moving. 
 // If after 30 seconds the arm is still moving, the method will return false.
 bool BrandeisArm::wait_for_servo() {

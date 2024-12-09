@@ -54,9 +54,9 @@ private:
     void moveprog();
     int arm_prog_angle[10];
     int arm_prog_servo[10];
-    int arm_prog_pc;
-    
-
+    int arm_prog_pc; // -1 means nothing to execute
+    int arm_prog_done; // 0 means not executed yet, 1 means executed.
+    void general_setup_ease(int servo_id, int angle, long duration);
 
 };
 
