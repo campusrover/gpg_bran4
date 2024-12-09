@@ -32,6 +32,7 @@ BrandeisArm::BrandeisArm() : node_handle(nullptr) {
   iteration_time = millis();
   iteration_interval = 100; // 20 milli second
   state = "idle";
+  arm_prog_pc = 0;
 };
 
 void BrandeisArm::setup(ros::NodeHandle &nh) {
@@ -61,6 +62,8 @@ void BrandeisArm::loop() {
     movex();
     if (arm_motion_stopped()) {
       state = "idle";
+    } else if (state = "moveprog") {
+      moveprog();
     }
   }
 }
@@ -89,6 +92,11 @@ void BrandeisArm::movex() {
     double new_angle = claw_servo.compute_next_increment(millis());
     claw_servo.move(new_angle);
   }
+}
+
+void BrandeisArm::movepprog() {
+  delay(50);
+  
 }
 
 // heuristic to generate time for a compounde move.
@@ -161,10 +169,12 @@ void BrandeisArm::arm_command(String command, float arg) {
     }
   }
 
-  if (command == "pos1") {
-      LOG_INFO("pos1_sh; Not implemented!");
+  if (command == "prog1") {
+    arm_prog_servo[0] = 100;
+    arm_prog_angle[0] = SH_POS1;
+    arm_prog_pc = 0;
+    state = "moveprog";
   }      
-
 
   for (ArmPositions pos : arm_locs) {
     if (command == pos.name) {

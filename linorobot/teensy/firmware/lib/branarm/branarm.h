@@ -51,6 +51,12 @@ private:
     void movex();
     char buffer[300];
 
+    void moveprog();
+    int arm_prog_angle[10];
+    int arm_prog_servo[10];
+    int arm_prog_pc;
+    
+
 
 };
 
